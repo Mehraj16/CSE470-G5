@@ -24,7 +24,7 @@ export default function Info(props) {
             <p>Event Roster</p>
             <button className='detailbtn'>Details</button>
           </div>
-          <p>{props.nearestEvent.date} {props.nearestEvent.time}</p>
+          <p>{props.nearestEvent.date} {props.nearestEvent.time}</p>{/* accesses the date, location and time regarding the earliest upcoming event*/}
           <p>{props.nearestEvent.location}</p>
         </div>
       </div>

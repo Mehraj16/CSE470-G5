@@ -1,0 +1,7 @@
+[
+    { "id": 4, "title": "Inauguration", "date": "2024-04-04", "time": "11:45", "image": "react.svg" },
+    { "id": 5, "title": "Event 2", "date": "2024-05-05", "time": "12:00", "image": "mascot.png" },
+    { "id": 6, "title": "Event 3", "date": "2024-06-06", "time": "13:00", "image": "mascot.png" },
+    { "id": 7, "title": "Event 4", "date": "2024-07-07", "time": "14:00", "image": "mascot.png" }
+  ]
+  

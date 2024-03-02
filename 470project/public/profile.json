@@ -1,0 +1,26 @@
+{
+    "name": "John",
+    "dateOfBirth": "1990-05-15",
+    "profileImage": "mascot.png",
+    "eventsSignedUp": [
+      {
+        "date": "2024-04-04",
+        "time": "11:45",
+        "title": "Event 1",
+        "location": "Location 1"
+      },
+      {
+        "date": "2024-05-05",
+        "time": "12:00",
+        "title": "Event 2",
+        "location": "Location 2"
+      },
+      {
+        "date": "2024-06-06",
+        "time": "13:00",
+        "title": "Event 3",
+        "location": "Location 3"
+      }
+    ]
+  }
+  

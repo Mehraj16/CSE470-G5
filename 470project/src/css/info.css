@@ -1,0 +1,117 @@
+.dashboard{
+    min-width: calc(95vw - 280px);
+    min-height: calc(90vh - 60px);
+}
+.welcomeText {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
+    width: 95%;
+    height: 200px;
+    background-color: var(--acc);
+    border-radius: 25px;
+    text-align: center; /* Center text horizontally */
+    margin: 10px 0;
+    position: relative; /* Position relative for pseudo-element */
+  }
+  
+  .welcomeText p {
+    flex: 1; /* Allow the paragraph to grow to fill the remaining space */
+    text-align: left; /* Align text to the left */
+    margin-left: 20px; /* Add margin for spacing */
+    font-size: 35px;
+    font-weight: 600;
+    color: var(--main);
+  }
+  
+  .welcomeText::before {
+    content: "";
+    position: absolute; /* Position the pseudo-element absolutely */
+    top: 0; /* Position it at the top of the container */
+    right: 0; /* Position it at the right of the container */
+    width: 50%; /* Set a width */
+    height: 100%; /* Set a height */
+    background-image: url('../assets/Hello-cuate.svg');
+    background-repeat: no-repeat;
+    background-position: right; /* Set background image to the right */
+    background-size: auto 100%; /* Auto width and 100% height for the background image */
+    border-radius: 25px; /* Match the container's border radius */
+  }
+  
+  
+.dashEvent{
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+}
+.eventDetail{
+    width: 70%;
+    background:var(--acc);
+    border-radius: 15px;
+    text-align: center;
+    line-height: 100px;
+    padding: 5px;
+    position: relative;
+}
+.totalEvents{
+    width: 25%;
+    background:var(--acc);
+    border-radius: 15px;
+    text-align: center;
+    line-height: 100px;
+    padding: 5px;
+}
+.eventDetail p{
+    color: var(--main);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    padding-left: 10px;
+    text-align: left;
+    font-size: 20px;
+}
+.eventRoster p{
+    font-size: 25px;
+    font-weight: 600;
+}
+.eventRoster{
+    display: flex;
+    flex-direction: row;
+}
+.detailbtn{
+    background-color: var(--main); 
+    border: 3px solid var(--text); 
+    color: var(--text);
+    padding: 5px 20px; 
+    text-align: center;
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer; 
+    border-radius: 10px; 
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+}
+.analytic{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 91%;
+    margin: 10px 0;
+    padding: 20px;
+    background: var(--acc);
+    border-radius: 10px;
+}
+.history{
+    display: flex;
+    justify-content: space-between;
+}
+@media screen and (max-width: 650px) {
+    .totalEvents{
+        display: none;
+    }
+    .eventDetail{
+        width: 100%;
+    }
+}

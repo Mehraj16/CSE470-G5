@@ -50,38 +50,54 @@
     text-align: center;
     line-height: 100px;
     padding: 5px;
-    position: relative;
 }
 .totalEvents{
-    width: 25%;
+    width: 24%;
     background:var(--acc);
     border-radius: 15px;
-    text-align: center;
+    text-align: end;
     line-height: 100px;
-    padding: 5px;
+    padding-right: 25px;
+}
+.total{
+    color: var(--main);
+    line-height: 25px;
+    padding: 5px 0;
+    font-size: 25px;
+    font-weight: 600;
+}
+.upcoming{
+    color: var(--main);
+    line-height: 20px;
+    padding: 5px 0;
+    font-size: 20px;
+    font-weight: 500;
 }
 .eventDetail p{
     color: var(--main);
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 25px;
+    font-weight: 600;
     margin: 0;
     padding-left: 10px;
     text-align: left;
     font-size: 20px;
 }
-.eventRoster p{
-    font-size: 25px;
-    font-weight: 600;
-}
+
 .eventRoster{
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.eventRoster p{
+    font-size: 20px;
+    font-weight: 500;
+    text-align: end;
 }
 .detailbtn{
     background-color: var(--main); 
     border: 3px solid var(--text); 
     color: var(--text);
-    padding: 5px 20px; 
+    padding: 5px 15px; 
     text-align: center;
     text-decoration: none; 
     display: inline-block; 
@@ -89,9 +105,15 @@
     margin: 4px 2px; 
     cursor: pointer; 
     border-radius: 10px; 
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
+}
+.detailbtn:hover{
+    background-color: var(--text);
+    border: 3px solid var(--text);
+    font-size: 16px;
+    padding: 5px 15px; 
+    margin: 4px 2px; 
+    cursor: pointer; 
+    color: var(--main);
 }
 .analytic{
     display: flex;

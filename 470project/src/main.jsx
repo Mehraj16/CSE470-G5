@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Events from './pages/Events.jsx'
+import Settings from './pages/Settings.jsx'
 import './index.css'
 import {
   createBrowserRouter,
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "events",
     element: <Events />,
+  },
+  {
+    path: "settings",
+    element: <Settings />,
   },
 ]);
 

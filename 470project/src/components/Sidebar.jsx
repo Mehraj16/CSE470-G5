@@ -16,7 +16,7 @@ function Sidebar() {
             <li className='list-item'><FaHome className='icon'/><a href="/">Home</a></li>
             <li className='list-item'><BsCalendar3Event className='icon'/><a href="/events">Event</a></li>
             <li className='list-item'><RxDashboard className='icon'/><a href="/">Discover</a></li>
-            <li className='list-item'><VscSettings className='icon'/><a href="/">Settings</a></li>
+            <li className='list-item'><VscSettings className='icon'/><a href="/settings">Settings</a></li>
             <li className='list-item'><IoLogOut className='icon'/><a href="/">Logout</a></li>
         </ul>
     </div>

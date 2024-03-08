@@ -16,8 +16,8 @@ export default function Info(props) {
       </div>
       <div className="dashEvent">
         <div className="totalEvents">
-          <p>Upcoming Events</p>
-          <p>{props.totalEvents}</p>
+          <p className='upcoming'>Upcoming Events</p>
+          <p className='total'>{props.totalEvents}</p>
         </div>
         <div className="eventDetail">
           <div className="eventRoster">

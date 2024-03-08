@@ -1,0 +1,41 @@
+.all-details{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.btn{
+    display: inline-flex;
+    justify-content: flex-end;
+    margin-right: 85px;
+}
+.profile-details {
+    display: flex;
+    justify-content: center;
+    width: 53vw;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  border-radius: 35px; 
+  border: 1px solid #ccc; 
+  padding: 8px; 
+}
+input[type="date"] {
+  border-radius: 5px;
+}
+textarea{
+    border-radius: 10px;
+}
+.inputs{
+    display: flex;
+    justify-content: space-between;
+}
+.btn2{
+    display: flex;
+    justify-content: flex-end;
+}
+.btn2 button{
+    margin: 0 5px;
+}

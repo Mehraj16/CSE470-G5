@@ -44,6 +44,7 @@ function Events() {
   
     fetchData();
   }, []);
+  
     return (
       <div className='App'>
         <Sidebar />

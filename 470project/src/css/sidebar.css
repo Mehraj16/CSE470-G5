@@ -32,6 +32,9 @@
     font-size: 18px;
     font-weight: 500;
 }
+.sidebar .list-item a:focus {
+    color: var(--acc) !important;
+}
 .sidebar ul li:hover {
     background-color:var(--main);
     border-radius: 15px;

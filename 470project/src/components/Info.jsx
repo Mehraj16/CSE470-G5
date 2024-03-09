@@ -12,7 +12,7 @@ export default function Info(props) {
   return (
     <div className="dashboard">
       <div className="welcomeText">
-        <p>Welcome, {props.name}</p>
+        <p>Welcome, {props.firstName}</p>
       </div>
       <div className="dashEvent">
         <div className="totalEvents">

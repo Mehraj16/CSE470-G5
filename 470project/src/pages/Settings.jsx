@@ -10,17 +10,24 @@ import '../css/editform.css'
 import EditForm from '../components/EditForm';
 
 export default function Settings() {
-    const [formData, setFormData] = useState({
-        firstName: "John",
-        lastName: "Doe",
-        dob: "1990-01-01",
-        city: "New York",
-        email: "john@example.com",
-        password: "m@ri0",
-        biography: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        interests: "Coding, hiking, reading",
-        skills: "JavaScript, React, HTML, CSS"
-      });
+    const [formData, setFormData] = useState({});
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('/profile.json');// test file used in public folder
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setFormData(data);
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+    
+      fetchData();
+    }, []);
     
       const handleInputChange = (field, value) => {
         setFormData(prevData => ({
@@ -40,12 +47,18 @@ export default function Settings() {
     setInputsEnabled(false);
     console.log(inputsEnabled);
   }
+  const [selectedGender, setSelectedGender] = useState(formData.gender);
+  const handleGenderChange = (e) => {
+    setSelectedGender(e.target.value);
+    handleInputChange('gender', e.target.value);
+  };
+
   return (
     <div className='App'>
       <Sidebar />
       <div className='profile-content'>
-        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs}/>
-        <Profile />
+        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} selectedGender={selectedGender} handleGenderChange={handleGenderChange}/>
+        <Profile formData={formData}/>
       </div>
     </div>
   )

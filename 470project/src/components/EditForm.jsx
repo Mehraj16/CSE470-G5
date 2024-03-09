@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs }) {
+export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs, selectedGender, handleGenderChange }) {
     const handleChange = (field, e) => {
         handleInputChange(field, e.target.value);
       };
@@ -42,7 +42,51 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             </div>
             <label htmlFor="biography">Biography:</label><br />
             <textarea id="biography" name="biography" rows="5" cols="52" value={formData.biography} onChange={(e) => handleChange('biography', e)} disabled={!inputsEnabled}></textarea><br /><br />
-
+            <div>
+                <div>
+                    <label htmlFor="blood">Blood Group:</label><br />
+                    <input type="text" id="blood" name="blood" value={formData.blood} onChange={(e) => handleChange('blood', e)} disabled={!inputsEnabled} /><br /><br />
+                </div>
+                <div>
+                    <label >Gender:</label><br />
+                    <label>
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked={formData.gender === 'male'}
+                                    onChange={(e) => handleChange('gender', e)}
+                                    disabled={!inputsEnabled}
+                    />
+                    Male
+                </label>
+                <br />
+                <label>
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="female"
+                        checked={formData.gender === 'female'}
+                                    onChange={(e) => handleChange('gender', e)}
+                                    disabled={!inputsEnabled}
+                    />
+                    Female
+                </label>
+                <br />
+                <label>
+                    <input
+                        type="radio"
+                        name="gender"
+                        value="other"
+                        checked={formData.gender === 'other'}
+                                    onChange={(e) => handleChange('gender', e)}
+                                    disabled={!inputsEnabled}
+                    />
+                    Other
+                </label>
+                <br />
+                </div>
+            </div>
             <div className='inputs'>
                 <div>
                     <label htmlFor="interests">Interests:</label><br />

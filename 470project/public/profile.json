@@ -1,6 +1,18 @@
 {
-    "name": "John",
-    "dateOfBirth": "1990-05-15",
+    "firstName": "John",
+    "lastName": "Doe",
+    "dob": "1990-01-01",
+    "city": "New York",
+    "email": "john@example.com",
+    "password": "m@ri0",
+    "blood": "O +ve",
+    "gender": "male",
+    "score" : 570,
+    "totalMedals": 3,
+    "eventCount": 19,
+    "biography": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "interests": "Coding, hiking, reading",
+    "skills": "JavaScript, React, HTML, CSS",
     "profileImage": "mascot.png",
     "eventsSignedUp": [
       {

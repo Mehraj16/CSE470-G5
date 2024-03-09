@@ -60,7 +60,7 @@ function App() {
         <Header profilepic={`/src/assets/${profileData.profileImage}`} /> {/* Sends the profile image from fetched data */}
         <div className='Content'>
           <Info 
-            name={profileData.name}
+            firstName={profileData.firstName}
             totalEvents={numEventsSignedUp}
             nearestEvent={nearestEvent}
           />

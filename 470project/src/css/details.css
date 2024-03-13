@@ -7,7 +7,7 @@
   .banner img {
     margin-bottom: 20px;
     width: 90%;
-    height: auto;
+    height: 55vh;
     display: block;
     border-radius: 35px;
   }
@@ -33,5 +33,8 @@
   .banner p:nth-child(7),
   .banner p:nth-child(9) {
     font-size: 16px;
+  }
+  .interestBtn:active, .interestBtn:focus {
+    background-color: #6d747b;
   }
   

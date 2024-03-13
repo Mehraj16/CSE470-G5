@@ -38,26 +38,19 @@ export default function Settings() {
   const [inputsEnabled, setInputsEnabled] = useState(false);
 
   const enableInputs = () => {
-    console.log("Button clicked!");
     setInputsEnabled(true);
-    console.log(inputsEnabled);
   };
-  const cancelInputs = () => {
-    console.log("Button clicked!");
+  const cancelInputs = (e) => {
+    e.preventDefault();
     setInputsEnabled(false);
-    console.log(inputsEnabled);
   }
-  const [selectedGender, setSelectedGender] = useState(formData.gender);
-  const handleGenderChange = (e) => {
-    setSelectedGender(e.target.value);
-    handleInputChange('gender', e.target.value);
-  };
 
   return (
     <div className='App'>
       <Sidebar />
+      <Header />
       <div className='profile-content'>
-        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} selectedGender={selectedGender} handleGenderChange={handleGenderChange}/>
+        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs}/>
         <Profile formData={formData}/>
       </div>
     </div>

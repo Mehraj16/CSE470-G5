@@ -4,6 +4,8 @@ import App from './App.jsx'
 import Events from './pages/Events.jsx'
 import Settings from './pages/Settings.jsx'
 import EventDetails from './pages/EventDetails.jsx'
+import Invites from './pages/Invites.jsx'
+import MyEvents from './pages/MyEvents.jsx'
 import './index.css'
 import {
   createBrowserRouter,
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
   {
     path: "eventdetails",
     element: <EventDetails />,
+  },
+  {
+    path: "myevents",
+    element: <MyEvents />,
+  },
+  {
+    path: "invites",
+    element: <Invites />,
   },
 ]);
 

@@ -45,28 +45,6 @@
 .sidebar ul li:hover .icon{
     color: var(--acc);
 }
-/* .sidebar ul li:hover::before{
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: 0;
-    width: 20px;
-    height: 20px;
-    border-bottom-right-radius: 20px;
-    box-shadow: 5px 5px 0 5px var(--main);
-    background: transparent;
-}
-.sidebar ul li:hover::after{
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    right: 0;
-    width: 20px;
-    height: 20px;
-    border-top-right-radius: 20px;
-    box-shadow: 5px -5px 0 5px var(--main);
-    background: transparent;
-} */
 .icon{
     color: var(--main);
     margin-right: 8px;

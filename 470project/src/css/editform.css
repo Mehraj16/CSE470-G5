@@ -39,3 +39,15 @@ textarea{
 .btn2 button{
     margin: 0 5px;
 }
+@media screen and (max-width: 800px) {
+    .prof{
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .profile-details{
+        width: 85vw;
+    }
+    .btn{
+        margin-bottom: 20px;
+    }
+}

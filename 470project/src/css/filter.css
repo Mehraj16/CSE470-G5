@@ -1,0 +1,33 @@
+.filter-container{
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+}
+.filter-container p{
+    font-size: 20px;
+    font-weight: 400;
+}
+.filterIcon{
+    width: 30px;
+    height: 35px;
+    stroke-width: 1;
+    cursor: pointer;
+}
+.popup-container{
+    display: flex;
+    justify-content: center;
+}
+.popup{
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 10px;
+    z-index: 999;
+    text-align: center;
+    font-size: 20px;
+}
+.popup div {
+    cursor: pointer;
+}
+.popup div:hover {
+    color: blue;
+}

@@ -18,13 +18,25 @@ body, html, .App {
   margin-left: 300px; 
   margin-top: 60px;
 }
+.filter{
+  text-align: end;
+  margin-right: 50px;
+}
 .card-container {
-  margin-top: 60px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
+.profile-content{
+  display: flex;
+  margin: 60px 30px 0 280px;
+}
 @media screen and (max-width: 800px) {
+  .profile-content{
+    flex-direction: column-reverse;
+    justify-content: center;
+    margin-left: 100px; 
+  }
   .Content {
     display: block;
     margin-left: 100px; 
@@ -34,7 +46,8 @@ body, html, .App {
     justify-content: center;
   }
 }
-.profile-content{
-  display: flex;
-  margin: 60px 30px 0 280px;
+.leading-title{
+  margin: 50px 0 0 280px;
+  font-size: 20px;
+  font-weight: 600;
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BarChart from './BarChart';
+import { IoArrowForwardCircle } from "react-icons/io5";
 
 export default function Info(props) {
     const [selectedOption, setSelectedOption] = useState('lastYear');
@@ -7,6 +9,13 @@ export default function Info(props) {
     const handleSelectChange = async (event) => {
       const selectedValue = event.target.value;
       setSelectedOption(selectedValue);
+    };
+    const navigation = useNavigate();
+    const showInvites = () => {
+      navigation('../invites');
+    };
+    const showMyEvents = () => {
+      navigation('../myevents');
     };
 
   return (
@@ -19,10 +28,16 @@ export default function Info(props) {
           <p className='upcoming'>Upcoming Events</p>
           <p className='total'>{props.totalEvents}</p>
         </div>
+        <div className='invitation' style={{paddingRight: '20px'}}>
+          <div>
+            <p className='upcoming'>Invitation Pending</p><IoArrowForwardCircle className='showInvite' onClick={showInvites}/>
+          </div>
+          <p className='total'>{props.totalEvents}</p>
+        </div>
         <div className="eventDetail">
           <div className="eventRoster">
             <p>Event Roster</p>
-            <button className='detailbtn'>Details</button>
+            <button className='detailbtn' onClick={showMyEvents}>Details</button>
           </div>
           <p>{props.nearestEvent.date} {props.nearestEvent.time}</p>{/* accesses the date, location and time regarding the earliest upcoming event*/}
           <p>{props.nearestEvent.location}</p>

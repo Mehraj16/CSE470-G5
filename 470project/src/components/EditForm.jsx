@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs, selectedGender, handleGenderChange }) {
+export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs}) {
     const handleChange = (field, e) => {
         handleInputChange(field, e.target.value);
       };
@@ -33,11 +33,11 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             <div className='inputs'>
                 <div>
                     <label htmlFor="email">Email:</label><br />
-                    <input type="email" id="email" name="email" value={formData.email} onChange={(e) => handleChange('email', e)} disabled={!inputsEnabled} /><br /><br />
+                    <input type="email" id="email" name="email" value={formData.email} disabled /><br /><br />
                 </div>
                 <div>
                     <label htmlFor="password">Password:</label><br />
-                    <input type="password" id="password" name="password" value={formData.password} onChange={(e) => handleChange('password', e)} disabled={!inputsEnabled} /><br /><br />
+                    <input type="password" id="password" name="password" value={formData.password} disabled/><br /><br />
                 </div>
             </div>
             <label htmlFor="biography">Biography:</label><br />
@@ -99,7 +99,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             </div>
             <div className='btn2'>
                 <button type='submit'>Save</button>
-                <button onChange={cancelInputs}>Cancel</button>
+                <button onClick={cancelInputs}>Cancel</button>
             </div>
         </form>
       </div>

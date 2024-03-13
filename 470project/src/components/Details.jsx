@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Details(props) {
+export default function Details({ isClicked, handleClick, status, ...props }) {
   function formatDate(dateStr) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(dateStr);
@@ -20,6 +20,10 @@ export default function Details(props) {
         <p></p>
         <p>Event Details</p>
         <p></p>
+        <button className={`interestBtn ${isClicked ? 'active' : ''}`} 
+            onClick={handleClick} disabled={status}>
+            {status ? 'Interest Sent' : (isClicked ? 'Interest Sent' : 'Interested')}
+          </button>
       </div>
 
     </div>

@@ -6,11 +6,14 @@ import Settings from './pages/Settings.jsx'
 import EventDetails from './pages/EventDetails.jsx'
 import Invites from './pages/Invites.jsx'
 import MyEvents from './pages/MyEvents.jsx'
+import Discover from './pages/Discover.jsx'
+import ViewAll from './components/ViewAll.jsx'
 import './index.css'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import Article from './pages/Article.jsx'
 
 const router = createBrowserRouter([
   {
@@ -34,8 +37,20 @@ const router = createBrowserRouter([
     element: <MyEvents />,
   },
   {
+    path: "discover",
+    element: <Discover />,
+  },
+  {
     path: "invites",
     element: <Invites />,
+  },
+  {
+    path: "viewall",
+    element: <ViewAll />,
+  },
+  {
+    path: "article",
+    element: <Article />,
   },
 ]);
 

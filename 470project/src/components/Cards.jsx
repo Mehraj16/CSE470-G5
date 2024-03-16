@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/cards.css'
 
 export default function Cards(props) {
   const navigation = useNavigate();
-
   const handleClick = () => {
     navigation('../eventdetails', {state: props});
   };

@@ -3,9 +3,6 @@ import './App.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Info from './components/Info';
-import './css/sidebar.css';
-import './css/header.css';
-import './css/info.css';
 
 function App() {
   const [profileData, setProfileData] = useState({});
@@ -63,6 +60,7 @@ function App() {
             firstName={profileData.firstName}
             totalEvents={numEventsSignedUp}
             nearestEvent={nearestEvent}
+            profilepic={profileData.profileImage}
           />
         </div>
       </div>

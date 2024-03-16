@@ -103,26 +103,22 @@
     text-align: end;
 }
 .detailbtn{
-    background-color: var(--main); 
-    border: 3px solid var(--text); 
-    color: var(--text);
-    padding: 5px 15px; 
+    background-color: var(--text); 
+    border: 2px solid var(--text); 
+    color: var(--main);
+    padding: 5px 12px; 
     text-align: center;
     text-decoration: none; 
     display: inline-block; 
     font-size: 16px; 
-    margin: 4px 2px; 
+    margin: 10px 25px 0 0; 
     cursor: pointer; 
-    border-radius: 10px; 
+    border-radius: 5px; 
 }
 .detailbtn:hover{
-    background-color: var(--text);
-    border: 3px solid var(--text);
-    font-size: 16px;
-    padding: 5px 15px; 
-    margin: 4px 2px; 
-    cursor: pointer; 
-    color: var(--main);
+    background-color: var(--main);
+    border: 2px solid var(--text);
+    color: var(--text);
 }
 .analytic{
     display: flex;
@@ -131,7 +127,7 @@
     width: 91%;
     margin: 10px 0;
     padding: 20px;
-    background: var(--acc);
+    background: var(--main);
     border-radius: 10px;
 }
 .history{

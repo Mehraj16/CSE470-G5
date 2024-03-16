@@ -1,10 +1,7 @@
 import React, { useState,useEffect } from 'react'
-import '../App.css';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Profile from '../components/Profile';
-import '../css/sidebar.css'
-import '../css/header.css'
 import '../css/profile.css'
 import '../css/editform.css'
 import EditForm from '../components/EditForm';
@@ -48,7 +45,7 @@ export default function Settings() {
   return (
     <div className='App'>
       <Sidebar />
-      <Header />
+      <Header profilepic={`/src/assets/${formData.profileImage}`}/>
       <div className='profile-content'>
         <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs}/>
         <Profile formData={formData}/>

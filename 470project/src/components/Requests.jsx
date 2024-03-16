@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheck } from "react-icons/fa";
 import { RiCloseLine } from "react-icons/ri";
+import requests from'../css/requests.module.css';
 
 export default function Requests({ onViewDetails}) {
     const [data, setData] = useState([]);
@@ -43,12 +44,12 @@ export default function Requests({ onViewDetails}) {
     };
 
     return (
-        <div className='table-container'>
-            <table>
+        <div className={requests.tableContainer}>
+            <table className={requests.reqtable}>
                 <thead>
                     <tr>
                         <th>Author</th>
-                        <th>Event Name</th>
+                        <th>Event</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -57,8 +58,8 @@ export default function Requests({ onViewDetails}) {
                         <tr key={event.id}>
                             <td>{event.author}</td>
                             <td>{event.title}</td>
-                            <td className='cta-btn'>
-                                <button onClick={() => onViewDetails(event.id)}>View Details</button>
+                            <td className={requests.ctabtn}>
+                                <button onClick={() => onViewDetails(event.id)}>View</button>
                                 {event.status === 'accepted' ? (
                                     <FaCheck className='check'/>
                                 ) : event.status === 'rejected' ? (

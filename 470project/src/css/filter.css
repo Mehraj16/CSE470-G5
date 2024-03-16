@@ -3,13 +3,23 @@
     display: flex;
     justify-content: space-between;
 }
+.filter-container h3{
+    margin-bottom: 0;
+}
 .filter-container p{
     font-size: 20px;
     font-weight: 400;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.filter-details{
+    display: flex;
+    height: 46px;
+    align-items: flex-end;
 }
 .filterIcon{
     width: 30px;
-    height: 35px;
+    height: 30px;
     stroke-width: 1;
     cursor: pointer;
 }

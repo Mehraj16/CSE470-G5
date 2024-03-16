@@ -1,9 +1,6 @@
 import React , { useState, useEffect }from 'react';
-import '../App.css';
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
-import '../css/sidebar.css';
-import '../css/header.css';
 import '../css/details.css';
 import Details from '../components/Details';
 import { useLocation } from 'react-router-dom'
@@ -42,7 +39,7 @@ export default function EventDetails () {
   return (
     <div className='App'>
       <Sidebar />
-      <Header />
+      <Header profilepic={`/src/assets/${props.profilepic}`}/>
       <div className='Content'>
         {/* Pass props directly to the Details component */}
         <Details title={props.title} date={props.date} time={props.time} image={props.image} isClicked={isClicked} handleClick={handleClick} status={status}/>

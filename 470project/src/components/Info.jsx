@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BarChart from './BarChart';
 import { IoArrowForwardCircle } from "react-icons/io5";
+import '../css/info.css';
 
 export default function Info(props) {
     const [selectedOption, setSelectedOption] = useState('lastYear');
-
     const handleSelectChange = async (event) => {
       const selectedValue = event.target.value;
       setSelectedOption(selectedValue);
     };
     const navigation = useNavigate();
     const showInvites = () => {
-      navigation('../invites');
+      navigation('../invites' ,{state: props});
     };
     const showMyEvents = () => {
-      navigation('../myevents');
+      navigation('../myevents',{state: props});
     };
 
   return (
@@ -39,7 +39,7 @@ export default function Info(props) {
             <p>Event Roster</p>
             <button className='detailbtn' onClick={showMyEvents}>Details</button>
           </div>
-          <p>{props.nearestEvent.date} {props.nearestEvent.time}</p>{/* accesses the date, location and time regarding the earliest upcoming event*/}
+          <p>{props.nearestEvent.date} {props.nearestEvent.time}</p>
           <p>{props.nearestEvent.location}</p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default function Info(props) {
             <option value="allTime">All Time</option>
           </select>
         </div>
-        <BarChart selectedMode={selectedOption} />
+        <BarChart selectedOption={selectedOption} />
       </div>
     </div>
   );

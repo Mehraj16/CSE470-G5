@@ -6,6 +6,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
       };
   return (
     <div className='all-details'>
+        <h3 className='settings-headers'>Profile</h3>
       <div className='btn'><button onClick={enableInputs}>Edit Profile</button></div>  
       <div className='profile-details'>
         <form>
@@ -23,7 +24,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             <div className='inputs'>
                 <div>
                     <label htmlFor="dob">Date of Birth:</label><br />
-                    <input type="date" id="dob" name="dob" value={formData.dob} onChange={(e) => handleChange('dob', e)} disabled={!inputsEnabled} /><br /><br />
+                    <input type="date"  className='date-input' id="dob" name="dob" value={formData.dob} onChange={(e) => handleChange('dob', e)} disabled={!inputsEnabled} /><br /><br />
                 </div>
                 <div>
                     <label htmlFor="city">City:</label><br />
@@ -42,12 +43,15 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             </div>
             <label htmlFor="biography">Biography:</label><br />
             <textarea id="biography" name="biography" rows="5" cols="52" value={formData.biography} onChange={(e) => handleChange('biography', e)} disabled={!inputsEnabled}></textarea><br /><br />
-            <div>
+            <div className='inputs'>
                 <div>
                     <label htmlFor="blood">Blood Group:</label><br />
                     <input type="text" id="blood" name="blood" value={formData.blood} onChange={(e) => handleChange('blood', e)} disabled={!inputsEnabled} /><br /><br />
                 </div>
-                <div>
+                <div style={{
+                    width: '35%',
+                    lineHeight: '30px'
+                }}>
                     <label >Gender:</label><br />
                     <label>
                     <input
@@ -102,6 +106,18 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                 <button onClick={cancelInputs}>Cancel</button>
             </div>
         </form>
+      </div>
+      <div>
+          <h3 className='settings-headers'>Account</h3>
+          <p className='settings-headers' style={{border: 'None'}}>Deleting the account will permanently erase all your data. You will not be able to retrieve any data after.</p>
+          <div style={{
+            width: '95%',
+            display: 'inline-flex',
+            justifyContent: 'flex-end'
+          }}><button className='del-btn'>Delete Account</button>
+          </div>
+          <br />
+          <br />
       </div>
     </div>
   )

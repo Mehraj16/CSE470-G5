@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import '../App.css';
-import '../css/sidebar.css';
-import '../css/header.css';
-import '../css/requests.css';
 import DetailedView from '../components/DetailedView';
-
+import { useLocation } from 'react-router-dom'
 
 export default function Invites() {
   const [data, setData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
+
+  const location = useLocation();
+  const props = location.state;
+  console.log(props)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +38,7 @@ export default function Invites() {
   return (
     <div className='App'>
       <Sidebar />
-      <Header />
+      <Header profilepic={`/src/assets/${props.profilepic}`}/>
       <div className='leading-title'>
         <p>Your Event Roster</p>
       </div>
@@ -46,14 +46,24 @@ export default function Invites() {
         marginTop: '10px',
       }}>
         <div className='table-container' style={{
-                width: '50vw',
+                width: '45vw',
         }}>
-                <table>
+                <table style={{
+                  width: '45vw',
+                  marginRight: '20px',
+                  borderCollapse: 'collapse'
+                }}>
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Event Name</th>
-                            <th>Actions</th>
+                            <th style={{
+                                  width: '34%',
+                                }}>Date</th>
+                            <th style={{
+                                  width: '36%',
+                                }}>Event Name</th>
+                            <th style={{
+                                  width: '50%',
+                                }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,7 +71,9 @@ export default function Invites() {
                             <tr key={event.id}>
                                 <td>{event.date}</td>
                                 <td>{event.title}</td>
-                                <td className='cta-btn'>
+                                <td className='cta-btn' style={{
+                                  width: 'auto',
+                                }}>
                                     <button onClick={() => handleViewDetails(event.id)}>View</button>
                                 </td>
                             </tr>

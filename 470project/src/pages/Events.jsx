@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import '../App.css';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Cards from '../components/Cards';
-import '../css/sidebar.css'
-import '../css/header.css'
-import '../css/cards.css'
-import '../css/filter.css'
 import Filter from '../components/Filter';
 
 function Events() {
@@ -95,7 +90,7 @@ function Events() {
 
   return (
     <div className='App'>
-      <Sidebar />
+      <Sidebar profilepic={`/src/assets/${profileData.profileImage}`}/>
       <Header profilepic={`/src/assets/${profileData.profileImage}`} />
       <div className='Content'>
         <div className='filter'>
@@ -104,7 +99,7 @@ function Events() {
         <div className='card-container'>
           {/* Render cards based on filtered data */}
           {filteredData.map(item => (
-            <Cards key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} time={item.time} />
+            <Cards key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} time={item.time} profilepic={profileData.profileImage}/>
           ))}
         </div>
       </div>

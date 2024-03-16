@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import '../App.css';
-import '../css/sidebar.css';
-import '../css/header.css';
-import '../css/requests.css';
 import Requests from '../components/Requests';
 import DetailedView from '../components/DetailedView';
+import { useLocation } from 'react-router-dom'
 
 export default function Invites() {
   const [data, setData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
 
+  const location = useLocation();
+  const props = location.state;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,7 +60,7 @@ export default function Invites() {
   return (
     <div className='App'>
       <Sidebar />
-      <Header />
+      <Header profilepic={`/src/assets/${props.profilepic}`}/>
       <div className='profile-content'>
         <Requests
           data={data}

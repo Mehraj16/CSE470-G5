@@ -2,6 +2,9 @@
     { "id": 4, "author": "Laura", "title": "Inauguration", "date": "2024-07-07", "time": "11:45", "image": "react.svg", "rewards": 200, "location": "location11"},
     { "id": 5, "author": "Melissa", "title": "Event 2", "date": "2024-05-05", "time": "12:00", "image": "mascot.png", "rewards": 250, "location": "location12"},
     { "id": 6, "author": "Steve", "title": "Event 3", "date": "2024-06-06", "time": "13:00", "image": "react.svg", "rewards": 300, "location": "location13"},
-    { "id": 7, "author": "Alina", "title": "Event 4", "date": "2024-04-04", "time": "14:00", "image": "mascot.png", "rewards": 100, "location": "location14"}
+    { "id": 7, "author": "Alina", "title": "Event 4", "date": "2024-04-04", "time": "14:00", "image": "mascot.png", "rewards": 100, "location": "location14"},
+    { "id": 8, "author": "Steve", "title": "Event 3", "date": "2024-06-06", "time": "13:00", "image": "react.svg", "rewards": 300, "location": "location13"},
+    { "id": 9, "author": "Alina", "title": "Event 4", "date": "2024-04-04", "time": "14:00", "image": "mascot.png", "rewards": 100, "location": "location14"}
+    
 ]
   

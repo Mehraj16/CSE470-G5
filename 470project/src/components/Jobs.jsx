@@ -13,11 +13,19 @@ export default function Jobs(props) {
     }
     });
   }
+  const showJob = (e, item) =>{
+    e.preventDefault();
+    navigate('../circular', {state: {
+      props: props.profilepic,
+      id: item,
+    }
+    });
+  }
   return (
-    <div onClick={(e) => showArticle(e, props.id)}>
+    <div onClick={(e) => (props.code === 1 && showArticle(e, props.id)) || (props.code !== 1 && showJob(e, props.id))}>
       <div className='mycards'>
         <div className='imgdiv'>
-        <img src={props.image} alt="job" />
+          <img src={props.image} alt="job" />
         </div>
         <div className='cards-text'>
           <h4 className='mytitle'>{props.title}</h4>
@@ -25,5 +33,5 @@ export default function Jobs(props) {
         </div>
       </div>
     </div>
-  )
+  );  
 }

@@ -14,6 +14,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Article from './pages/Article.jsx'
+import Circular from './pages/Circular.jsx'
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: "article",
     element: <Article />,
+  },
+  {
+    path: "circular",
+    element: <Circular />,
   },
 ]);
 

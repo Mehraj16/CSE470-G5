@@ -27,7 +27,7 @@ export default function Discover() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/invites.json'); 
+        const response = await fetch('/jobs.json'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -79,7 +79,7 @@ export default function Discover() {
         <div className='scroll-container'>
             <div className='job-cards'>
                 {resource.map(item => (
-                        <Jobs key={item.id} id={item.id} title={item.title} image={item.image} date={item.date} type={'Published'} profilepic={`/src/assets/${profileData.profileImage}`}/>
+                        <Jobs key={item.id} id={item.id} title={item.title} image={item.image} date={item.date} type={'Published'} profilepic={`/src/assets/${profileData.profileImage}`} code={1}/>
                 ))}
             </div>
         </div>
@@ -90,7 +90,7 @@ export default function Discover() {
         <div className='scroll-container'>
             <div className='job-cards'>
                 {data.map(item => (
-                        <Jobs key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} type={'Deadline'}/>
+                        <Jobs key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} type={'Deadline'} profilepic={`/src/assets/${profileData.profileImage}`} code={2}/>
                 ))}
             </div>
         </div>

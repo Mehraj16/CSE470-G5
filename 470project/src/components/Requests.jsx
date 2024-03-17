@@ -63,7 +63,11 @@ export default function Requests({ onViewDetails}) {
                                 {event.status === 'accepted' ? (
                                     <FaCheck className='check'/>
                                 ) : event.status === 'rejected' ? (
-                                    <RiCloseLine className='cross'/>
+                                    <RiCloseLine className='cross' style={{
+                                        strokeWidth: '1',
+                                        height: '35px',
+                                        width: '25px',
+                                    }}/>
                                 ) : (
                                     <>
                                         <button onClick={() => handleAccept(event.id)}>Accept</button>

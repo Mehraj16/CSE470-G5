@@ -1,0 +1,80 @@
+[
+    {
+      "eventId": 1,
+      "authorId": 5,
+      "title": "Event 1",
+      "location": "Location 1",
+      "time": "10:00",
+      "date": "2024-03-22",
+      "description": "Description of Event 1",
+      "rewardPoints": 100,
+      "banner": "banner1.jpg"
+    },
+    {
+      "eventId": 2,
+      "authorId": 5,
+      "title": "Event 2",
+      "location": "Location 2",
+      "time": "12:00",
+      "date": "2024-03-23",
+      "description": "Description of Event 2",
+      "rewardPoints": 150,
+      "banner": "banner2.jpg"
+    },
+    {
+      "eventId": 3,
+      "authorId": 5,
+      "title": "Event 3",
+      "location": "Location 3",
+      "time": "14:00",
+      "date": "2024-03-24",
+      "description": "Description of Event 3",
+      "rewardPoints": 200,
+      "banner": "banner3.jpg"
+    },
+    {
+      "eventId": 4,
+      "authorId": 5,
+      "title": "Event 4",
+      "location": "Location 4",
+      "time": "16:00",
+      "date": "2024-03-25",
+      "description": "Description of Event 4",
+      "rewardPoints": 250,
+      "banner": "banner4.jpg"
+    },
+    {
+      "eventId": 5,
+      "authorId": 9,
+      "title": "Event 5",
+      "location": "Location 5",
+      "time": "18:00",
+      "date": "2024-03-26",
+      "description": "Description of Event 5",
+      "rewardPoints": 300,
+      "banner": "banner5.jpg"
+    },
+    {
+      "eventId": 6,
+      "authorId": 9,
+      "title": "Event 6",
+      "location": "Location 6",
+      "time": "20:00",
+      "date": "2024-03-27",
+      "description": "Description of Event 6",
+      "rewardPoints": 350,
+      "banner": "banner6.jpg"
+    },
+    {
+      "eventId": 7,
+      "authorId": 9,
+      "title": "Event 7",
+      "location": "Location 7",
+      "time": "22:00",
+      "date": "2024-03-28",
+      "description": "Description of Event 7",
+      "rewardPoints": 400,
+      "banner": "banner7.jpg"
+    }
+  ]
+  

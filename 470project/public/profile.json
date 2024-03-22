@@ -1,0 +1,38 @@
+{
+    "firstName": "John",
+    "lastName": "Doe",
+    "dob": "1990-01-01",
+    "city": "New York",
+    "email": "john@example.com",
+    "password": "m@ri0",
+    "blood": "O +ve",
+    "gender": "male",
+    "score" : 570,
+    "totalMedals": 3,
+    "eventCount": 19,
+    "biography": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "interests": "Coding, hiking, reading",
+    "skills": "JavaScript, React, HTML, CSS",
+    "profileImage": "mascot.png",
+    "eventsSignedUp": [
+      {
+        "date": "2024-04-04",
+        "time": "11:45",
+        "title": "Event 1",
+        "location": "Location 1"
+      },
+      {
+        "date": "2024-05-05",
+        "time": "12:00",
+        "title": "Event 2",
+        "location": "Location 2"
+      },
+      {
+        "date": "2024-06-06",
+        "time": "13:00",
+        "title": "Event 3",
+        "location": "Location 3"
+      }
+    ]
+  }
+  

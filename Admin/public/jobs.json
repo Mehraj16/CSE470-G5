@@ -1,0 +1,12 @@
+[
+    {"id": 1, "title": "Treasurer", "date": "2024-05-05", "description": "Take care of finances", "image":"mascot.png"},
+    {"id": 2, "title": "Secretary", "date": "2024-05-12", "description": "Record minutes of meetings", "image":"mascot.png"},
+    {"id": 3, "title": "Chairperson", "date": "2024-06-01", "description": "Lead committee meetings", "image":"mascot.png"},
+    {"id": 4, "title": "Volunteer Coordinator", "date": "2024-06-15", "description": "Organize volunteer activities", "image":"mascot.png"},
+    {"id": 5, "title": "Event Planner", "date": "2024-07-03", "description": "Plan upcoming events", "image":"mascot.png"},
+    {"id": 6, "title": "Public Relations Officer", "date": "2024-07-10", "description": "Handle external communications", "image":"mascot.png"},
+    {"id": 7, "title": "Fundraising Coordinator", "date": "2024-08-02", "description": "Organize fundraising campaigns", "image":"mascot.png"},
+    {"id": 8, "title": "Membership Director", "date": "2024-08-20", "description": "Manage member registrations", "image":"mascot.png"},
+    {"id": 9, "title": "Social Media Manager", "date": "2024-09-05", "description": "Manage social media platforms", "image":"mascot.png"},
+    {"id": 10, "title": "Community Outreach Coordinator", "date": "2024-09-18", "description": "Coordinate community outreach programs", "image":"mascot.png"}
+]

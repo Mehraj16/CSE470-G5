@@ -1,0 +1,65 @@
+[
+    {
+      "postId": 1,
+      "authorId": 7,
+      "title": "Sample Title 1",
+      "date": "2024-03-23",
+      "pdf": "sample1.pdf"
+    },
+    {
+      "postId": 2,
+      "authorId": 5,
+      "title": "Sample Title 2",
+      "date": "2024-03-24",
+      "pdf": "sample2.pdf"
+    },
+    {
+      "postId": 3,
+      "authorId": 7,
+      "title": "Sample Title 3",
+      "date": "2024-03-25",
+      "pdf": "sample3.pdf"
+    },
+    {
+      "postId": 4,
+      "authorId": 5,
+      "title": "Sample Title 4",
+      "date": "2024-03-26",
+      "pdf": "sample4.pdf"
+    },
+    {
+      "postId": 5,
+      "authorId": 7,
+      "title": "Sample Title 5",
+      "date": "2024-03-27",
+      "pdf": "sample5.pdf"
+    },
+    {
+      "postId": 6,
+      "authorId": 5,
+      "title": "Sample Title 6",
+      "date": "2024-03-28",
+      "pdf": "sample6.pdf"
+    },
+    {
+      "postId": 7,
+      "authorId": 7,
+      "title": "Sample Title 7",
+      "date": "2024-03-29",
+      "pdf": "sample7.pdf"
+    },
+    {
+      "postId": 8,
+      "authorId": 5,
+      "title": "Sample Title 8",
+      "date": "2024-03-30",
+      "pdf": "sample8.pdf"
+    },
+    {
+      "postId": 9,
+      "authorId": 7,
+      "title": "Sample Title 9",
+      "date": "2024-03-31",
+      "pdf": "sample9.pdf"
+    }
+  ]  

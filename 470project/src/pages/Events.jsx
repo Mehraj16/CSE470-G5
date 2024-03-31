@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Cards from '../components/Cards';
 import Filter from '../components/Filter';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Events() {
+  const location = useLocation();
+  const props = location.state;
+  
   const [data, setData] = useState([]);
   const [profileData, setProfileData] = useState({});
-  const [filterOption, setFilterOption] = useState('all');
+  const [filterOption, setFilterOption] = useState(props ? props : 'all');
   const [signedData, setSignedData] = useState([]);
+  const [suggestedData, setSuggestedData] = useState([]);
   const [commonIds, setCommonIds] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const profileResponse = await fetch('/profile.json');
-        if (!profileResponse.ok) {
-          throw new Error('Network response was not ok');
-        }
+        const [profileResponse, dataResponse, signedResponse, suggestedResponse] = await Promise.all([
+          fetch('/profile.json'),
+          fetch('/data.json'),
+          fetch('/signedUp.json'),
+          fetch('/suggested.json')
+        ]);
+
         const profileData = await profileResponse.json();
-        setProfileData(profileData);
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dataResponse = await fetch('/data.json');
-        if (!dataResponse.ok) {
-          throw new Error('Network response was not ok');
-        }
         const data = await dataResponse.json();
+        const signed = await signedResponse.json();
+        const suggested = await suggestedResponse.json();
+
+        setProfileData(profileData);
         setData(data);
+        setSignedData(signed);
+        setSuggestedData(suggested);
+
+        const commonIds = signed.map(signedItem => signedItem.id).filter(id => data.some(item => item.id === id));
+        setCommonIds(commonIds);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -45,33 +46,10 @@ function Events() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/signedUp.json');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const signedData = await response.json();
-        setSignedData(signedData);
-
-        // Find common IDs between signed-up data and original data
-        const commonIds = signedData.map(signedItem => signedItem.id)
-                                     .filter(id => data.some(item => item.id === id));
-        setCommonIds(commonIds);
-      } catch (error) {
-        console.error('Error fetching signed-up data:', error);
-      }
-    };
-
-    fetchData();
-  }, [data]); // Trigger the effect whenever data changes
-
   const handleFilterOptionSelect = (option) => {
     setFilterOption(option);
   };
 
-  // Filter and sort data based on selected option
   let filteredData = [];
   switch (filterOption) {
     case 'signedUpEvents':
@@ -83,10 +61,20 @@ function Events() {
     case 'sortDate':
       filteredData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
       break;
+    case 'suggested':
+      filteredData = suggestedData;
+      break;
     default:
       filteredData = data;
       break;
   }
+
+  const navigation = useNavigate();
+  const handleClick = (item) => {
+    const { id, title, image, date, time } = item;
+    const profilepic = profileData.profileImage;
+    navigation('../eventdetails', { state: { id, title, image, date, time, profilepic } });
+  };
 
   return (
     <div className='App'>
@@ -94,12 +82,20 @@ function Events() {
       <Header profilepic={`/src/assets/${profileData.profileImage}`} />
       <div className='Content'>
         <div className='filter'>
-          <Filter onOptionSelect={handleFilterOptionSelect} />
+          <Filter onOptionSelect={handleFilterOptionSelect} option={filterOption}/>
         </div>
         <div className='card-container'>
-          {/* Render cards based on filtered data */}
           {filteredData.map(item => (
-            <Cards key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} time={item.time} profilepic={profileData.profileImage}/>
+            <Cards
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              image={`/src/assets/${item.image}`}
+              date={item.date}
+              time={item.time}
+              profilepic={profileData.profileImage}
+              click={() => handleClick(item)}
+            />
           ))}
         </div>
       </div>

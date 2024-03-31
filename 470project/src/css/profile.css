@@ -3,6 +3,7 @@ p{
 }
 .prof{
     display: flex;
+    padding-top: 50px;
 }
 .profile-display{
     background-color: var(--main);
@@ -11,7 +12,7 @@ p{
     flex-direction: column;
     align-items: center;
     border-radius: 45px;
-    padding: 20px 10px;
+    padding: 20px 15px;
     padding-top: 33px;
     font-size: 18px;
     height: fit-content;
@@ -43,4 +44,10 @@ p{
     height: 100px;
     border-radius: 25px;
     box-shadow: 0px 4px 8px rgba(12, 12, 12, 0.1);
+}
+.profile-pic{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
 }

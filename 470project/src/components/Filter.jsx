@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { CiFilter } from "react-icons/ci";
 import '../css/filter.css'
 
-export default function Filter({ onOptionSelect }) {
+export default function Filter({ onOptionSelect, option }) {
   const [popupVisible, setPopupVisible] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('all');
-
+  const [selectedOption, setSelectedOption] = useState(option);
+  
   const togglePopup = () => {
     setPopupVisible(!popupVisible);
   };
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
-    onOptionSelect(option); // Pass selected option back to parent component
-    setPopupVisible(false); // Close the popup after selecting an option
+    onOptionSelect(option);
+    setPopupVisible(false);
   };
   let textToShow;
   switch (selectedOption) {
@@ -29,11 +29,14 @@ export default function Filter({ onOptionSelect }) {
     case 'all':
       textToShow = 'All';
       break;
+    case 'suggested':
+      textToShow = 'Suggested';
+      break;
     default:
       textToShow = 'All';
       break;
   }
-
+  console.log(textToShow)
   return (
     <div>
       <div className='filter-container'>
@@ -50,6 +53,7 @@ export default function Filter({ onOptionSelect }) {
             <div onClick={() => handleOptionClick('signedUpEvents')}>Signed Up Events</div>
             <div onClick={() => handleOptionClick('eventsNotSignedUp')}>Events Not Signed Up</div>
             <div onClick={() => handleOptionClick('all')}>All</div>
+            <div onClick={() => handleOptionClick('suggested')}>Suggested for You</div>
           </div>
         )}
       </div>

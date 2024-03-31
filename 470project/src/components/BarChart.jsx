@@ -59,40 +59,45 @@ export default function BarChart({ selectedOption }) {
               ]
             });
             break;
-          case 'lastMonth':
-            filteredEvents = events.filter(event => {
-              const eventDate = new Date(event.date);
-              const currentDate = new Date();
-              const lastMonth = currentDate.getMonth() - 1; // Get month index for last month
-              return eventDate.getMonth() === lastMonth;
-            });
-            // Count occurrences for each day
-            const lastMonthCounts = {};
-            filteredEvents.forEach(event => {
-              const date = new Date(event.date);
-              const day = date.getDate();
-              if (lastMonthCounts[day]) {
-                lastMonthCounts[day]++;
-              } else {
-                lastMonthCounts[day] = 1;
-              }
-            });
-            // Prepare chart data for last month
-            setChartData({
-              labels: Object.keys(lastMonthCounts).map(day => parseInt(day)),
-              datasets: [
-                {
-                  label: "Count",
-                  data: Object.values(lastMonthCounts),
-                  backgroundColor: [
-                    "rgb(60, 72, 107, 0.8)",
-                    "rgb(244, 80, 80, 0.8)"
-                  ],
-                  borderRadius: 5,
+            case 'lastMonth':
+              filteredEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                const currentDate = new Date();
+                const lastMonth = currentDate.getMonth() - 1; // Get month index for last month
+                return eventDate.getMonth() === lastMonth;
+              });
+            
+              // Count occurrences for each day
+              const lastMonthCounts = {};
+              filteredEvents.forEach(event => {
+                const date = new Date(event.date);
+                const day = date.getDate();
+                const monthAbbreviation = date.toLocaleString('default', { month: 'short' }); // Get month abbreviation
+                const formattedDate = `${day} ${monthAbbreviation}`;
+                if (lastMonthCounts[formattedDate]) {
+                  lastMonthCounts[formattedDate]++;
+                } else {
+                  lastMonthCounts[formattedDate] = 1;
                 }
-              ]
-            });
-            break;
+              });
+            
+              // Prepare chart data for last month
+              setChartData({
+                labels: Object.keys(lastMonthCounts),
+                datasets: [
+                  {
+                    label: "Count",
+                    data: Object.values(lastMonthCounts),
+                    backgroundColor: [
+                      "rgb(60, 72, 107, 0.8)",
+                      "rgb(244, 80, 80, 0.8)"
+                    ],
+                    borderRadius: 5,
+                  }
+                ]
+              });
+              break;
+            
           case 'allTime':
             filteredEvents = events;
             // Count occurrences for each year

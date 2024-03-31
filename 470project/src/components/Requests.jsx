@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheck } from "react-icons/fa";
 import { RiCloseLine } from "react-icons/ri";
-import requests from'../css/requests.module.css';
+import requests from '../css/requests.module.css';
 
-export default function Requests({ onViewDetails}) {
+export default function Requests({ onViewDetails }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/invites.json'); 
+                const response = await fetch('/invites.json');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -24,7 +24,6 @@ export default function Requests({ onViewDetails}) {
     }, []);
 
     const handleAccept = (id) => {
-        // onAccept(id);
         setData(prevData => prevData.map(item => {
             if (item.id === id) {
                 return { ...item, status: 'accepted' };
@@ -34,7 +33,6 @@ export default function Requests({ onViewDetails}) {
     };
 
     const handleReject = (id) => {
-        // onReject(id);
         setData(prevData => prevData.map(item => {
             if (item.id === id) {
                 return { ...item, status: 'rejected' };
@@ -44,41 +42,34 @@ export default function Requests({ onViewDetails}) {
     };
 
     return (
-        <div className={requests.tableContainer}>
-            <table className={requests.reqtable}>
-                <thead>
-                    <tr>
-                        <th>Author</th>
-                        <th>Event</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map(event => (
-                        <tr key={event.id}>
-                            <td>{event.author}</td>
-                            <td>{event.title}</td>
-                            <td className={requests.ctabtn}>
-                                <button onClick={() => onViewDetails(event.id)}>View</button>
-                                {event.status === 'accepted' ? (
-                                    <FaCheck className='check'/>
-                                ) : event.status === 'rejected' ? (
-                                    <RiCloseLine className='cross' style={{
-                                        strokeWidth: '1',
-                                        height: '35px',
-                                        width: '25px',
-                                    }}/>
-                                ) : (
-                                    <>
-                                        <button onClick={() => handleAccept(event.id)}>Accept</button>
-                                        <button onClick={() => handleReject(event.id)}>Reject</button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className={requests.container}>
+            <h3 className={requests.h3}>Pending Invitations:</h3>
+            <div className={requests.row}>
+                <span className={requests.column} id={requests.head}>Organiser</span>
+                <span className={requests.column} id={requests.head}>Title</span>
+                <span className={requests.columnbtn} id={requests.head}>Action</span>
+            </div>
+            <div className={requests.fullTable}>
+                {data.map(event => (
+                    <div key={event.id} className={requests.row}>
+                        <span className={requests.column}>{event.author}</span>
+                        <span className={requests.column}>{event.title}</span>
+                        <span className={requests.columnbtn}>
+                            <button onClick={() => onViewDetails(event.id)}>View</button>
+                            {event.status === 'accepted' ? (
+                                <FaCheck className={requests.icon} />
+                            ) : event.status === 'rejected' ? (
+                                <RiCloseLine className={requests.icon} />
+                            ) : (
+                                <>
+                                    <button onClick={() => handleAccept(event.id)}>Accept</button>
+                                    <button onClick={() => handleReject(event.id)}>Reject</button>
+                                </>
+                            )}
+                        </span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

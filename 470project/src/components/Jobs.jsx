@@ -5,13 +5,8 @@ import { useNavigate } from 'react-router-dom';
 export default function Jobs(props) {
   const navigate = useNavigate();
 
-  const showArticle = (e, item) =>{
-    e.preventDefault();
-    navigate('../article', {state: {
-      props: props.profilepic,
-      id: item,
-    }
-    });
+  const showArticle = (props) =>{
+    window.open(props.content, '_blank');
   }
   const showJob = (e, item) =>{
     e.preventDefault();

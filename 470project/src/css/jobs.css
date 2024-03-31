@@ -1,6 +1,6 @@
 .mycards{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     border-radius: 25px;
     padding: 10px;

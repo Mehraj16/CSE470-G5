@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import DetailedView from '../components/DetailedView';
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
+import requests from '../css/requests.module.css';
 
 export default function Invites() {
   const [data, setData] = useState([]);
@@ -10,7 +11,6 @@ export default function Invites() {
 
   const location = useLocation();
   const props = location.state;
-  console.log(props)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +30,6 @@ export default function Invites() {
   }, []);
 
   const handleViewDetails = (eventId) => {
-    // Find the data with the matching eventId
     const selectedEventData = data.find(item => item.id === eventId);
     setSelectedData(selectedEventData);
   };
@@ -38,58 +37,36 @@ export default function Invites() {
   return (
     <div className='App'>
       <Sidebar />
-      <Header profilepic={`/src/assets/${props.profilepic}`}/>
-      <div className='leading-title'>
-        <p>Your Event Roster</p>
-      </div>
-      <div className='profile-content' style={{
-        marginTop: '10px',
-      }}>
-        <div className='table-container' style={{
-                width: '45vw',
-        }}>
-                <table style={{
-                  width: '45vw',
-                  marginRight: '20px',
-                  borderCollapse: 'collapse'
-                }}>
-                    <thead>
-                        <tr>
-                            <th style={{
-                                  width: '34%',
-                                }}>Date</th>
-                            <th style={{
-                                  width: '36%',
-                                }}>Event Name</th>
-                            <th style={{
-                                  width: '50%',
-                                }}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map(event => (
-                            <tr key={event.id}>
-                                <td>{event.date}</td>
-                                <td>{event.title}</td>
-                                <td className='cta-btn' style={{
-                                  width: 'auto',
-                                }}>
-                                    <button onClick={() => handleViewDetails(event.id)}>View</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+      <Header profilepic={props.profilepic}/>
+      <div className='profile-content'>
+        <div className={requests.container}>
+          <h3 className={requests.h3}>Pending Invitations:</h3>
+            <div className={requests.row}>
+                <span className={requests.column} id={requests.head3}>Date</span>
+                <span className={requests.column} id={requests.head3}>Title</span>
+                <span className={requests.columnbtn} id={requests.head3}>Action</span>
             </div>
-            <DetailedView 
-                author={selectedData?.author}
-                image={selectedData?.image}
-                date={selectedData?.date}
-                time={selectedData?.time}
-                rewards={selectedData?.rewards}
-                location={selectedData?.location}
-            />
-      </div>
+        <div className={requests.fullTable}>
+            {data.map(event => (
+              <div key={event.id} className={requests.row}>
+                <span className={requests.column} id={requests.head2}>{event.date}</span>
+                <span className={requests.column} id={requests.head2}>{event.title}</span>
+                <span className={requests.columnbtns} id={requests.head2}>
+                  <button onClick={() => handleViewDetails(event.id)}>View</button>
+                </span>
+              </div>
+            ))}
+        </div>
+        </div>
+        <DetailedView 
+          author={selectedData?.author}
+          image={selectedData?.image}
+          date={selectedData?.date}
+          time={selectedData?.time}
+          rewards={selectedData?.rewards}
+          location={selectedData?.location}
+        />
+    </div>
     </div>
   );
 }

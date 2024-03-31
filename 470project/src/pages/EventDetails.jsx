@@ -11,17 +11,17 @@ export default function EventDetails () {
   const [isClicked, setIsClicked] = useState(false);
   const [status, setStatus] = useState(false);
   const location = useLocation();
-  const props = location.state;
+  const { id, title, image, date, time, profilepic } = location.state;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/signedUp.json'); // Assuming this is your endpoint
+        const response = await fetch('/signedUp.json');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        // Check if the id exists in the data fetched
-        if (data.some(item => item.id === props.id)) {
+        if (data.some(item => item.id === id)) {
 
           setStatus(true);
         }
@@ -39,10 +39,10 @@ export default function EventDetails () {
   return (
     <div className='App'>
       <Sidebar />
-      <Header profilepic={`/src/assets/${props.profilepic}`}/>
+      <Header profilepic={`/src/assets/${profilepic}`}/>
       <div className='Content'>
-        {/* Pass props directly to the Details component */}
-        <Details title={props.title} date={props.date} time={props.time} image={props.image} isClicked={isClicked} handleClick={handleClick} status={status}/>
+        {console.log(title)}
+        <Details title={title} date={date} time={time} image={`/src/assets/${image}`} isClicked={isClicked} handleClick={handleClick} status={status}/>
       </div>
     </div>
   )

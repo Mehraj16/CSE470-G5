@@ -1,0 +1,75 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: calc(100% - 260px);
+    height: 50px;
+    z-index: 2;
+    margin-bottom: 20px;
+}
+.profile {
+    margin-right: 50px;
+    width: 150px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.profilePic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.notif{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+.notif circle{
+    color: green;
+}
+.popup {
+  position: absolute;
+  top: 114%;
+  right: 3%;
+  background-color: var(--main);
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  z-index: 1;
+  width: 30vw;
+  height: 80vh;
+}
+.popup p {
+    margin: 0;
+}
+
+.popup .close {
+    position: absolute;
+    top: 5px;
+    right: 17px;
+    font-size: 35px;
+    cursor: pointer;
+  }
+  
+  .popup.show {
+    display: block;
+  }
+  .notifList {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    justify-content: space-between; /* Adjust as needed */
+    align-items: center; /* Align items vertically */
+  }
+  
+  .notifList span {
+    display: inline-flex; /* Display spans as inline-flex */
+    align-items: center; /* Align items vertically within spans */
+    margin-right: 10px; /* Adjust as needed */
+  }
+  .h2{
+    border-bottom: 1px solid;
+  }

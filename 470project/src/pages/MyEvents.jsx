@@ -40,7 +40,7 @@ export default function Invites() {
       <Header profilepic={props.profilepic}/>
       <div className='profile-content'>
         <div className={requests.container}>
-          <h3 className={requests.h3}>Pending Invitations:</h3>
+          <h3 className={requests.h3}>Upcoming Events:</h3>
             <div className={requests.row}>
                 <span className={requests.column} id={requests.head3}>Date</span>
                 <span className={requests.column} id={requests.head3}>Title</span>

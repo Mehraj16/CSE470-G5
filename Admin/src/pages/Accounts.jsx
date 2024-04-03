@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import AdminSidebar from '../components/AdminSidebar'
 import AdminHeader from '../components/AdminHeader'
-
+import manage from "../css/manage.module.css";
 export default function Accounts() {
   const [profileData, setProfileData] = useState([]);
   useEffect(() => {
@@ -26,6 +26,17 @@ export default function Accounts() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${profileData.profileImage}`}/>
       <div className='Content'>
+      <div>
+          <h3 className={manage.headline}>Admin Accounts</h3>
+      </div>
+        <div className={manage.jobsCreate}>
+          <div>
+            <p>Create New Admin</p>
+          </div>
+          <div>
+            <p>View All Admin</p>
+          </div>
+      </div>
       </div>
     </div>
   )

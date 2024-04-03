@@ -58,13 +58,19 @@ export default function Manage() {
             <p>Manage Events</p>
           </div>
           <div onClick={showEventTemplate}>
-            <p>Invitations</p>
-          </div>
-          <div onClick={showEventTemplate}>
             <p>Review</p>
           </div>
         </div>
-        <h3 className={manage.headline}>Resources</h3>
+        <div className={manage.opps}>
+          <div>
+              <h3 className={manage.headline}>Resources</h3>
+          </div>
+          <div>
+              <h3 className={manage.headline} style={{
+                marginLeft: '0',
+              }}>Opportunities</h3>
+          </div>
+        </div>
         <div className={manage.jobsCreate}>
           <div onClick={showPostTemplate}>
             <p>Create Post</p>
@@ -72,15 +78,12 @@ export default function Manage() {
           <div onClick={showMyPosts}>
             <p>Manage Posts</p>
           </div>
-        </div>
-        <h3 className={manage.headline}>Opportunities</h3>
-        <div className={manage.jobsCreate}>
-          <div onClick={showJobTemplate}>
-            <p>Create Opening</p>
-          </div>
-          <div onClick={showMyJobs}>
-            <p>Manage Jobs</p>
-          </div>
+            <div onClick={showJobTemplate}>
+              <p>Create Opening</p>
+            </div>
+            <div onClick={showMyJobs}>
+              <p>Manage Jobs</p>
+            </div>
         </div>
       </div>
     </div>

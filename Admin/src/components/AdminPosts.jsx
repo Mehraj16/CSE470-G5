@@ -5,6 +5,9 @@ import manage from "../css/manage.module.css";
 import viewall from "../css/viewall.module.css";
 import { useLocation } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import requests from'../css/requests.module.css';
+import { MdOutlineFileUpload } from "react-icons/md";
+
 export default function AdminPosts() {
   const location = useLocation();
   const props = location.state;
@@ -77,35 +80,30 @@ export default function AdminPosts() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
       <div className="Content">
-        <h3>
-          Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
-        </h3>
-        <table className={viewall.viewtable}>
-          <thead>
-            <tr>
-              <th>Post ID</th>
-              <th> Article Title</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPageData.map((item) => (
-              <tr key={item.postId}>
-                <td>{item.postId}</td>
-                <td>
-                  <a
-                    className={viewall.clickToView}
-                    href=""
-                    onClick={(e) => showDetails(e, item)}
-                  >
-                    {item.title}
-                  </a>
-                </td>
-                <td>{item.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>All Your Articles</h2>
+        <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
+        <div className={requests.eventContainer}>
+          <div className={requests.row}>
+            <span className={requests.column} id={requests.head}>Post ID</span>
+            <span className={requests.column} id={requests.head}>Article Title</span>
+            <span className={requests.column} id={requests.head}>Date</span>
+          </div>
+          {currentPageData.map((item) => (
+            <div key={item.postId} className={requests.row}>
+              <span className={requests.column}>{item.postId}</span>
+              <span className={requests.column}>
+                <a
+                  className={viewall.clickToView}
+                  href=""
+                  onClick={(e) => showDetails(e, item)}
+                >
+                  {item.title}
+                </a>
+              </span>
+              <span className={requests.column}>{item.date}</span>
+            </div>
+          ))}
+        </div>
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalItems / itemsPerPage)}
@@ -115,41 +113,43 @@ export default function AdminPosts() {
           <React.Fragment>
             <h3 className={manage.headline}>Edit Article</h3>
             <form onSubmit={handleSubmit} className={manage.eventForm}>
-              <div>
-                <label htmlFor="title">Title:</label>
-                <br />
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                />
+            <div className={manage.inputContainer}>
+              <label htmlFor="title">Title:</label><br />
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
               </div>
               <div className={manage.formDiv}>
-                <div>
-                  <label htmlFor="date">Date:</label>
-                  <br />
-                  <input
+                <div className={manage.inputContainer}>
+                    <label htmlFor="date">Date:</label><br />
+                    <input
                     type="date"
                     id="date"
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                  />
+                    className={manage.dateInput}
+                    />
                 </div>
-                <div>
-                  <label htmlFor="banner">Article (*PDF only):</label>
-                  <br />
-                  <input
-                    type="file"
-                    id="pdf"
-                    name="pdf"
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+                  <div>
+                  <label htmlFor="banner">Article (*PDF only):</label><br />
+                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                      <input
+                      type="file"
+                      id="pdf"
+                      name="pdf"
+                      onChange={handleChange}
+                      className={manage.fileInput}
+                      />
+                  </div>
+            </div>
               <button type="submit">Submit</button>
+              <br />
+              <br />
             </form>
           </React.Fragment>
         )}

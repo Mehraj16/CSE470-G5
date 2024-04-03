@@ -3,6 +3,7 @@ import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import manage from "../css/manage.module.css";
 import { useLocation } from "react-router-dom";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 export default function CreateJob() {
     const location = useLocation();
@@ -37,11 +38,10 @@ export default function CreateJob() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
       <div className='Content'>
-        <h3 className={manage.headline}>Upload Your Article</h3>
-      </div>
+        <h3 className={manage.headline}>Create Posting</h3>
         <form onSubmit={handleSubmit} className={manage.eventForm}>
-        <div>
-        <label htmlFor="positionTitle">Position Title:</label>
+        <div className={manage.inputContainer}>
+        <label htmlFor="positionTitle">Position Title:</label><br />
         <input
           type="text"
           id="positionTitle"
@@ -49,10 +49,11 @@ export default function CreateJob() {
           value={formData.positionTitle}
           onChange={handleChange}
           required
+          
         />
         </div>
-        <div>
-        <label htmlFor="jobDescription">Job Description:</label>
+        <div className={manage.inputContainer}>
+        <label htmlFor="jobDescription">Job Description:</label><br />
         <textarea
           id="jobDescription"
           name="jobDescription"
@@ -61,8 +62,8 @@ export default function CreateJob() {
           required
         />
         </div>
-        <div>
-        <label htmlFor="jobRequirements">Job Requirements:</label>
+        <div className={manage.inputContainer}>
+        <label htmlFor="jobRequirements">Job Requirements:</label><br />
         <textarea
           id="jobRequirements"
           name="jobRequirements"
@@ -72,8 +73,8 @@ export default function CreateJob() {
         />
         </div>
         <div className={manage.formDiv}>
-            <div>
-                <label htmlFor="deadlineDate">Deadline Date:</label>
+            <div className={manage.inputContainer}>
+                <label htmlFor="deadlineDate">Deadline Date:</label><br />
                 <input
                 type="date"
                 id="deadlineDate"
@@ -81,22 +82,28 @@ export default function CreateJob() {
                 value={formData.deadlineDate}
                 onChange={handleChange}
                 required
+                className={manage.dateInput}
                 />
             </div>
-            <div>
-                <label htmlFor="resume">CV(*PDF only):</label>
-                <input
+            <div class={manage.filecontainer}>
+              <label>CV(*PDF only):</label><br />
+              <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+              <input
                 type="file"
                 id="resume"
                 name="resume"
                 accept=".pdf"
                 onChange={handleFileChange}
                 required
-                />
+                className={manage.fileInput}
+              />
             </div>
         </div>
-            <button type="submit">Submit Application</button>
+            <button type="submit">Create Posting</button>
+            <br />
+            <br />
         </form>
+        </div>
       </div>
   )
 }

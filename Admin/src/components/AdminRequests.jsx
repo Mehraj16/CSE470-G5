@@ -9,7 +9,7 @@ export default function AdminRequests({ onViewDetails}) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/invites.json'); 
+                const response = await fetch('/someProfiles.json'); 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -44,42 +44,34 @@ export default function AdminRequests({ onViewDetails}) {
     };
 
     return (
-        <div className={requests.tableContainer}>
-            <h3>Pending Approvals</h3>
-            <table className={requests.reqtable}>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Event</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map(event => (
-                        <tr key={event.id}>
-                            <td>{event.author}</td>
-                            <td>{event.title}</td>
-                            <td className={requests.ctabtn}>
-                                <button onClick={() => onViewDetails(event.id)}>View</button>
-                                {event.status === 'accepted' ? (
-                                    <FaCheck className='check'/>
-                                ) : event.status === 'rejected' ? (
-                                    <RiCloseLine className='cross' style={{
-                                        strokeWidth: '1',
-                                        height: '35px',
-                                        width: '25px',
-                                    }}/>
-                                ) : (
-                                    <>
-                                        <button onClick={() => handleAccept(event.id)}>Accept</button>
-                                        <button onClick={() => handleReject(event.id)}>Reject</button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className={requests.container}>
+            <h3 className={requests.h3}>Pending Invitations:</h3>
+            <div className={requests.row}>
+                <span className={requests.column} id={requests.head}>Volunteer Name</span>
+                <span className={requests.column} id={requests.head}>Title</span>
+                <span className={requests.columnbtn} id={requests.head}>Action</span>
+            </div>
+            <div className={requests.fullTable}>
+                {data.map(event => (
+                    <div key={event.id} className={requests.row}>
+                        <span className={requests.column}>{event.firstName}</span>
+                        <span className={requests.column}>{event.title}Inauguration</span>
+                        <span className={requests.columnbtn}>
+                            <button onClick={() => onViewDetails(event.id)}>View</button>
+                            {event.status === 'accepted' ? (
+                                <FaCheck className={requests.icon} />
+                            ) : event.status === 'rejected' ? (
+                                <RiCloseLine className={requests.icon} />
+                            ) : (
+                                <>
+                                    <button onClick={() => handleAccept(event.id)}>Accept</button>
+                                    <button onClick={() => handleReject(event.id)}>Reject</button>
+                                </>
+                            )}
+                        </span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

@@ -2,9 +2,8 @@ import React, { useState,useEffect } from 'react'
 import AdminSidebar from '../components/AdminSidebar';
 import AdminHeader from '../components/AdminHeader';
 import AdminProfile from '../components/AdminProfile';
-import '../css/profile.css'
 import '../css/editform.css'
-import EditForm from '../components/EditForm';
+import AdminEditForm from '../components/AdminEditForm';
 
 export default function AdminSettings() {
     const [formData, setFormData] = useState({});
@@ -47,7 +46,7 @@ export default function AdminSettings() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${formData.profileImage}`}/>
       <div className='profile-content'>
-        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs}/>
+        <AdminEditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs}/>
         <AdminProfile formData={formData}/>
       </div>
     </div>

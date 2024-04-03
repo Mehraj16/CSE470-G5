@@ -8,14 +8,16 @@ import Accounts from './pages/Accounts.jsx'
 import './index.css'
 import AdminEvents from './components/AdminEvents.jsx'
 import CreateEvents from './components/CreateEvents.jsx'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
 import CreatePost from './components/CreatePost.jsx'
 import AdminPosts from './components/AdminPosts.jsx'
 import CreateJob from './components/CreateJob.jsx'
 import AdminJobs from './components/AdminJobs.jsx'
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import SendInvites from './components/SendInvites.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -61,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/adminjob",
     element: <AdminJobs />,
+  },
+  {
+    path: "/invitations",
+    element: <SendInvites />,
   },
 ]);
 

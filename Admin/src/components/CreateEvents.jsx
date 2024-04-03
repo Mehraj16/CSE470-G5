@@ -81,7 +81,7 @@ export default function CreateEvents() {
           </div>
             <div>
               <label htmlFor="description">Description:</label><br />
-              <textarea
+              <textarea className='desc'
                 id="description"
                 name="description"
                 value={formData.description}

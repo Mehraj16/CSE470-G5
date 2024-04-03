@@ -5,6 +5,7 @@ import manage from '../css/manage.module.css';
 import viewall from '../css/viewall.module.css';
 import Pagination from '../components/Pagination';
 import { useLocation } from 'react-router-dom';
+import requests from'../css/requests.module.css';
 
 export default function AdminJobs() {
     const location = useLocation();
@@ -50,25 +51,30 @@ export default function AdminJobs() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
       <div className='Content'>
+        <h2>Submissions To Your Postings</h2>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
-        <table className={viewall.viewtable}>
-          <thead>
-            <tr>
-              <th>Job ID</th>
-              <th>Position Title</th>
-              <th>Applicant Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPageData.map((item) => (
-              <tr key={item.applicationId}>
-                <td>{item.applicationId}</td>
-                <td><a className={viewall.clickToView} href="" onClick={(e) => showDetails(e, item)}>{item.positionTitle}</a></td>
-                <td>{item.applicantName}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className={requests.eventContainer}>
+        <div className={requests.row}>
+          <span className={requests.column} id={requests.head}>Job ID</span>
+          <span className={requests.column} id={requests.head}>Position Title</span>
+          <span className={requests.column} id={requests.head}>Applicant Name</span>
+        </div>
+        {currentPageData.map((item) => (
+          <div key={item.applicationId} className={requests.row}>
+            <span className={requests.column}>{item.applicationId}</span>
+            <span className={requests.column}>
+              <a
+                className={viewall.clickToView}
+                href=""
+                onClick={(e) => showDetails(e, item)}
+              >
+                {item.positionTitle}
+              </a>
+            </span>
+            <span className={requests.column}>{item.applicantName}</span>
+          </div>
+        ))}
+      </div>
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalItems / itemsPerPage)}
@@ -77,7 +83,7 @@ export default function AdminJobs() {
 
         {eventClicked && (
           <React.Fragment>
-              <div className="application-details">
+              <div className={manage.applicationDetails}>
               <h3>Application Details</h3>
               <p><strong>Applicant Name:</strong> {selectedApplication.applicantName}</p>
               <p><strong>Position Title:</strong> {selectedApplication.positionTitle}</p>
@@ -93,9 +99,8 @@ export default function AdminJobs() {
                   </a>
             </p>
 
-              <div className="buttons">
-                <button >Approve</button>
-                <button >Reject</button>
+              <div className={manage.buttons}>
+                <button>Processed</button>
               </div>
             </div>
           </React.Fragment>

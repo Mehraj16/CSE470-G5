@@ -3,6 +3,7 @@ import AdminSidebar from '../components/AdminSidebar';
 import AdminHeader from '../components/AdminHeader';
 import manage from '../css/manage.module.css';
 import { useLocation } from 'react-router-dom';
+import { MdOutlineFileUpload } from "react-icons/md";
 
 export default function CreatePost() {
     const location = useLocation();
@@ -34,9 +35,8 @@ export default function CreatePost() {
         <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
         <div className='Content'>
           <h3 className={manage.headline}>Upload Your Article</h3>
-        </div>
         <form onSubmit={handleSubmit} className={manage.eventForm}>
-              <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
                 type="text"
@@ -45,9 +45,9 @@ export default function CreatePost() {
                 value={formData.title}
                 onChange={handleChange}
               />
-            </div>
+              </div>
               <div className={manage.formDiv}>
-                <div>
+                <div className={manage.inputContainer}>
                     <label htmlFor="date">Date:</label><br />
                     <input
                     type="date"
@@ -55,20 +55,26 @@ export default function CreatePost() {
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
+                    className={manage.dateInput}
                     />
                 </div>
                   <div>
                   <label htmlFor="banner">Article (*PDF only):</label><br />
+                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="pdf"
                       name="pdf"
                       onChange={handleChange}
+                      className={manage.fileInput}
                       />
                   </div>
             </div>
               <button type="submit">Submit</button>
+              <br />
+              <br />
         </form>
+        </div>
     </div>
   )
 }

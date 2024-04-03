@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/AdminSidebar';
 import Header from '../components/AdminHeader';
 import AdminRequests from '../components/AdminRequests';
-import DetailedView from '../components/DetailedView';
+import AdminDetailedView from '../components/AdminDetailedView';
 import { useLocation } from 'react-router-dom'
 
 export default function AdminInvites() {
@@ -14,7 +14,7 @@ export default function AdminInvites() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/invites.json'); 
+        const response = await fetch('/someProfiles.json'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -32,6 +32,7 @@ export default function AdminInvites() {
     // Find the data with the matching eventId
     const selectedEventData = data.find(item => item.id === eventId);
     setSelectedData(selectedEventData);
+    console.log(selectedData);
   };
 
   // const handleAccept = (eventId) => {
@@ -68,13 +69,15 @@ export default function AdminInvites() {
           // onAccept={onAccept}
           // onReject={onReject}
         />
-        <DetailedView
-          author={selectedData?.author}
-          image={selectedData?.image}
-          date={selectedData?.date}
-          time={selectedData?.time}
-          rewards={selectedData?.rewards}
-          location={selectedData?.location}
+        <AdminDetailedView
+          firstName={selectedData?.firstName}
+          lastName={selectedData?.lastName}
+          image={selectedData?.profileImage}
+          total={selectedData?.eventCount}
+          score={selectedData?.score}
+          medals={selectedData?.totalMedals}
+          skills={selectedData?.skills}
+          interests={selectedData?.interests}
         />
       </div>
     </div>

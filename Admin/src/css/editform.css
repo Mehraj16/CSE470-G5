@@ -72,6 +72,7 @@ textarea{
     margin-left: 30px;
     border-bottom: 1px solid;
     margin-right: 20px;
+    margin-bottom: 30px;
 }
 .del-btn{
     background-color: var(--text);

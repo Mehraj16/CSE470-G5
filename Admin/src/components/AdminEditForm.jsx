@@ -91,16 +91,6 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                 <br />
                 </div>
             </div>
-            <div className='inputs'>
-                <div>
-                    <label htmlFor="interests">Interests:</label><br />
-                    <input type="text" id="interests" name="interests" value={formData.interests} onChange={(e) => handleChange('interests', e)} disabled={!inputsEnabled} /><br /><br />
-                </div>
-                <div>
-                    <label htmlFor="skills">Skills:</label><br />
-                    <input type="text" id="skills" name="skills" value={formData.skills} onChange={(e) => handleChange('skills', e)} disabled={!inputsEnabled} /><br /><br />
-                </div>
-            </div>
             <div className='btn2'>
                 <button type='submit'>Save</button>
                 <button onClick={cancelInputs}>Cancel</button>

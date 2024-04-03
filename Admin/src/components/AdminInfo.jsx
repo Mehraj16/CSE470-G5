@@ -9,7 +9,7 @@ export default function AdminInfo(props) {
       navigation('../admininvites' ,{state: props});
     };
     const showMyEvents = () => {
-      navigation('../myevents',{state: props});
+      navigation('../adminevents',{state: props});
     };
 
   return (

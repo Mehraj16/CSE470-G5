@@ -3,8 +3,9 @@ p{
 }
 .prof{
     display: flex;
+    min-width: 25vw;
 }
-.profile-display{
+.profileDisplay{
     background-color: var(--main);
     border: 2px solid var(--acc);
     display: flex;
@@ -15,6 +16,7 @@ p{
     padding-top: 33px;
     font-size: 18px;
     height: fit-content;
+    width: 100%;
 }
 .analytics{
     width: 100%;
@@ -29,7 +31,7 @@ p{
 .propcontent{
     font-weight: 600;
 }
-.profile-bio{
+.profileBio{
     font-weight: 500;
     margin-top: 10px;
 }
@@ -38,7 +40,7 @@ p{
     font-size: 15px;
     line-height: 25px;
 }
-.banner-pic{
+.bannerPic{
     width: 100px;
     height: 100px;
     border-radius: 25px;

@@ -32,7 +32,7 @@
   border-collapse: collapse;
 }
 .clickToView{
-  color: #f0c609;
+  color: var(--text);
 }
 th, td {
   padding: 8px;
@@ -90,9 +90,6 @@ th, td {
 .viewtable {
   width: 90%;
   border-collapse: collapse;
-}
-.clickToView{
-  color: #f0c609;
 }
 th, td {
   padding: 8px;

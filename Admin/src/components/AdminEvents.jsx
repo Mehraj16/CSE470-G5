@@ -4,7 +4,8 @@ import AdminHeader from '../components/AdminHeader';
 import manage from '../css/manage.module.css';
 import viewall from '../css/viewall.module.css';
 import Pagination from '../components/Pagination';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import requests from'../css/requests.module.css';
 
 export default function AdminEvents() {
   const location = useLocation();
@@ -13,38 +14,34 @@ export default function AdminEvents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const itemsPerPage = 3; // Change this according to your requirements
+  const itemsPerPage = 7; // Change this according to your requirements
   const [eventClicked, setEventClicked] = useState(false); // State to track if event link is clicked
 
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
-  // Function to fetch data for the current page
   const fetchData = async () => {
-    // For the sake of this example, fetching mock JSON data
     const response = await fetch('/eventsCreated.json');
     const jsonData = await response.json();
   
-    // Filter the JSON data to include only events with the specified authorId
     const filteredData = jsonData.filter(event => event.authorId === 5);
   
     setData(filteredData);
-    setTotalItems(filteredData.length); // Set total items based on the fetched data
+    setTotalItems(filteredData.length); 
   };
-  
 
-  // Get the index range of items to be displayed on the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-
-  // Get the subset of data to be displayed on the current page
   const currentPageData = data.slice(startIndex, endIndex);
-
-  // Callback function to handle page changes
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  navigation = useNavigate();
+  const goToInvites = (profileImage, eventId) =>{
+    navigation('../invitations',{ state: { profileImage, eventId } })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,8 +58,8 @@ export default function AdminEvents() {
     time: '',
     date: '',
     description: '',
-    rewardPoints: 0, // Assuming reward points are numeric
-    banner: null // Assuming banner is a file object
+    rewardPoints: 0, 
+    banner: null
   });
   
   // Update handleEventClick to properly set formData
@@ -75,12 +72,10 @@ export default function AdminEvents() {
       date: eventData.date,
       description: eventData.description,
       rewardPoints: eventData.rewardPoints,
-      banner: eventData.banner // Assuming banner is a file object
+      banner: eventData.banner 
     });
-    setEventClicked(true); // Set eventClicked to true when event link is clicked
+    setEventClicked(true); 
   };
-  
-  // Ensure handleChange function is defined to handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -95,25 +90,23 @@ export default function AdminEvents() {
       <AdminSidebar />
       <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
       <div className='Content'>
+        <h2>Your Active Events</h2>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
-        <table className={viewall.viewtable}>
-          <thead>
-            <tr>
-              <th>Event ID</th>
-              <th> Event Title</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div className={requests.eventContainer}>
+          <div className={requests.row}>
+            <span className={requests.column} id={requests.head}>Event ID</span>
+            <span className={requests.column} id={requests.head}>Event Name</span>
+            <span className={requests.columnbtn} id={requests.head}>Send Invitations</span>
+          </div>
             {currentPageData.map((item) => (
-              <tr key={item.eventId}>
-                <td>{item.eventId}</td>
-                <td><a className={viewall.clickToView} href="" onClick={(e) => showDetails(e, item)}>{item.title}</a></td>
-                <td>{item.date}</td>
-              </tr>
+              <div key={item.eventId} className={requests.row}>
+                <span className={requests.column}>{item.eventId}</span>
+                <span className={requests.column}><a className={viewall.clickToView} href="" onClick={(e) => showDetails(e, item)}>{item.title}</a></span>
+                <span className={requests.columnbtn}><button onClick={() => goToInvites(props.profileImage, item.eventId)}>Select</button></span>
+              </div>
             ))}
-          </tbody>
-        </table>
+        </div>
+      
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalItems / itemsPerPage)}

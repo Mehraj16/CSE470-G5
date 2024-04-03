@@ -17,9 +17,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import SendInvites from './components/SendInvites.jsx'
+import LoginSignup from './LoginSignup.jsx'
 
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LoginSignup />,
+  },
   {
     path: "/admin",
     element: <AdminHome />,

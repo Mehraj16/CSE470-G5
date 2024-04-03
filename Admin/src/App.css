@@ -113,3 +113,9 @@ body, html, .App {
   font-size: 20px;
   font-weight: 600;
 }
+
+/* charts */
+.first-layer{
+  display: flex;
+  align-items: center;
+}

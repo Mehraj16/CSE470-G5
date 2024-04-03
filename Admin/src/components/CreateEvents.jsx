@@ -3,6 +3,7 @@ import AdminSidebar from '../components/AdminSidebar';
 import AdminHeader from '../components/AdminHeader';
 import manage from '../css/manage.module.css';
 import { useLocation } from 'react-router-dom';
+import { MdOutlineFileUpload } from "react-icons/md";
 
 export default function CreateEvents() {
  const location = useLocation();
@@ -37,7 +38,7 @@ export default function CreateEvents() {
     <div className='Content'>
       <h3 className={manage.headline}>Create Your Event</h3>
             <form onSubmit={handleSubmit} className={manage.eventForm}>
-              <div>
+              <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
                 type="text"
@@ -47,7 +48,7 @@ export default function CreateEvents() {
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="location">Location:</label><br />
               <input
                 type="text"
@@ -58,7 +59,7 @@ export default function CreateEvents() {
               />
             </div>
           <div className={manage.formDiv}>
-              <div>
+              <div className={manage.inputContainer}>
                   <label htmlFor="time">Time:</label><br />
                   <input
                   type="time"
@@ -66,9 +67,10 @@ export default function CreateEvents() {
                   name="time"
                   value={formData.time}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
                   </div>
-                  <div>
+                  <div className={manage.inputContainer}>
                   <label htmlFor="date">Date:</label><br />
                   <input
                   type="date"
@@ -76,10 +78,11 @@ export default function CreateEvents() {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
               </div>
           </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="description">Description:</label><br />
               <textarea className='desc'
                 id="description"
@@ -89,7 +92,7 @@ export default function CreateEvents() {
               />
             </div>
               <div className={manage.formDiv}>
-                  <div>
+                  <div className={manage.inputContainer}>
                       <label htmlFor="rewardPoints">Reward Points:</label><br />
                       <input
                       type="number"
@@ -97,19 +100,24 @@ export default function CreateEvents() {
                       name="rewardPoints"
                       value={formData.rewardPoints}
                       onChange={handleChange}
+                      min="0"
                       />
                   </div>
-                  <div>
-                  <label htmlFor="banner">Banner:</label><br />
+                  <div className={manage.filecontainer}>
+                  <label htmlFor="banner">Event Banner:</label><br />
+                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="banner"
                       name="banner"
                       onChange={handleChange}
+                      className={manage.fileInput}
                       />
                   </div>
             </div>
-              <button type="submit">Submit</button>
+              <button type="submit">Create Event</button>
+              <br />
+              <br />
             </form>
     </div>
     </div>

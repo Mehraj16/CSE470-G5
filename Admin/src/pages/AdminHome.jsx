@@ -3,6 +3,9 @@ import '../App.css';
 import AdminSidebar from '../components/AdminSidebar';
 import AdminHeader from '../components/AdminHeader';
 import AdminInfo from '../components/AdminInfo';
+import DoughnutChart from '../components/DoughnutChart';
+import LineChart from '../components/LineChart';
+import DoubleBarChart from '../components/DoubleBarChart';
 
 function App() {
   const [profileData, setProfileData] = useState({});
@@ -62,6 +65,14 @@ function App() {
             nearestEvent={nearestEvent}
             profilepic={profileData.profileImage}
           />
+          <div className='first-layer'>
+            <DoughnutChart />
+            <DoubleBarChart />
+          </div>
+          <br />
+          <br />
+          <LineChart />
+          <br />
         </div>
       </div>
     </>

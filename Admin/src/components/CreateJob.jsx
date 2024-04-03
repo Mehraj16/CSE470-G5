@@ -85,7 +85,7 @@ export default function CreateJob() {
                 className={manage.dateInput}
                 />
             </div>
-            <div class={manage.filecontainer}>
+            <div className={manage.filecontainer}>
               <label>CV(*PDF only):</label><br />
               <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
               <input

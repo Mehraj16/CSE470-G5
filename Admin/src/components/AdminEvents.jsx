@@ -6,6 +6,7 @@ import viewall from '../css/viewall.module.css';
 import Pagination from '../components/Pagination';
 import { useNavigate, useLocation } from 'react-router-dom';
 import requests from'../css/requests.module.css';
+import { MdOutlineFileUpload } from "react-icons/md";
 
 export default function AdminEvents() {
   const location = useLocation();
@@ -116,7 +117,7 @@ export default function AdminEvents() {
           <React.Fragment>
             <h3 className={manage.headline}>Edit Event</h3>
             <form onSubmit={handleSubmit} className={manage.eventForm}>
-              <div>
+              <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
                 type="text"
@@ -126,7 +127,7 @@ export default function AdminEvents() {
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="location">Location:</label><br />
               <input
                 type="text"
@@ -137,7 +138,7 @@ export default function AdminEvents() {
               />
             </div>
           <div className={manage.formDiv}>
-              <div>
+              <div className={manage.inputContainer}>
                   <label htmlFor="time">Time:</label><br />
                   <input
                   type="time"
@@ -145,9 +146,10 @@ export default function AdminEvents() {
                   name="time"
                   value={formData.time}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
                   </div>
-                  <div>
+                  <div className={manage.inputContainer}>
                   <label htmlFor="date">Date:</label><br />
                   <input
                   type="date"
@@ -155,12 +157,13 @@ export default function AdminEvents() {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
               </div>
           </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="description">Description:</label><br />
-              <textarea
+              <textarea className='desc'
                 id="description"
                 name="description"
                 value={formData.description}
@@ -168,7 +171,7 @@ export default function AdminEvents() {
               />
             </div>
               <div className={manage.formDiv}>
-                  <div>
+                  <div className={manage.inputContainer}>
                       <label htmlFor="rewardPoints">Reward Points:</label><br />
                       <input
                       type="number"
@@ -176,19 +179,24 @@ export default function AdminEvents() {
                       name="rewardPoints"
                       value={formData.rewardPoints}
                       onChange={handleChange}
+                      min="0"
                       />
                   </div>
-                  <div>
-                  <label htmlFor="banner">Banner:</label><br />
+                  <div className={manage.filecontainer}>
+                  <label htmlFor="banner">Event Banner:</label><br />
+                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="banner"
                       name="banner"
                       onChange={handleChange}
+                      className={manage.fileInput}
                       />
                   </div>
             </div>
-              <button type="submit">Submit</button>
+              <button type="submit">Save Changes</button>
+              <br />
+              <br />
             </form>
           </React.Fragment>
         )}

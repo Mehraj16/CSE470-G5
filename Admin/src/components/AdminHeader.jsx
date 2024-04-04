@@ -4,8 +4,7 @@ import '../css/header.css';
 export default function AdminHeader(props) {
   return (
     <div className="navbar">
-        <div className="profile">
-            <button className="chat-button">Chat</button>
+        <div className="profile-admin">
             <img src={props.profilepic} alt="Profile Picture" className="profile-pic" />
         </div>
       </div>

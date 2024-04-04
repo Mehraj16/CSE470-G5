@@ -48,7 +48,7 @@ export default function Filter({ onOptionSelect, option }) {
       </div>
       <div className='popup-container'>
         {popupVisible && (
-          <div className='popup'>
+          <div className='mypopup'>
             <div onClick={() => handleOptionClick('sortDate')}>Sort by Date (nearest to furthest)</div>
             <div onClick={() => handleOptionClick('signedUpEvents')}>Signed Up Events</div>
             <div onClick={() => handleOptionClick('eventsNotSignedUp')}>Events Not Signed Up</div>

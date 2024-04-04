@@ -15,11 +15,15 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
+import LoginSignup from './LoginSignup.jsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <LoginSignup />,
+  },
+  {
+    path: "/home",
     element: <App />,
   },
   {

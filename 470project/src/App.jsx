@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Confetti from 'react-confetti';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Info from './components/Info';
@@ -8,6 +9,19 @@ function App() {
   const [profileData, setProfileData] = useState({});
   const [numEventsSignedUp, setNumEventsSignedUp] = useState(0);
   const [nearestEvent, setNearestEvent] = useState({});
+
+  const [isCelebrating, setIsCelebrating] = useState(false);
+
+  useEffect(() => {
+    const hasSeenConfetti = localStorage.getItem('hasSeenConfetti');
+    if (!hasSeenConfetti) {
+      setIsCelebrating(true);
+      localStorage.setItem('hasSeenConfetti', 'true');
+      setTimeout(() => {
+        setIsCelebrating(false);
+      }, 3000); // Stop celebrating after 3 seconds
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +67,12 @@ function App() {
   return (
     <>
       <div className='App'>
+      {isCelebrating && <Confetti
+        width={1200}
+        height={600}
+        numberOfPieces={200}
+        gravity={0.5}
+      />}
         <Sidebar />
         <Header profilepic={`/src/assets/${profileData.profileImage}`} /> {/* Sends the profile image from fetched data */}
         <div className='Content'>

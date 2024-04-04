@@ -27,7 +27,7 @@
     display: flex;
     justify-content: center;
 }
-.popup{
+.mypopup{
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
     padding: 10px;
@@ -35,9 +35,9 @@
     text-align: center;
     font-size: 20px;
 }
-.popup div {
+.mypopup div {
     cursor: pointer;
 }
-.popup div:hover {
+.mypopup div:hover {
     color: blue;
 }

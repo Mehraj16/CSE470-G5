@@ -33,3 +33,19 @@ class EventSchema(BaseModel):
     date: datetime # It will be only date later
     time: datetime # It will be only time later
     organizer_company: str
+
+#-------------------------------------------------------------------------------------------------------------------------------------
+class UserEventBase(BaseModel):
+    event_id: int
+    event_name: str
+    event_status: str
+
+class UserEvent(UserEventBase):
+    id: int
+    user_id: int
+
+    class Config:
+        from_attributes = True
+
+class UserEventList(BaseModel):
+    user_events: List[UserEvent]

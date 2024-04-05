@@ -96,3 +96,53 @@ def delete_event(db: Session, event_id: int) -> bool:
     db.commit()
     return True
 
+#-------------------------------------------------------------------------------------------------------------------------------------
+#fetch the user name
+def get_user_name_by_email(db: Session, email: str):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if user:
+        return user.username
+    return None
+
+
+# fetch user's pending and accepted events by email
+def get_user_events_by_email(db: Session, email: str):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user:
+        return None
+    return user.user_events if user.user_events else []
+
+# fetch event details by event id 
+def get_event_by_id(db: Session, event_id: int):
+    return db.query(models.EventPublishModel).filter(models.EventPublishModel.id == event_id).first()
+
+# Function to accept an event
+def accept_event(db: Session, user_id: int, event_id: int):
+    user_event = db.query(models.UserEventModel).filter(
+        models.UserEventModel.user_id == user_id,
+        models.UserEventModel.event_id == event_id
+    ).first()
+
+    if not user_event:
+        raise HTTPException(status_code=404, detail="Event not found for the user")
+
+    # Update event_status to 'accepted'
+    user_event.event_status = "accepted"
+    db.commit()
+    return user_event
+
+# Function to reject an event
+def reject_event(db: Session, user_id: int, event_id: int):
+    user_event = db.query(models.UserEventModel).filter(
+        models.UserEventModel.user_id == user_id,
+        models.UserEventModel.event_id == event_id
+    ).first()
+
+    if not user_event:
+        raise HTTPException(status_code=404, detail="Event not found for the user")
+
+    # Delete the event from the table
+    db.delete(user_event)
+    db.commit()
+
+

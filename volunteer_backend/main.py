@@ -115,3 +115,32 @@ def get_user_name(email: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return {"user_name": user_name}
 
+
+#-------------------------------------------------------------------------------------------------------------------------------------
+
+# API endpoint to fetch user's pending and accepted events by email
+@app.get("/user_events/", response_model=schemas.UserEventList)
+def get_user_events(email: str, db: Session = Depends(get_db)):
+    user_events = services.get_user_events_by_email(db, email)
+    if user_events is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return schemas.UserEventList(user_events=user_events)
+
+# API endpoint to fetch event details by event id 
+@app.get("/events/{event_id}", response_model=schemas.EventSchema)
+def read_event(event_id: int, db: Session = Depends(get_db)):
+    event =services.get_event_by_id(db, event_id)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
+
+# API endpoint to accept an event
+@app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
+def accept_event_api(event_id: int, current_user: models.UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
+    return services.accept_event(db, current_user.id, event_id)
+
+# API endpoint to reject an event
+@app.post("/events/{event_id}/reject")
+def reject_event_api(event_id: int, current_user: models.UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
+    services.reject_event(db, current_user.id, event_id)
+    return {"message": "Event rejected successfully"}

@@ -17,7 +17,7 @@ class UserModel(Base):
     # Additional fields for volunteer
     age = Column(Integer) # It will be date of birth in the second sprint
     blood_group = Column(String(5))
-    priority_level = Column(String(20))
+    # priority_level = Column(String(20))
     # Also there will be a field for profile picture
 
     

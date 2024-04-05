@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from pydantic import BaseModel
+from typing import List
 
 
 class UserBase(BaseModel):
@@ -32,4 +33,3 @@ class EventSchema(BaseModel):
     date: datetime # It will be only date later
     time: datetime # It will be only time later
     organizer_company: str
-

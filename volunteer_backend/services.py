@@ -10,7 +10,15 @@ from fastapi import HTTPException
 
 # This will be use for user registration
 def create_user(db: Session, user: schemas.UserCreate):
+    # Check if the email is already registered
+    existing_user = db.query(models.UserModel).filter(models.UserModel.email == user.email).first()
+    if existing_user:
+        raise ValueError("Email already registered")
+
+    # Hash the password
     hashed_password = bcrypt.hash(user.password)
+    
+    # Create the new user
     db_user = models.UserModel(
         username=user.username,
         email=user.email,
@@ -88,11 +96,3 @@ def delete_event(db: Session, event_id: int) -> bool:
     db.commit()
     return True
 
-#----------------------------------------------------------------------------------------------------------------
-
-#fetch the user name
-def get_user_name_by_email(db: Session, email: str):
-    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-    if user:
-        return user.name
-    return None

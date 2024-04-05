@@ -106,9 +106,6 @@ def delete_event_endpoint(event_id: int, db: Session = Depends(get_db)):
 # Include the router in the main application
 app.include_router(router, prefix="/api")
 
-#----------------------------------------------------------------------------------------------------------------
-
-#fetch the user name
 
 # API endpoint to fetch user's name by email
 @app.get("/user/name/")
@@ -117,3 +114,4 @@ def get_user_name(email: str, db: Session = Depends(get_db)):
     if user_name is None:
         raise HTTPException(status_code=404, detail="User not found")
     return {"user_name": user_name}
+

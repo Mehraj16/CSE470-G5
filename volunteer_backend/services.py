@@ -88,3 +88,11 @@ def delete_event(db: Session, event_id: int) -> bool:
     db.commit()
     return True
 
+#----------------------------------------------------------------------------------------------------------------
+
+#fetch the user name
+def get_user_name_by_email(db: Session, email: str):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if user:
+        return user.name
+    return None

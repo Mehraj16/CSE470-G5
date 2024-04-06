@@ -49,15 +49,15 @@ body, html, .App {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #3c3c3b;
+  margin: 40px 0 5px 0 ;
 }
 .opp{
   font-size: 24px;
 }
-/* App.css */
 .scroll-container {
   overflow-x: auto;
   white-space: nowrap;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 .show-items{
   color: var(--acc);
@@ -70,8 +70,7 @@ body, html, .App {
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  flex: 0 0 auto; /* Ensures each job card has its own width */
-  margin-right: 10px; /* Add margin between job cards */
+  margin-right: 10px;
 }
 .scroll-container::-webkit-scrollbar {
   width: 4px;
@@ -112,10 +111,4 @@ body, html, .App {
   margin: 50px 0 0 280px;
   font-size: 20px;
   font-weight: 600;
-}
-
-/* charts */
-.first-layer{
-  display: flex;
-  align-items: center;
 }

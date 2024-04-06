@@ -1,5 +1,5 @@
 [
-    {"id": 1, "title": "Treasurer", "date": "2024-05-05", "description": "Take care of finances", "image":"mascot.png"},
+    {"id": 1, "title": "Treasurer", "date": "2024-05-05", "description": "Take care of finances", "image":"src/assets/mascot.png"},
     {"id": 2, "title": "Secretary", "date": "2024-05-12", "description": "Record minutes of meetings", "image":"mascot.png"},
     {"id": 3, "title": "Chairperson", "date": "2024-06-01", "description": "Lead committee meetings", "image":"mascot.png"},
     {"id": 4, "title": "Volunteer Coordinator", "date": "2024-06-15", "description": "Organize volunteer activities", "image":"mascot.png"},

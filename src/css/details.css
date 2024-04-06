@@ -1,0 +1,40 @@
+.banner {
+    margin: 50px 0px 20px 20px;
+    width: 100%;
+    text-align: start;
+  }
+  
+  .banner img {
+    margin-bottom: 20px;
+    width: 90%;
+    height: 55vh;
+    display: block;
+    border-radius: 35px;
+  }
+  
+  .banner p {
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .banner p:nth-child(2) {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .banner p:nth-child(4),
+  .banner p:nth-child(6),
+  .banner p:nth-child(8) {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .banner p:nth-child(5),
+  .banner p:nth-child(7),
+  .banner p:nth-child(9) {
+    font-size: 16px;
+  }
+  .interestBtn:active, .interestBtn:focus {
+    background-color: #6d747b;
+  }
+  

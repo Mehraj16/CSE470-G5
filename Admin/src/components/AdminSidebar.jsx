@@ -11,7 +11,7 @@ export default function AdminSidebar() {
   return (
     <div className="sidebar">
         <div className="logo">
-            <img src={logo} alt="Logo" width="70" />
+            <img src={logo} alt="Logo" width="150" />
         </div>
         <ul className="list">
             <li className='list-item'><FaHome className='icon'/><a href="/admin">Home</a></li>

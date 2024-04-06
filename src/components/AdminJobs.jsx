@@ -14,7 +14,7 @@ export default function AdminJobs() {
     const [currentPage, setCurrentPage] = useState(1);
     const [data, setData] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
-    const itemsPerPage = 3;
+    const itemsPerPage = 7;
     const [eventClicked, setEventClicked] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState([]); 
 
@@ -83,13 +83,24 @@ export default function AdminJobs() {
 
         {eventClicked && (
           <React.Fragment>
-              <div className={manage.applicationDetails}>
-              <h3>Application Details</h3>
-              <p><strong>Applicant Name:</strong> {selectedApplication.applicantName}</p>
-              <p><strong>Position Title:</strong> {selectedApplication.positionTitle}</p>
-              <p><strong>Deadline Date:</strong> {selectedApplication.deadlineDate}</p>
-              <p>
-                <strong>Resume: </strong> 
+            <div className={manage.applicationDetails}>
+            <h3>Application Details</h3>
+            <div className={manage.table}>
+              <span className={manage.row}>
+                <span className={manage.cell}><strong>Applicant Name:</strong></span>
+                <span className={manage.cell}>{selectedApplication.applicantName}</span>
+              </span>
+              <span className={manage.row}>
+                <span className={manage.cell}><strong>Position Title:</strong></span>
+                <span className={manage.cell}>{selectedApplication.positionTitle}</span>
+              </span>
+              <span className={manage.row}>
+                <span className={manage.cell}><strong>Deadline Date:</strong></span>
+                <span className={manage.cell}>{selectedApplication.deadlineDate}</span>
+              </span>
+              <span className={manage.row}>
+                <span className={manage.cell}><strong>Resume:</strong></span>
+                <span className={manage.cell}>
                   <a 
                     href={`/src/assets/${selectedApplication.resume}`} 
                     target="_blank" 
@@ -97,12 +108,13 @@ export default function AdminJobs() {
                   >
                     {selectedApplication.resume}
                   </a>
-            </p>
-
-              <div className={manage.buttons}>
-                <button>Processed</button>
-              </div>
+                </span>
+              </span>
             </div>
+            <div className={manage.button}>
+              <button>Processed</button>
+            </div>
+          </div>
           </React.Fragment>
         )};
     </div>

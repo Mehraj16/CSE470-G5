@@ -1,0 +1,205 @@
+.eventsCreate, .jobsCreate{
+    display: flex;
+    width: auto;
+    margin: 0 25px 4em 0;
+    justify-content: space-evenly;
+}
+.opps{
+    display: flex;
+    justify-content: space-between;
+}
+.opps div{
+    display: inline-flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+.eventsCreate div, .jobsCreate div{
+    height: 4em;
+    display: inline-flex;
+    align-items: center;
+    width: 12em;
+    justify-content: center;
+    background-color: rgb(244 80 77 / 80%);
+    color: var(--main);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.eventsCreate div:hover{
+    background-color: rgba(242, 65, 62, 0.9);
+}
+.jobsCreate div:hover{
+    background-color: rgba(38, 43, 61, 0.9);
+}
+.jobsCreate div{
+    background-color: rgb(60 72 107 / 90%);
+}
+.eventsCreate div p, .jobsCreate div p{
+    font-size: 20px;
+}
+.headline{
+    border-bottom: 1px solid;
+    margin: 1em;
+    font-size: 28px;
+    width: 94%;
+}
+.eventForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 35px;
+}
+.eventForm div{
+    width: 55vw;
+    margin-bottom: 20px;
+}
+.formDiv{
+    display: flex;
+    justify-content: space-between;
+}
+.inputContainer input[type="text"]{
+    width: 100%;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e3e1e1;
+} 
+.desc{
+    width: 712px;
+    height: 84px;
+}
+.jobsCreate div button{
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  border: none;
+  color: white;
+  font-weight: 600;
+}
+.jobsCreate div button:hover{
+  border: none;
+}
+.formCreate{
+  width:100%;
+}
+.inputContainer textarea{
+    width: 703px; 
+    height: 125px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #e3e1e1;
+    resize: none;
+}
+.inputContainer label{
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--acc);
+}
+.inputContainer input[type="text"]:focus, textarea:focus{
+    outline: none;
+    border-bottom: 1px solid var(--text);
+}
+/* Styling for the date input field */
+.inputContainer .dateInput {
+    border: none;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 200px;
+    outline: none;
+    background-color: #e3e1e1;
+  }
+.dateInput:focus {
+    border: 1px solid;
+    border-color: var(--text);
+  }
+.date-picker-icon {
+    width: 24px;
+    height: 24px;
+    margin-left: -30px; 
+    pointer-events: none; 
+  }
+
+.dateInput::placeholder {
+    color: #e3e1e1;
+  }
+
+.filecontainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .fileInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .icon{
+    width: 25px;
+    height: 25px;
+  }
+  .filelabel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background-color: var(--acc);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .filelabel:hover {
+    background-color: var(--acc); /* Darken color on hover */
+  }
+  /* manage.module.css */
+
+.applicationDetails {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .applicationDetails h3 {
+    margin-top: 0;
+  }
+  
+  .applicationDetails p {
+    margin: 10px 0;
+  }
+  
+  .applicationDetails strong {
+    font-weight: bold;
+  }
+  
+  .applicationDetails a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .applicationDetails a:hover {
+    text-decoration: underline;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  .buttons button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .buttons button:hover {
+    background-color: #0056b3;
+  }
+  
+  

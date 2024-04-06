@@ -60,3 +60,20 @@
     background-color: rgba(214, 219, 255, 0.5);
   }
   
+.volunteerContainer{
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.cell {
+  padding:8px 15px; 
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+.table .trow {
+  white-space: nowrap;
+}

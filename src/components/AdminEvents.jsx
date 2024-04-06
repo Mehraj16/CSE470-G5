@@ -6,7 +6,58 @@ import viewall from '../css/viewall.module.css';
 import Pagination from '../components/Pagination';
 import { useNavigate, useLocation } from 'react-router-dom';
 import requests from'../css/requests.module.css';
+import { MdOutlineFileUpload } from "react-icons/md";
 
+function DeleteEventPopup({ onCancel, onConfirm }) {
+  return (
+    <div className="popup">
+      <div className="popup-inner">
+        <h3>Are you sure you want to delete this event?</h3>
+        <p>Deleting the event will send a notification to all the volunteers who signed up.</p>
+        <div className="btn-group">
+          <button onClick={onCancel}>Cancel</button>
+          <button onClick={onConfirm}>Confirm</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+function SaveChangesPopup({ onClose, event }) {
+  const [sendNotif, setSendNotif] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    setSendNotif(event.target.checked);
+  };
+
+  const handleSend = () => {
+    onClose();
+    if (sendNotif) {
+      // Set state to true and display a message
+      console.log(`Has edited ${event}`);
+    }
+  };
+
+  return (
+    <div className="popup">
+      <div className="popup-inner">
+        <h3>Are you sure you want to make these changes?</h3>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <input
+            type="checkbox"
+            name="notif-confirm"
+            id="notif-confirm"
+            onChange={handleCheckboxChange}
+          />
+          <p style={{ fontSize: '17px' }}>Send a notification to those signed up</p>
+        </div>
+        <div className={manage.formDiv} style={{ width: '80%' }}>
+          <button className="del-btn" onClick={onClose}>Cancel</button>
+          <button className="change-btn" onClick={handleSend}>Send</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default function AdminEvents() {
   const location = useLocation();
   const props = location.state;
@@ -45,7 +96,6 @@ export default function AdminEvents() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
   };
   
   const showDetails = (e, eventData) => {
@@ -83,8 +133,27 @@ export default function AdminEvents() {
       [name]: value
     });
   };
-  
+  const [showPopup, setShowPopup] = useState(false);
+  const [event, setEvent] = useState(null);
+  const handlePopupToggle = (event) => {
+        setShowPopup(!showPopup);
+        setEvent(event);
+    };
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const handleDeleteEvent = () =>{
+    setShowDeletePopup(true);
+  }
+  const handleCancelDelete = () => {
+    setShowDeletePopup(false);
+};
 
+const handleConfirmDelete = () => {
+    // Add logic to delete the account here
+    // You can make an API call or perform any other action
+
+    // After deletion, close the popup
+    setShowDeletePopup(false);
+};
   return (
     <div className='App'>
       <AdminSidebar />
@@ -116,7 +185,7 @@ export default function AdminEvents() {
           <React.Fragment>
             <h3 className={manage.headline}>Edit Event</h3>
             <form onSubmit={handleSubmit} className={manage.eventForm}>
-              <div>
+              <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
                 type="text"
@@ -126,7 +195,7 @@ export default function AdminEvents() {
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="location">Location:</label><br />
               <input
                 type="text"
@@ -137,7 +206,7 @@ export default function AdminEvents() {
               />
             </div>
           <div className={manage.formDiv}>
-              <div>
+              <div className={manage.inputContainer}>
                   <label htmlFor="time">Time:</label><br />
                   <input
                   type="time"
@@ -145,9 +214,10 @@ export default function AdminEvents() {
                   name="time"
                   value={formData.time}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
                   </div>
-                  <div>
+                  <div className={manage.inputContainer}>
                   <label htmlFor="date">Date:</label><br />
                   <input
                   type="date"
@@ -155,12 +225,13 @@ export default function AdminEvents() {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
+                  className={manage.dateInput}
                   />
               </div>
           </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label htmlFor="description">Description:</label><br />
-              <textarea
+              <textarea className='desc'
                 id="description"
                 name="description"
                 value={formData.description}
@@ -168,7 +239,7 @@ export default function AdminEvents() {
               />
             </div>
               <div className={manage.formDiv}>
-                  <div>
+                  <div className={manage.inputContainer}>
                       <label htmlFor="rewardPoints">Reward Points:</label><br />
                       <input
                       type="number"
@@ -176,20 +247,35 @@ export default function AdminEvents() {
                       name="rewardPoints"
                       value={formData.rewardPoints}
                       onChange={handleChange}
+                      min="0"
                       />
                   </div>
-                  <div>
-                  <label htmlFor="banner">Banner:</label><br />
+                  <div className={manage.filecontainer}>
+                  <label htmlFor="banner">Event Banner:</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="banner"
                       name="banner"
                       onChange={handleChange}
+                      className={manage.fileInput}
                       />
                   </div>
             </div>
-              <button type="submit">Submit</button>
+              <div className={manage.formDiv} style={{justifyContent: 'space-evenly'}}>
+                <button onClick={() => handlePopupToggle(formData.title)}>Save Changes</button>
+                <button className='del-btn' onClick={handleDeleteEvent}>Delete Event</button>
+              </div>
+              <br />
+              <br />
             </form>
+            {showPopup && <SaveChangesPopup onClose={handlePopupToggle} event={event} />}
+            {showDeletePopup && (
+                    <DeleteEventPopup
+                    onCancel={handleCancelDelete}
+                    onConfirm={handleConfirmDelete}
+                    />
+              )}
           </React.Fragment>
         )}
       </div>

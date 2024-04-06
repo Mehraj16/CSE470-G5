@@ -1,0 +1,72 @@
+.container {
+    max-width: 800px; /* Set a max-width for the container */
+    margin: 2rem auto; /* Center the container */
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .volunteer-item {
+    border-bottom: 1px solid #e1e1e1;
+    padding: 1rem 0;
+  }
+  
+  .volunteer-name {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .star-rating {
+    margin-bottom: 1rem;
+  }
+  
+  .star {
+    cursor: pointer;
+    transition: color 200ms;
+  }
+  
+  .star:hover {
+    color: #ffeb3b;
+  }
+  
+  .hours-input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
+  
+  .points-display {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .submit-button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  

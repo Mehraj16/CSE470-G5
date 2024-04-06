@@ -43,10 +43,9 @@ export default function Manage() {
   const showMyJobs = () => {
     navigation("../adminjob", { state: profileData });
   };
-  const showRatings = () => {
-    navigation("../adminratings",{ state: profileData});
-  };
-
+  const showMyRatings = () => {
+    navigation("../adminrating", { state: profileData });
+  } 
   return (
     <div className="App">
       <AdminSidebar />
@@ -60,7 +59,7 @@ export default function Manage() {
           <div onClick={showMyEvents}>
             <p>Manage Events</p>
           </div>
-          <div onClick={showEventTemplate}>
+          <div onClick={showMyRatings}>
             <p>Review</p>
           </div>
         </div>
@@ -88,13 +87,7 @@ export default function Manage() {
             <div onClick={showMyJobs}>
               <p>Manage Jobs</p>
             </div>
-        <div className={manage.ratings}>
-          <h3 className={manage.headline}>Ratings</h3>
-            <div className={manage.ratingsButton} onClick={showRatings}>
-              <p>Job Ratings</p>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

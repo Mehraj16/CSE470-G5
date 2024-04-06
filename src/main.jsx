@@ -12,8 +12,6 @@ import CreatePost from './components/CreatePost.jsx'
 import AdminPosts from './components/AdminPosts.jsx'
 import CreateJob from './components/CreateJob.jsx'
 import AdminJobs from './components/AdminJobs.jsx'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Events from './pages/Events.jsx'
 import Settings from './pages/Settings.jsx'
@@ -24,6 +22,7 @@ import Discover from './pages/Discover.jsx'
 import ViewAll from './components/ViewAll.jsx'
 import Circular from './pages/Circular.jsx'
 import Notifications from './pages/Notifications.jsx'
+import AdminRatings from './components/AdminRatings.jsx'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -125,6 +124,10 @@ const router = createBrowserRouter([
     path: "notifications",
     element: <Notifications/>,
   },
+  {
+    path: "adminratings",
+    element: <AdminRatings/>,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

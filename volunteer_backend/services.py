@@ -8,7 +8,7 @@ from passlib.hash import bcrypt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+
 
 
 
@@ -17,46 +17,8 @@ SECRET_KEY = "fyuufyaufiyaiyufoioyufdaaaaaa"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Adjust token expiration as needed
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-# This will be use for user registration
-def create_user(db: Session, user: schemas.UserCreate):
-    # Check if the email is already registered
-    existing_user = db.query(models.UserModel).filter(models.UserModel.email == user.email).first()
-    if existing_user:
-        raise ValueError("Email already registered")
-
-    # Hash the password
-    hashed_password = bcrypt.hash(user.password)
-    
-    # Create the new user
-    db_user = models.UserModel(
-        username=user.username,
-        email=user.email,
-        password_hash=hashed_password,
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-
-
-# Function to verify password
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-# Function to authenticate user
-def authenticate_user(db: Session, email: str, password: str):
-    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-    if not user or not verify_password(password, user.password_hash):
-        return False
-    return user
-
-# Function to create access token
+# # Function to create access token
 def create_access_token(data: dict):
     to_encode = data.copy()
     expires_delta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -65,35 +27,91 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# Function to get current user
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+
+
+
+# This will be use for user registration
+def create_user(db: Session, user: schemas.UserCreate, priority_level: str = "user"):
+    existing_user = db.query(models.UserModel).filter(models.UserModel.email == user.email).first()
+    if existing_user:
+        raise ValueError("Email already registered")
+
+    hashed_password = bcrypt.hash(user.password)
+    
+    db_user = models.UserModel(
+        username=user.username,
+        email=user.email,
+        password_hash=hashed_password,
+        priority_level=priority_level,  # set priority level
     )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    # Generate JWT token after user registration
+    access_token = create_access_token(data={"sub": user.email})
+    
+    # Return user, access token and priority level as dictionary
+    return {"id": db_user.id, "username": db_user.username, "email": db_user.email, "access_token": access_token, "priority_level": db_user.priority_level}
+
+
+
+
+
+
+
+# Function to authenticate user
+
+def authenticate_user(email: str, password: str, db: Session):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user or not bcrypt.verify(password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+
+    # Generate JWT token after successful login
+    access_token = create_access_token(data={"sub": user.email})
+    
+    # Return user and access token as dictionary
+    return {"id": user.id, "username": user.username, "email": user.email, "access_token": access_token}
+
+
+
+# Function to fetch user name by token
+def get_user_name_by_token(db: Session, token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         if email is None:
-            raise credentials_exception
+            return None
+        user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+        if user:
+            return user.username
     except JWTError:
-        raise credentials_exception
-    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-    if user is None:
-        raise credentials_exception
-    return user
+        return None
+    return None
 
 
 
 
 
-# This will be use for user login
-# def authenticate_user(db: Session, email: str, password: str):
-#     user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-#     if user and bcrypt.verify(password, user.password_hash):
-#         return user
-#     return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # This will be use for updeting a specific user informatin
@@ -155,20 +173,22 @@ def delete_event(db: Session, event_id: int) -> bool:
     db.commit()
     return True
 
-#fetch the user name
-def get_user_name_by_email(db: Session, email: str):
-    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-    if user:
-        return user.username
-    return None
 
 
-# fetch user's pending and accepted events by email
-def get_user_events_by_email(db: Session, email: str):
-    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-    if not user:
+
+# Function to fetch user's events by token
+def get_user_events_by_token(db: Session, token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            return None
+        user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+        if not user:
+            return None
+        return user.user_events if user.user_events else []
+    except JWTError:
         return None
-    return user.user_events if user.user_events else []
 
 # fetch event details by event id 
 def get_event_by_id(db: Session, event_id: int):

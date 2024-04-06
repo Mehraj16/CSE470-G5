@@ -2,33 +2,97 @@
 from datetime import datetime
 from fastapi import FastAPI, HTTPException,  Depends,status,APIRouter
 import schemas, models, services
+from middleware import JWTMiddleware
+
 from database import SessionLocal
 from sqlalchemy.orm import Session
 from typing import List 
 from database import get_db
 
 app = FastAPI()
+# Add middleware to the app
+app.add_middleware(JWTMiddleware)
+
+
 
 # This will be use for user registration
 @app.post("/register/", response_model=schemas.UserResponse)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
-        db_user = services.create_user(db, user)
-        return db_user
-    except ValueError as e:  # Catching the error raised from create_user
+        user_data = services.create_user(db, user)
+        return user_data  # Return the dictionary containing both user and access_token
+    except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
 # This will be use for user login
-@app.post("/user_login/")   
+@app.post("/user_login/", response_model=schemas.UserResponse)
 def login(email: str, password: str, db: Session = Depends(get_db)):
-    user = services.authenticate_user(db, email, password)
+    user = services.authenticate_user(email, password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
-        )
-    return {"message": "Login successful"}
+        )  
+      
+    return user
+
+
+# API endpoint to fetch user's name by email
+# @app.get("/user/name/")
+# def get_user_name(token: str, db: Session = Depends(get_db)):
+#     user_name = services.get_user_name_by_email(db,token)
+#     if user_name is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     return {"user_name": user_name}
+
+# def get_user_info(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+#     email = services.get_email_from_token(token)
+#     if email is None:
+#         raise HTTPException(status_code=401, detail="Invalid token")
+    
+#     user_info = services.get_user_info_by_email(db, email)
+#     if user_info is None:
+#         raise HTTPException(status_code=404, detail="User not found")
+    
+#     return {"user_info": user_info}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # This will be use for updeting a specific user informatin  
 @app.put("/update-account/{user_id}")
@@ -101,13 +165,6 @@ def delete_event_endpoint(event_id: int, db: Session = Depends(get_db)):
 app.include_router(router, prefix="/api")
 
 
-# API endpoint to fetch user's name by email
-@app.get("/user/name/")
-def get_user_name(email: str, db: Session = Depends(get_db)):
-    user_name = services.get_user_name_by_email(db, email)
-    if user_name is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"user_name": user_name}
 
 
 
@@ -127,15 +184,15 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
-# API endpoint to accept an event
-@app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
-def accept_event_api(event_id: int, current_user: models.UserModel = Depends(services.get_current_user), db: Session = Depends(get_db)):
-    return services.accept_event(db, current_user.id, event_id)
+# # API endpoint to accept an event
+# @app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
+# def accept_event_api(event_id: int, current_user: models.UserModel = Depends(middleware.get_current_user), db: Session = Depends(get_db)):
+#     return services.accept_event(db, current_user.id, event_id)
 
-# API endpoint to reject an event
-@app.post("/events/{event_id}/reject")
-def reject_event_api(event_id: int, current_user: models.UserModel = Depends(services.get_current_user), db: Session = Depends(get_db)):
-    services.reject_event(db, current_user.id, event_id)
-    return {"message": "Event rejected successfully"}
+# # API endpoint to reject an event
+# @app.post("/events/{event_id}/reject")
+# def reject_event_api(event_id: int, current_user: models.UserModel = Depends(middleware.get_current_user), db: Session = Depends(get_db)):
+#     services.reject_event(db, current_user.id, event_id)
+#     return {"message": "Event rejected successfully"}
 
 #-------------------------------------------------------------------------------------------------------------------------------------

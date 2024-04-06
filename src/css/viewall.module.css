@@ -3,7 +3,6 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    width: 65vw;
   }
   
   .pagination button {
@@ -33,64 +32,7 @@
   border-collapse: collapse;
 }
 .clickToView{
-  color: var(--text);
-}
-th, td {
-  padding: 8px;
-}
-
-.viewtable th{
-  font-weight: bold;
-  text-align: center;
-  background-color: var(--acc);
-}
-
-.viewtable tr:nth-child(even) {
-  background-color: rgb(60, 72, 107, 0.6);
-}
-.viewtable th:first-child{
-  border-top-left-radius: 7px;
-  border-bottom-left-radius: 0;
-}
-.viewtable th:last-child{
-  border-top-right-radius: 7px;
-  border-bottom-right-radius: 0;
-}
-.viewtable tr td:first-child, .viewtable tr td:last-child{
-  border-radius: 0;
-  width:20%;
-}.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .pagination button {
-    margin: 0 5px;
-    padding: 8px 12px;
-    background-color: var(--acc);
-    color: var(--main);
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .pagination ul{
-    list-style-type: none;
-    display: inline-flex;
-  }
-  .pagination button:hover {
-    background-color: rgb(60, 72, 107, 0.5);
-  }
-  
-  .pagination button:disabled {
-    background-color: rgba(157, 165, 189, 0.9);
-    color: #888;
-    cursor: not-allowed;
-  }
-
-.viewtable {
-  width: 90%;
-  border-collapse: collapse;
+  color: #f0c609;
 }
 th, td {
   padding: 8px;

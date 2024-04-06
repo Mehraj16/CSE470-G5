@@ -12,6 +12,18 @@ import CreatePost from './components/CreatePost.jsx'
 import AdminPosts from './components/AdminPosts.jsx'
 import CreateJob from './components/CreateJob.jsx'
 import AdminJobs from './components/AdminJobs.jsx'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import Events from './pages/Events.jsx'
+import Settings from './pages/Settings.jsx'
+import EventDetails from './pages/EventDetails.jsx'
+import Invites from './pages/Invites.jsx'
+import MyEvents from './pages/MyEvents.jsx'
+import Discover from './pages/Discover.jsx'
+import ViewAll from './components/ViewAll.jsx'
+import Circular from './pages/Circular.jsx'
+import Notifications from './pages/Notifications.jsx'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -72,6 +84,46 @@ const router = createBrowserRouter([
   {
     path: "/invitations",
     element: <SendInvites />,
+  },
+  {
+    path: "/home",
+    element: <App />,
+  },
+  {
+    path: "events",
+    element: <Events />,
+  },
+  {
+    path: "settings",
+    element: <Settings />,
+  },
+  {
+    path: "eventdetails",
+    element: <EventDetails />,
+  },
+  {
+    path: "myevents",
+    element: <MyEvents />,
+  },
+  {
+    path: "discover",
+    element: <Discover />,
+  },
+  {
+    path: "invites",
+    element: <Invites />,
+  },
+  {
+    path: "viewall",
+    element: <ViewAll />,
+  },
+  {
+    path: "circular",
+    element: <Circular />,
+  },
+  {
+    path: "notifications",
+    element: <Notifications/>,
   },
 ]);
 

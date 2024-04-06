@@ -3,6 +3,12 @@ import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar } from 'react-chartjs-2';
 
 export default function BarChart({ selectedOption }) {
+  const mvv = localStorage.getItem('mvv');
+  let bar1 = '#3C486B';
+  let bar2 = '#F45050';
+  if(mvv){
+     bar1 = '#74c091';
+  }
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -10,8 +16,8 @@ export default function BarChart({ selectedOption }) {
         label: "Count",
         data: [],
         backgroundColor: [
-          "rgb(60, 72, 107, 0.8)",
-          "rgb(244, 80, 80, 0.8)"
+          bar1,
+          bar2
         ],
         borderRadius: 5,
       }
@@ -19,23 +25,35 @@ export default function BarChart({ selectedOption }) {
   });
 
   useEffect(() => {
-    fetch('/history.json')
-      .then(response => response.json())
-      .then(data => {
-        const events = data.eventsVolunteered;
-        let filteredEvents;
+    const fetchpartData = async () => {
+    let url = 'http://127.0.0.1:8000/api/events-volunteered/';
+    try {
+      const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      const responseBody = await response.json(); // Read response body
 
+      if (!response.ok) {
+          console.error('Failed request:', responseBody); // Log error and response body
+          throw new Error('Failed request');
+      }
+        const events = responseBody;
+        let filteredEvents;
+        console.log(events);
         switch (selectedOption) {
           case 'lastYear':
             filteredEvents = events.filter(event => {
-              const eventDate = new Date(event.date);
+              const eventDate = new Date(event.event_date);
               const currentDate = new Date();
               return eventDate.getFullYear() === currentDate.getFullYear() - 1;
             });
             // Count occurrences for each month
             const yearMonthCounts = {};
             filteredEvents.forEach(event => {
-              const date = new Date(event.date);
+              const date = new Date(event.event_date);
               const month = date.toLocaleString('default', { month: 'long' });
               if (yearMonthCounts[month]) {
                 yearMonthCounts[month]++;
@@ -51,8 +69,8 @@ export default function BarChart({ selectedOption }) {
                   label: "Count",
                   data: Object.values(yearMonthCounts),
                   backgroundColor: [
-                    "rgb(60, 72, 107, 0.8)",
-                    "rgb(244, 80, 80, 0.8)"
+                    bar1,
+                    bar2
                   ],
                   borderRadius: 5,
                 }
@@ -61,7 +79,7 @@ export default function BarChart({ selectedOption }) {
             break;
             case 'lastMonth':
               filteredEvents = events.filter(event => {
-                const eventDate = new Date(event.date);
+                const eventDate = new Date(event.event_date);
                 const currentDate = new Date();
                 const lastMonth = currentDate.getMonth() - 1; // Get month index for last month
                 return eventDate.getMonth() === lastMonth;
@@ -70,7 +88,7 @@ export default function BarChart({ selectedOption }) {
               // Count occurrences for each day
               const lastMonthCounts = {};
               filteredEvents.forEach(event => {
-                const date = new Date(event.date);
+                const date = new Date(event.event_date);
                 const day = date.getDate();
                 const monthAbbreviation = date.toLocaleString('default', { month: 'short' }); // Get month abbreviation
                 const formattedDate = `${day} ${monthAbbreviation}`;
@@ -89,8 +107,8 @@ export default function BarChart({ selectedOption }) {
                     label: "Count",
                     data: Object.values(lastMonthCounts),
                     backgroundColor: [
-                      "rgb(60, 72, 107, 0.8)",
-                      "rgb(244, 80, 80, 0.8)"
+                      bar1,
+                      bar2
                     ],
                     borderRadius: 5,
                   }
@@ -103,7 +121,7 @@ export default function BarChart({ selectedOption }) {
             // Count occurrences for each year
             const yearCounts = {};
             filteredEvents.forEach(event => {
-              const date = new Date(event.date);
+              const date = new Date(event.event_date);
               const year = date.getFullYear();
               if (yearCounts[year]) {
                 yearCounts[year]++;
@@ -119,8 +137,8 @@ export default function BarChart({ selectedOption }) {
                   label: "Count",
                   data: Object.values(yearCounts),
                   backgroundColor: [
-                    "rgb(60, 72, 107, 0.8)",
-                    "rgb(244, 80, 80, 0.8)"
+                    bar1,
+                    bar2
                   ],
                   borderRadius: 5,
                 }
@@ -131,10 +149,11 @@ export default function BarChart({ selectedOption }) {
             filteredEvents = events;
             break;
         }
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+      } catch (error) {
+        console.error('Error:', error);
+    }
+};
+fetchpartData();
   }, [selectedOption]);
 
   return (

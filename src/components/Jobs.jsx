@@ -6,12 +6,11 @@ export default function Jobs(props) {
   const navigate = useNavigate();
 
   const showArticle = (props) =>{
-    window.open(props.content, '_blank');
+    window.open(props.article, '_blank');
   }
   const showJob = (e, item) =>{
     e.preventDefault();
     navigate('../circular', {state: {
-      props: props.profilepic,
       id: item,
     }
     });

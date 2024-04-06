@@ -6,17 +6,33 @@ export default function ShowVolunteers() {
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const itemsPerPage = 7;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
   const fetchData = async () => {
-    const response = await fetch('/someProfiles.json');
-    const jsonData = await response.json();
-    setData(jsonData);
-    setTotalItems(jsonData.length); 
+    let url;
+    url = 'http://127.0.0.1:8000/api/users';
+    try {
+      const response = await fetch(url, {
+           method: 'GET',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+       });
+          const responseBody = await response.json(); // Read response body
+          if (!response.ok) {
+              console.error('Failed request:', responseBody); // Log error and response body
+              throw new Error('Failed request');
+          }
+          console.log("succes");
+          setData(responseBody);
+          setTotalItems(responseBody.length); 
+      } catch (error) {
+          console.error('Error:', error);
+      }
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -28,7 +44,6 @@ export default function ShowVolunteers() {
   return (
         <div>
               <h2>All Volunteers</h2>
-              <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
               <div className={requests.eventContainer}>
                 <div className={requests.volunteerContainer}>
                     <table className={requests.table}>
@@ -58,7 +73,7 @@ export default function ShowVolunteers() {
                             <td className={requests.cell}>{item.email}</td>
                             <td className={requests.cell}>{item.blood}</td>
                             <td className={requests.cell}>{item.gender}</td>
-                            <td className={requests.cell}>{item.score}</td>
+                            <td className={requests.cell}>{item.lifetimeScore}</td>
                             <td className={requests.cell}>{item.totalMedals}</td>
                             <td className={requests.cell}>{item.eventCount}</td>
                             <td className={requests.cell}>{item.interests}</td>
@@ -68,6 +83,7 @@ export default function ShowVolunteers() {
                     </tbody>
                     </table>
                 </div>
+                <h5>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h5>
             <Pagination
               currentPage={currentPage}
               totalPages={Math.ceil(totalItems / itemsPerPage)}

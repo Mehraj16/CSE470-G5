@@ -11,6 +11,9 @@ import { MdOutlineFileUpload } from "react-icons/md";
 export default function AdminPosts() {
   const location = useLocation();
   const props = location.state;
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const admin_id = mydata.id;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
@@ -24,12 +27,26 @@ export default function AdminPosts() {
 
   // Function to fetch data for the current page
   const fetchData = async () => {
-    const response = await fetch("/postCreated.json");
-    const jsonData = await response.json();
-    const filteredData = jsonData.filter((event) => event.authorId === 5);
+    let url = 'http://127.0.0.1:8000/api/posts/';
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              const filteredData = responseBody.filter(event => event.admin_id === admin_id);
+              setData(filteredData);
+              setTotalItems(filteredData.length);
 
-    setData(filteredData);
-    setTotalItems(filteredData.length); 
+            } catch (error) {
+                console.error('Error:', error);
+            }  
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -45,17 +62,23 @@ export default function AdminPosts() {
     handleEventClick(eventData);
   };
   const [formData, setFormData] = useState({
+    id: '',
     title: '',
     date: '',
-    pdf: null 
+    article: null,
+    banner_image: null,
+    admin_id: admin_id 
   });
 
   const handleEventClick = (eventData) => {
     setFormData({
       ...formData,
+      id: eventData.id,
       title: eventData.title,
       date: eventData.date,
-      pdf: eventData.pdf 
+      article: eventData.article,
+      banner_image: eventData.banner_image,
+      admin_id: admin_id 
     });
     setEventClicked(true);
   };
@@ -70,9 +93,27 @@ export default function AdminPosts() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted with data:', formData);
+  const handleSubmit = async (event) => {
+    const postId = event.id;
+    let url = `http://127.0.0.1:8000/api/posts/${postId}`;
+        try {
+          const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+          console.log(formData);
+          const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              console.log("posted");
+            } catch (error) {
+                console.error('Error:', error);
+            }
   };
 
   return (
@@ -90,7 +131,7 @@ export default function AdminPosts() {
           </div>
           {currentPageData.map((item) => (
             <div key={item.postId} className={requests.row}>
-              <span className={requests.column}>{item.postId}</span>
+              <span className={requests.column}>{item.id}</span>
               <span className={requests.column}>
                 <a
                   className={viewall.clickToView}
@@ -112,7 +153,7 @@ export default function AdminPosts() {
         {eventClicked && (
           <React.Fragment>
             <h3 className={manage.headline}>Edit Article</h3>
-            <form onSubmit={handleSubmit} className={manage.eventForm}>
+            <div className={manage.eventForm}>
             <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
@@ -135,9 +176,9 @@ export default function AdminPosts() {
                     className={manage.dateInput}
                     />
                 </div>
-                  <div>
+                  <div className={manage.fileBox}>
                   <label htmlFor="banner">Article (*PDF only):</label><br />
-                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="pdf"
@@ -147,10 +188,21 @@ export default function AdminPosts() {
                       />
                   </div>
             </div>
-              <button type="submit">Submit</button>
+            <div className={manage.fileBox}>
+                  <label htmlFor="banner">Banner:</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                      <input
+                      type="file"
+                      id="image"
+                      name="banner_image"
+                      onChange={handleChange}
+                      className={manage.fileInput}
+                      />
+                  </div>
+              <button onClick={() => handleSubmit(formData)}>Submit</button>
               <br />
               <br />
-            </form>
+            </div>
           </React.Fragment>
         )}
       </div>

@@ -3,44 +3,101 @@ import { FaCheck } from "react-icons/fa";
 import { RiCloseLine } from "react-icons/ri";
 import requests from'../css/requests.module.css';
 
-export default function AdminRequests({ onViewDetails}) {
-    const [data, setData] = useState([]);
-
+export default function AdminRequests({ onViewDetails, alldata}) {
+    const[data, setData] = useState(alldata);
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('/someProfiles.json'); 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setData(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+        console.log(data);
+    }, [data]);
+
+   const removeRequest = async(reqid, vol_id, admin_id, name) =>{
+    try{
+        const mes = `Ypur request for ${name} has been approved`
+        console.log(mes)
+        const requestData = {
+          "admin_id": admin_id,
+          "volunteer_id": vol_id,
+          "Message": mes
         };
-
-        fetchData();
-    }, []);
-
-    const handleAccept = (id) => {
-        // onAccept(id);
+        const response = await fetch('http://127.0.0.1:8000/api/notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+        
+        const responseBody = await response.json();
+        if (!response.ok) {
+          console.log(responseBody)
+          throw new Error('Failed to send invitation for volunteer:');
+        }
+        try{
+            const response = await fetch(`http://127.0.0.1:8000/api/remove-requests/${reqid}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            });
+        
+        const responseBody = await response.json();
+        if (!response.ok) {
+          console.log(responseBody);
+          throw new Error('Failed to remove:');
+        }
+        }catch (error) {
+        console.error('Error removing:', error);   
+        }
+      }catch (error) {
+        console.error('Error sending notifs:', error);   
+      }
+   }
+    useEffect(() => {
+        setData(alldata);
+    }, [alldata]);
+    const handleAccept = async (reqid, id, vol_id, date, admin_id, name) => {
+        console.log('Accept clicked for ID:', id);
         setData(prevData => prevData.map(item => {
-            if (item.id === id) {
+            if (item.event.id === id) {
                 return { ...item, status: 'accepted' };
             }
             return item;
         }));
+        try{
+
+            const requestData = {  
+              "volunteer_id": vol_id,
+              "event_id": id,
+              "event_date": date,
+              "admin_id": admin_id
+            };
+            const response = await fetch('http://127.0.0.1:8000/api/events-signed-up/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestData),
+            });
+            
+            const responseBody = await response.json();
+            if (!response.ok) {
+              console.log(responseBody)
+              throw new Error('Failed to send invitation for volunteer:', selectedItem);
+            }
+            removeRequest(reqid, vol_id, admin_id, name);
+          }catch (error) {
+            console.error('Error sending notifss:', error);   
+          }
     };
 
-    const handleReject = (id) => {
-        // onReject(id);
+    const handleReject = (reqid, id, vol_id, date, admin_id, name) => {
+        console.log('Reject clicked for ID:', id);
         setData(prevData => prevData.map(item => {
-            if (item.id === id) {
+            if (item.event.id === id) {
                 return { ...item, status: 'rejected' };
             }
             return item;
         }));
+        removeRequest(reqid, vol_id, admin_id, name);
     };
 
     return (
@@ -54,18 +111,18 @@ export default function AdminRequests({ onViewDetails}) {
             <div className={requests.fullTable}>
                 {data.map(event => (
                     <div key={event.id} className={requests.row}>
-                        <span className={requests.column}>{event.firstName}</span>
-                        <span className={requests.column}>{event.title}Inauguration</span>
+                        <span className={requests.column}>{event.volunteer.firstName}</span>
+                        <span className={requests.column}>{event.event.title}</span>
                         <span className={requests.columnbtn}>
-                            <button onClick={() => onViewDetails(event.id)}>View</button>
+                            <button onClick={() => onViewDetails(event.volunteer.id)}>View</button>
                             {event.status === 'accepted' ? (
                                 <FaCheck className={requests.icon} />
                             ) : event.status === 'rejected' ? (
                                 <RiCloseLine className={requests.icon} />
                             ) : (
                                 <>
-                                    <button onClick={() => handleAccept(event.id)}>Accept</button>
-                                    <button onClick={() => handleReject(event.id)}>Reject</button>
+                                    <button onClick={() => handleAccept(event.request_id, event.event.id, event.volunteer_id, event.event.date, event.admin_id, event.event.title)}>Accept</button>
+                                    <button onClick={() => handleReject(event.request_id, event.event.id, event.volunteer_id, event.event.date, event.admin_id, event.event.title)}>Reject</button>
                                 </>
                             )}
                         </span>

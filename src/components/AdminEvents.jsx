@@ -22,18 +22,20 @@ function DeleteEventPopup({ onCancel, onConfirm }) {
     </div>
   );
 }
-function SaveChangesPopup({ onClose, event }) {
+function SaveChangesPopup({ onClose, event, submitForm }) {
   const [sendNotif, setSendNotif] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setSendNotif(event.target.checked);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     onClose();
     if (sendNotif) {
       // Set state to true and display a message
-      console.log(`Has edited ${event}`);
+      console.log(`Has edited ${event.title}`);
+      postNotification();
+      submitForm(event);
     }
   };
 
@@ -61,25 +63,62 @@ function SaveChangesPopup({ onClose, event }) {
 export default function AdminEvents() {
   const location = useLocation();
   const props = location.state;
-
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const admin_id = mydata.id;
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 7; // Change this according to your requirements
   const [eventClicked, setEventClicked] = useState(false); // State to track if event link is clicked
 
+  const pushNotification = async() =>{
+      let url = 'http://127.0.0.1:8000/api/events/';
+          try {
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          const responseBody = await response.json(); // Read response body
+              if (!response.ok) {
+                      console.error('Failed request:', responseBody); // Log error and response body
+                      throw new Error('Failed request');
+                  }
+                const filteredData = responseBody.filter(event => event.admin_id === admin_id);
+                setData(filteredData);
+                setTotalItems(filteredData.length);
+  
+              } catch (error) {
+                  console.error('Error:', error);    
+          }  
+  }
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
   const fetchData = async () => {
-    const response = await fetch('/eventsCreated.json');
-    const jsonData = await response.json();
-  
-    const filteredData = jsonData.filter(event => event.authorId === 5);
-  
-    setData(filteredData);
-    setTotalItems(filteredData.length); 
+    let url = 'http://127.0.0.1:8000/api/events/';
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              const filteredData = responseBody.filter(event => event.admin_id === admin_id);
+              setData(filteredData);
+              setTotalItems(filteredData.length);
+
+            } catch (error) {
+                console.error('Error:', error);
+            }  
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -90,12 +129,30 @@ export default function AdminEvents() {
   };
 
   navigation = useNavigate();
-  const goToInvites = (profileImage, eventId) =>{
-    navigation('../invitations',{ state: { profileImage, eventId } })
+  const goToInvites = (event) =>{
+    navigation('../invitations',{ state: event })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (eventDetails) => {
+    const eventId = eventDetails.id;
+    let url = `http://127.0.0.1:8000/api/events/${eventId}/`;
+        try {
+          const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              console.log("posted");
+            } catch (error) {
+                console.error('Error:', error);
+            }
   };
   
   const showDetails = (e, eventData) => {
@@ -103,26 +160,29 @@ export default function AdminEvents() {
     handleEventClick(eventData);
   };
   const [formData, setFormData] = useState({
+    id: '',
     title: '',
     location: '',
     time: '',
     date: '',
     description: '',
-    rewardPoints: 0, 
-    banner: null
+    rewards: 0, 
+    banner_image: null
   });
   
   // Update handleEventClick to properly set formData
   const handleEventClick = (eventData) => {
     setFormData({
       ...formData,
+      id: eventData.id,
       title: eventData.title,
       location: eventData.location,
       time: eventData.time,
       date: eventData.date,
       description: eventData.description,
-      rewardPoints: eventData.rewardPoints,
-      banner: eventData.banner 
+      rewards: eventData.rewards,
+      banner_image: eventData.banner_image,
+      admin_id: admin_id 
     });
     setEventClicked(true); 
   };
@@ -148,30 +208,26 @@ export default function AdminEvents() {
 };
 
 const handleConfirmDelete = () => {
-    // Add logic to delete the account here
-    // You can make an API call or perform any other action
-
-    // After deletion, close the popup
     setShowDeletePopup(false);
 };
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
+      <AdminHeader  />
       <div className='Content'>
         <h2>Your Active Events</h2>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
-        <div className={requests.eventContainer}>
+        <div key={admin_id} className={requests.eventContainer}>
           <div className={requests.row}>
             <span className={requests.column} id={requests.head}>Event ID</span>
             <span className={requests.column} id={requests.head}>Event Name</span>
             <span className={requests.columnbtn} id={requests.head}>Send Invitations</span>
           </div>
             {currentPageData.map((item) => (
-              <div key={item.eventId} className={requests.row}>
-                <span className={requests.column}>{item.eventId}</span>
+              <div key={item.id} className={requests.row}>
+                <span className={requests.column}>{item.id}</span>
                 <span className={requests.column}><a className={viewall.clickToView} href="" onClick={(e) => showDetails(e, item)}>{item.title}</a></span>
-                <span className={requests.columnbtn}><button onClick={() => goToInvites(props.profileImage, item.eventId)}>Select</button></span>
+                <span className={requests.columnbtn}><button onClick={() => goToInvites(item)}>Select</button></span>
               </div>
             ))}
         </div>
@@ -184,7 +240,7 @@ const handleConfirmDelete = () => {
         {eventClicked && ( // Render form only if event link is clicked
           <React.Fragment>
             <h3 className={manage.headline}>Edit Event</h3>
-            <form onSubmit={handleSubmit} className={manage.eventForm}>
+            <div className={manage.eventForm}>
               <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
@@ -244,8 +300,8 @@ const handleConfirmDelete = () => {
                       <input
                       type="number"
                       id="rewardPoints"
-                      name="rewardPoints"
-                      value={formData.rewardPoints}
+                      name="rewards"
+                      value={formData.rewards}
                       onChange={handleChange}
                       min="0"
                       />
@@ -256,20 +312,21 @@ const handleConfirmDelete = () => {
                       <input
                       type="file"
                       id="banner"
-                      name="banner"
+                      name="banner_image"
                       onChange={handleChange}
                       className={manage.fileInput}
                       />
                   </div>
             </div>
               <div className={manage.formDiv} style={{justifyContent: 'space-evenly'}}>
-                <button onClick={() => handlePopupToggle(formData.title)}>Save Changes</button>
+                <button onClick={() => handlePopupToggle(formData)}>Save Changes</button>
                 <button className='del-btn' onClick={handleDeleteEvent}>Delete Event</button>
               </div>
               <br />
               <br />
-            </form>
-            {showPopup && <SaveChangesPopup onClose={handlePopupToggle} event={event} />}
+            </div>
+            {showPopup && <SaveChangesPopup onClose={handlePopupToggle} event={event} submitForm={handleSubmit}/>}
+
             {showDeletePopup && (
                     <DeleteEventPopup
                     onCancel={handleCancelDelete}

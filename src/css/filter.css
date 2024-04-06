@@ -8,13 +8,12 @@
 }
 .filter-container p{
     font-size: 20px;
-    font-weight: 400;
+    font-weight: 200;
     margin-bottom: 0;
     padding-bottom: 0;
 }
 .filter-details{
     display: flex;
-    height: 46px;
     align-items: flex-end;
 }
 .filterIcon{
@@ -39,5 +38,5 @@
     cursor: pointer;
 }
 .mypopup div:hover {
-    color: blue;
+    color: var(--acc);
 }

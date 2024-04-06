@@ -39,7 +39,7 @@ th, td {
 }
 
 .viewtable th{
-  font-weight: bold;
+  font-weight: 400;
   text-align: center;
   background-color: var(--acc);
 }

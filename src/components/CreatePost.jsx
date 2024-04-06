@@ -8,11 +8,15 @@ import { MdOutlineFileUpload } from "react-icons/md";
 export default function CreatePost() {
     const location = useLocation();
     const props = location.state;
-
+    const jsonString = localStorage.getItem('profileData');
+    const data = JSON.parse(jsonString);
+    const id = data.id;
     const [formData, setFormData] = useState({
         title: '',
         date: '',
-        pdf: null 
+        banner_image: null,
+        article: null,
+        admin_id: id 
     });
     useEffect(() => {
       // Set the date field to today's date when the component mounts
@@ -26,8 +30,26 @@ export default function CreatePost() {
           [name]: value
         });
   };
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        let url = 'http://127.0.0.1:8000/api/post/';
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              console.log("posted");
+            } catch (error) {
+                console.error('Error:', error);
+            }
     };
   return (
     <div className='App'>
@@ -35,7 +57,7 @@ export default function CreatePost() {
         <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
         <div className='Content'>
           <h3 className={manage.headline}>Upload Your Article</h3>
-        <form onSubmit={handleSubmit} className={manage.eventForm}>
+        <form className={manage.eventForm}>
             <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
@@ -58,19 +80,30 @@ export default function CreatePost() {
                     className={manage.dateInput}
                     />
                 </div>
-                  <div>
+                  <div className={manage.fileBox}>
                   <label htmlFor="banner">Article (*PDF only):</label><br />
-                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="pdf"
-                      name="pdf"
+                      name="article"
                       onChange={handleChange}
                       className={manage.fileInput}
                       />
                   </div>
-            </div>
-              <button type="submit">Submit</button>
+              </div>
+              <div className={manage.fileBox}>
+                  <label htmlFor="banner">Banner:</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                      <input
+                      type="file"
+                      id="image"
+                      name="banner_image"
+                      onChange={handleChange}
+                      className={manage.fileInput}
+                      />
+                  </div>
+              <button onClick={handleSubmit}>Submit</button>
               <br />
               <br />
         </form>

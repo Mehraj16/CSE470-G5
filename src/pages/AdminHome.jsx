@@ -7,71 +7,131 @@ import DoughnutChart from '../components/DoughnutChart';
 import LineChart from '../components/LineChart';
 import DoubleBarChart from '../components/DoubleBarChart';
 
-function App() {
-  const [profileData, setProfileData] = useState({});
+function AdminHome() {
   const [numEventsSignedUp, setNumEventsSignedUp] = useState(0);
   const [nearestEvent, setNearestEvent] = useState({});
+  const [userdata, setuserData] = useState([]);
+  const [admindata, setadminData] = useState([]);
+  const [myevents, setmyevents] = useState([]);
+  const [allevents, setallevents] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/profile.json');// test file used in public folder
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setProfileData(data);
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const myid = mydata.id;
 
-        // Extracting profile data
-        const { eventsSignedUp } = data;
+useEffect(() => {
+  const fetcheventData = async () => {
+    let url = 'http://127.0.0.1:8000/api/events/';
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const responseBody = await response.json(); // Read response body
   
-        if (Array.isArray(eventsSignedUp)) {//this block chooses the latest event out of of the events signed up for
-          const today = new Date().toISOString().slice(0, 10);
-          let nearestEvent = null;
-          let nearestDateDiff = null;
-  
-          for (const event of eventsSignedUp) {
-            const eventDate = new Date(event.date);
-            const dateDiff = Math.abs(eventDate - new Date(today));
-  
-            if (nearestEvent === null || dateDiff < nearestDateDiff) {
-              nearestEvent = event;
-              nearestDateDiff = dateDiff;
-            }
-          }
-  
-          setNearestEvent(nearestEvent); //info regarding the earliest upcoming event
-          setNumEventsSignedUp(eventsSignedUp.length);
-        } else {
-          console.error('eventsSignedUp is not an array');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      if (!response.ok) {
+        console.error('Failed request:', responseBody); // Log error and response body
+        throw new Error('Failed request');
       }
-    };
+      const eventsArray = Object.values(responseBody);
+      const filteredEvents = eventsArray.filter(event => event.admin_id === myid);
+      setmyevents(filteredEvents);
+      const OtherfilteredEvents = eventsArray.filter(event => event.admin_id !== myid);
+      setallevents(OtherfilteredEvents)
+      const today = new Date().toISOString().slice(0, 10);
+      let nearestEvent = null;
+      let nearestDateDiff = null;
+      let count = 0;
+      for (const event of filteredEvents) {
+        const eventDate = new Date(event.date);
+        if (eventDate >= new Date(today)) {
+          count+=1;
+          const dateDiff = Math.abs(eventDate - new Date(today));
+          if (nearestEvent === null || dateDiff < nearestDateDiff) {
+            nearestEvent = event;
+            nearestDateDiff = dateDiff;
+          }
+        }
+      setNearestEvent(nearestEvent)
+      }
+      setNumEventsSignedUp(count)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   
-    fetchData();
-  }, []);
-  
+  fetcheventData();
+}, []);
+
+useEffect(() => {
+  fetchData();
+}, []);
+
+const fetchData = async () => {
+  let url;
+  url = 'http://127.0.0.1:8000/api/admins';
+  try {
+    const response = await fetch(url, {
+         method: 'GET',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+     });
+        const responseBody = await response.json(); // Read response body
+        if (!response.ok) {
+            console.error('Failed request:', responseBody); // Log error and response body
+            throw new Error('Failed request');
+        }
+        setadminData(responseBody);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+useEffect(() => {
+  fetchuserData();
+}, []);
+
+const fetchuserData = async () => {
+  let url;
+  url = 'http://127.0.0.1:8000/api/users';
+  try {
+    const response = await fetch(url, {
+         method: 'GET',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+     });
+        const responseBody = await response.json(); // Read response body
+        if (!response.ok) {
+            console.error('Failed request:', responseBody); // Log error and response body
+            throw new Error('Failed request');
+        }
+        setuserData(responseBody);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
   return (
     <>
       <div className='App'>
         <AdminSidebar />
-        <AdminHeader profilepic={`/src/assets/${profileData.profileImage}`} /> {/* Sends the profile image from fetched data */}
+        <AdminHeader /> {/* Sends the profile image from fetched data */}
         <div className='Content'>
           <AdminInfo 
-            firstName={profileData.firstName}
+            data={mydata}
             totalEvents={numEventsSignedUp}
             nearestEvent={nearestEvent}
-            profilepic={profileData.profileImage}
+            profilepic={mydata.profileImage}
           />
           <div className='first-layer'>
-            <DoughnutChart />
-            <DoubleBarChart />
+            <DoughnutChart userdata={userdata} admindata={admindata}/>
+            <DoubleBarChart userdata={userdata} admindata={admindata}/>
           </div>
           <br />
           <br />
-          <LineChart />
+          <LineChart myevents={myevents} allevents={allevents}/>
           <br />
         </div>
       </div>
@@ -79,4 +139,4 @@ function App() {
   );
 }
 
-export default App;
+export default AdminHome;

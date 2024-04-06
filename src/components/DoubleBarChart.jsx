@@ -2,60 +2,72 @@ import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import chartcss from '../css/chart.module.css'
 
-const DoubleBarChart = () => {
+const DoubleBarChart = ({ userdata, admindata }) => {
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
       {
         label: "Admins",
         data: [],
-        backgroundColor: "rgb(244, 80, 80, 0.8)", // Blue color
+        backgroundColor: "rgb(244, 80, 80, 0.8)", // Red color
       },
       {
         label: "Volunteers",
         data: [],
-        backgroundColor: "rgb(60, 72, 107, 0.8)", // Red color
+        backgroundColor: "rgb(60, 72, 107, 0.8)", // Blue color
       },
     ]
   });
 
   useEffect(() => {
-    // Mock data for admins and volunteers for each month of a year
-    const mockData = {
-      "January": { admins: 5, volunteers: 10 },
-      "February": { admins: 8, volunteers: 15 },
-      "March": { admins: 10, volunteers: 12 },
-      "April": { admins: 6, volunteers: 14 },
-      "May": { admins: 9, volunteers: 11 },
-      "June": { admins: 7, volunteers: 13 },
-      "July": { admins: 11, volunteers: 9 },
-      "August": { admins: 8, volunteers: 12 },
-      "September": { admins: 10, volunteers: 10 },
-      "October": { admins: 12, volunteers: 8 },
-      "November": { admins: 9, volunteers: 11 },
-      "December": { admins: 7, volunteers: 13 }
-    };
+    const monthCounts = {};
 
-    // Extract labels and data from mock data
-    const labels = Object.keys(mockData);
-    const adminData = labels.map(date => mockData[date].admins);
-    const volunteerData = labels.map(date => mockData[date].volunteers);
+    // Count months for admins
+    for (const key in admindata) {
+      const item = admindata[key];
+      const date = new Date(item.AccountCreationDate);
+      const month = date.toLocaleString('en-US', { month: 'long' });
+      if (monthCounts[month]) {
+        monthCounts[month].admins = (monthCounts[month].admins || 0) + 1;
+      } else {
+        monthCounts[month] = { admins: 1 };
+      }
+    }
 
-    // Update chart data state
-    setChartData({
+    // Count months for volunteers
+    for (const key in userdata) {
+      const item = userdata[key];
+      const date = new Date(item.AccountCreationDate);
+      const month = date.toLocaleString('en-US', { month: 'long' });
+      if (monthCounts[month]) {
+        monthCounts[month].volunteers = (monthCounts[month].volunteers || 0) + 1;
+      } else {
+        monthCounts[month] = { volunteers: 1 };
+      }
+    }
+
+    // Extract labels and data from monthCounts
+    const labels = Object.keys(monthCounts);
+    const adminData = labels.map(month => monthCounts[month].admins || 0);
+    const volunteerData = labels.map(month => monthCounts[month].volunteers || 0);
+
+    // Set chart data
+    setChartData(prevChartData => ({
+      ...prevChartData,
       labels: labels,
       datasets: [
         {
-          ...chartData.datasets[0],
+          ...prevChartData.datasets[0],
           data: adminData,
         },
         {
-          ...chartData.datasets[1],
+          ...prevChartData.datasets[1],
           data: volunteerData,
         }
       ]
-    });
-  }, []);
+    }));
+  }, [admindata, userdata]);
+
 
   return (
     <div className={chartcss.container}>

@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { MdOutlineFileUpload } from "react-icons/md";
+import manage from '../css/manage.module.css';
+import {useNavigate} from 'react-router-dom';
 
 function DeleteAccountPopup({ onCancel, onConfirm }) {
     return (
@@ -7,23 +10,43 @@ function DeleteAccountPopup({ onCancel, onConfirm }) {
           <h3>Are you sure?</h3>
           <p>Deleting the account will permanently erase all your data. You will not be able to retrieve any data after.</p>
           <div className="btn-group">
-            <button onClick={onCancel}>Cancel</button>
-            <button onClick={onConfirm}>Confirm</button>
+            <button className='cancel-btn' onClick={onCancel}>Cancel</button>
+            <button className='del-btn' onClick={onConfirm}>Confirm</button>
           </div>
         </div>
       </div>
     );
   }
   
-function ChangePasswordPopup({ onClose }) {
+function ChangePasswordPopup({ onClose, formData }) {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-
-    const handleChange = () => {
-        // Add your logic here to handle password change
-        // You can send oldPassword and newPassword to your backend for validation and update
-
-        // After password change, close the popup
+    const id = formData.id
+    const requestbody = {
+        "userid": id,
+        "oldpass": oldPassword,
+        "newpass": newPassword
+    }
+    const handleChange = async (e) => {
+        e.preventDefault();
+        try {
+            console.log(requestbody)
+            let url = 'http://127.0.0.1:8000/change-pass/'
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestbody),
+            });
+            const responseBody = await response.json();
+            if (!response.ok) {
+                console.error('Failed request:', responseBody);
+                throw new Error('Failed to update data');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
         onClose();
     };
 
@@ -50,7 +73,9 @@ function ChangePasswordPopup({ onClose }) {
     );
 }
 
-export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs}) {
+export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs, saveInputs}) {
+    
+    const navigation = useNavigate();
 
     const handleChange = (field, e) => {
         handleInputChange(field, e.target.value);
@@ -76,12 +101,26 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
         setShowDeletePopup(false);
     };
 
-    const handleConfirmDelete = () => {
-        // Add logic to delete the account here
-        // You can make an API call or perform any other action
-
-        // After deletion, close the popup
-        setShowDeletePopup(false);
+    const handleConfirmDelete = async () => {
+        try {
+            
+            const id = formData.id;
+            let url = `http://127.0.0.1:8000/delete-account/${id}`
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const responseBody = await response.json();
+            if (!response.ok) {
+                console.error('Failed request:', responseBody);
+                throw new Error('Failed to update data');
+            }
+            navigation('/');
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -116,9 +155,24 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                         <label htmlFor="email">Email:</label><br />
                         <input type="email" id="email" name="email" value={formData.email} disabled /><br /><br />
                     </div>
-                    <div>
-                        <label htmlFor="password">Password:</label><br />
-                        <input type="password" id="password" name="password" value={formData.password} disabled/><br /><br />
+                    <div className={manage.fileBox} style={{
+                        paddingRight:'45px'
+                    }}>
+                        <label htmlFor="profile-pic-update">Profile Picture:</label><br />
+                        <label htmlFor="pro-pic" className={manage.filelabel} style={{
+                            padding:'5px 8px',
+                            paddingLeft: '4px'
+                        }}><MdOutlineFileUpload className={manage.icon} style={{
+                            width: '18x',
+                            height: '18px'
+                        }}/>&nbsp;| Choose File</label><br />
+                        <input
+                        type="file"
+                        id="png"
+                        name="png"
+                        onChange={(e) => handleChange('profileImage', e)}
+                        className={manage.fileInput}
+                        /><br /><br />
                     </div>
                 </div>
                 <label htmlFor="biography">Biography:</label><br />
@@ -182,7 +236,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                     </div>
                 </div>
                 <div className='btn2'>
-                    <button type='submit'>Save</button>
+                    <button onClick={saveInputs}>Save</button>
                     <button onClick={cancelInputs}>Cancel</button>
                 </div>
             </form>
@@ -197,7 +251,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                 }}>
                     <button className='del-btn' onClick={handlePopupToggle}>Change Password</button>
                 </div>
-                {showPopup && <ChangePasswordPopup onClose={handlePopupToggle} />}
+                {showPopup && <ChangePasswordPopup onClose={handlePopupToggle} formData={formData}/>}
             </div>
             <br />
             <div>

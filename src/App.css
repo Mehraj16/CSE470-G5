@@ -3,6 +3,10 @@
   --acc: #3C486B;
   --text: #F45050;
 }
+[data-theme="mvv"]{
+  --acc: #74c091;
+  --text: #F45050;
+}
 ::-webkit-scrollbar {
   width: 4px;
   height: 5px;
@@ -20,13 +24,25 @@
   background-color: #555;
 }
 body, html, .App {
-  font-family: "Libre Franklin", sans-serif;
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
   background-color: var(--main);
   overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
+}
+h3, h2{
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size:24px;
+}
+h4{
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size:20px;
 }
 .Content {
   display: block;
@@ -110,5 +126,8 @@ body, html, .App {
 .leading-title{
   margin: 50px 0 0 280px;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 400;
+}
+.first-layer{
+  display: flex;
 }

@@ -15,7 +15,7 @@ export default function Profile(props) {
             </div>
             <div className='a2'>
                 <p>Score</p>
-                <p className='propcontent'>{formData.score}</p>
+                <p className='propcontent'>{formData.lifetimeScore}</p>
             </div>
             <div className='a3'>
                 <p>Medals</p>

@@ -12,7 +12,7 @@ function Sidebar() {
   const navigateTo = useNavigate();
   const handleLogout = () => {
     localStorage.clear();
-    // navigateTo('/')
+    navigateTo('/')
   };
 
   return (
@@ -21,7 +21,7 @@ function Sidebar() {
         <img src={logo} alt="Logo" width="70" />
       </div>
       <ul className="list">
-        <li className='list-item'><FaHome className='icon'/><a href="/">Home</a></li>
+        <li className='list-item'><FaHome className='icon'/><a href="/home">Home</a></li>
         <li className='list-item'><BsCalendar3Event className='icon'/><a href="/events">Event</a></li>
         <li className='list-item'><RxDashboard className='icon'/><a href="/discover">Discover</a></li>
         <li className='list-item'><VscSettings className='icon'/><a href="/settings">Settings</a></li>

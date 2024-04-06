@@ -4,13 +4,13 @@ import Header from '../components/Header';
 import Cards from '../components/Cards';
 import Filter from '../components/Filter';
 import { useLocation, useNavigate } from 'react-router-dom';
+import MvvMode from '../components/MvvMode';
 
 function Events() {
   const location = useLocation();
   const props = location.state;
   
   const [data, setData] = useState([]);
-  const [profileData, setProfileData] = useState({});
   const [filterOption, setFilterOption] = useState(props ? props : 'all');
   const [signedData, setSignedData] = useState([]);
   const [suggestedData, setSuggestedData] = useState([]);
@@ -19,24 +19,23 @@ function Events() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileResponse, dataResponse, signedResponse, suggestedResponse] = await Promise.all([
-          fetch('/profile.json'),
-          fetch('/data.json'),
-          fetch('/signedUp.json'),
+        const [dataResponse, signedResponse, suggestedResponse] = await Promise.all([
+          fetch('http://127.0.0.1:8000/api/events/'),
+          fetch('http://127.0.0.1:8000/api/events-signed-up/'),
           fetch('/suggested.json')
         ]);
-
-        const profileData = await profileResponse.json();
         const data = await dataResponse.json();
         const signed = await signedResponse.json();
         const suggested = await suggestedResponse.json();
 
-        setProfileData(profileData);
         setData(data);
         setSignedData(signed);
         setSuggestedData(suggested);
 
-        const commonIds = signed.map(signedItem => signedItem.id).filter(id => data.some(item => item.id === id));
+        const dataArray = Array.isArray(data) ? data : [data];
+        const commonIds = signed
+          .map(signedItem => signedItem.event_id)
+          .filter(id => dataArray.some(item => item.id === id));
         setCommonIds(commonIds);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -71,32 +70,51 @@ function Events() {
 
   const navigation = useNavigate();
   const handleClick = (item) => {
-    const { id, title, image, date, time } = item;
-    const profilepic = profileData.profileImage;
-    navigation('../eventdetails', { state: { id, title, image, date, time, profilepic } });
+    navigation('../eventdetails', { state: item });
   };
 
   return (
     <div className='App'>
-      <Sidebar profilepic={`/src/assets/${profileData.profileImage}`}/>
-      <Header profilepic={`/src/assets/${profileData.profileImage}`} />
+      <MvvMode />
+      <Sidebar />
+      <Header />
       <div className='Content'>
         <div className='filter'>
           <Filter onOptionSelect={handleFilterOptionSelect} option={filterOption}/>
         </div>
         <div className='card-container'>
-          {filteredData.map(item => (
+        {Array.isArray(filteredData) ? (
+          filteredData.map(item => (
             <Cards
               key={item.id}
               id={item.id}
+              adminid={item.admin_id}
               title={item.title}
-              image={`/src/assets/${item.image}`}
               date={item.date}
               time={item.time}
-              profilepic={profileData.profileImage}
+              location={item.location}
+              banner_image={item.image}
+              description={item.description}
               click={() => handleClick(item)}
             />
-          ))}
+          ))
+        ) : (
+          Object.values(filteredData).map(item => (
+            <Cards
+              key={item.id}
+              id={item.id}
+              adminid={item.admin_id}
+              title={item.title}
+              date={item.date}
+              time={item.time}
+              location={item.location}
+              banner_image={item.image}
+              description={item.description}
+              click={() => handleClick(item)}
+            />
+          ))
+        )}
+
         </div>
       </div>
     </div>

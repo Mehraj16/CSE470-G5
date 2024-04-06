@@ -3,6 +3,10 @@
     width: 90vw;
     height: 70vh;
 }
+.eventContainer{
+  width: 96%;
+  font-family: "Poppins", sans-serif;
+}
 .fullTable{
   height: 85%;
     overflow-y: scroll;
@@ -18,10 +22,11 @@
 .column {
     flex: 1;
     padding: 10px;
+    white-space: nowrap;
 }
 #head, #head3{
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 300;
     background-color: var(--acc);
     color: white;
 }
@@ -31,7 +36,7 @@
 .h3{
     border-bottom: 1px solid;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 400;
 }
   .columnbtn button, .columnbtns button {
     font-size: 16px;
@@ -56,4 +61,23 @@
   .row:nth-child(even) {
     background-color: rgba(214, 219, 255, 0.5);
   }
-  
+/* requests.module.css */
+.volunteerContainer{
+  overflow-x: scroll;
+}
+.table {
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.cell {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.head {
+  font-weight: 400;
+}

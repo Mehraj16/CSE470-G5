@@ -19,14 +19,28 @@ const ViewAll = () => {
   }, [currentPage, props]);
 
   const fetchData = async () => {
-    let url = '/article.json'; // Default URL
-    if (props.someProp === 'jobs') { // Check prop value
-      url = '/jobs.json'; // Change URL if prop value matches
+    let url = 'http://127.0.0.1:8000/api/posts/'; // Default URL
+    if (props.type === 'jobs') { // Check prop value
+      url = 'http://127.0.0.1:8000/api/jobs/';
     }
-    const response = await fetch(url);
-    const jsonData = await response.json();
-    setData(jsonData);
-    setTotalItems(jsonData.length); 
+    try {
+    const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+        });
+    const responseBody = await response.json();
+        if (!response.ok) {
+            console.error('Failed request:', responseBody);
+            throw new Error('Failed request');
+          }
+            setData(responseBody);
+            console.log(data)
+            setTotalItems(responseBody.length); 
+        }catch (error) {
+                console.error('Error:', error);
+            }
   };
 
 
@@ -40,32 +54,52 @@ const ViewAll = () => {
   
   let handleClick;
   const navigate = useNavigate();
-  if (props.someProp === 'jobs') {
+  if (props.type === 'jobs') {
     handleClick = (item) => {
       navigate('../circular', {
         state: {
-          props: props.profilepic,
           id: item,
         }
       });
     };
   } else {
     handleClick = (item) => {
-      window.open(item.content, '_blank');
+      console.log(item)
+      window.open(item.article, '_blank');
     };
   }
   
   return (
     <div className='App'>
       <Sidebar />
-      <Header profilepic={`/src/assets/${props.props}`}/>
+      <Header />
       <div className='Content'>
-        <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
+        <div style={{
+          width:'80%',
+          borderBottom:'1px solid'
+        }}>
+          {props.type === 'jobs' ? <h2>Opportunities</h2> : <h2>Resources</h2>}
+        </div>
+        {props.type === 'jobs' ?
           <div className='card-container'>
             {currentPageData.map((item) => (
-                <Cards key={item.id} id={item.id} title={item.title} image={item.image} date={item.date} 
+                <Cards key={item.id} id={item.id} title={item.positionTitle} image={item.banner_image} date={item.deadline} 
                 click={() => handleClick(item)} />
               ))}
+          </div>
+          :
+          <div className='card-container'>
+            {currentPageData.map((item) => (
+                <Cards key={item.id} id={item.id} title={item.title} image={item.banner_image} date={item.date} 
+                click={() => handleClick(item)} />
+              ))}
+          </div>}
+          <div style={{
+            width:'90%',
+            display:'inline-flex',
+            justifyContent:'flex-end'
+          }}>
+          <h5>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h5>
           </div>
         <Pagination
           currentPage={currentPage}

@@ -9,31 +9,102 @@ export default function AdminInvites() {
   const [data, setData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
 
-  const location = useLocation();
-  const props = location.state;
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const myid = mydata.id;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/someProfiles.json'); 
+        let url = 'http://127.0.0.1:8000/api/requests/';
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+                console.error('Failed request:', responseBody); // Log error and response body
+                throw new Error('Failed request');
+            }
+        console.log(responseBody)
+        if (responseBody.some(item => item.admin_id === myid)) {
+          const filteredData = responseBody.filter(item => item.admin_id === myid);
+          setData(filteredData); // Set matchingData state with filtered data
         }
-        const data = await response.json();
-        setData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const [allVolunteer, setAllVolunteer] = useState([]);
+
+  const handleViewDetails = (eventId) => {
+
+    const selectedEventData = allVolunteer.find(item => item.id === eventId);
+    setSelectedData(selectedEventData);
+    console.log(selectedData);
+  };
+  const [volunteer, setVolunteer] = useState([]);
+  const [event, setEvent] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let url = 'http://127.0.0.1:8000/api/users/';
+        const volunteerResponse = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const volunteerData = await volunteerResponse.json();
+  
+        if (!volunteerResponse.ok) {
+          console.error('Failed request for volunteer data:', volunteerData);
+          throw new Error('Failed request for volunteer data');
+        }
+        setAllVolunteer(volunteerData)
+        const updatedVolunteerData = data.map(request => {
+          const volunteer = volunteerData.find(volunteer => volunteer.id === request.volunteer_id);
+          return { ...request, volunteer };
+        });
+  
+        setVolunteer(updatedVolunteerData);
+        console.log(updatedVolunteerData);
+  
+        url = 'http://127.0.0.1:8000/api/events/';
+        const eventResponse = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const eventData = await eventResponse.json();
+  
+        if (!eventResponse.ok) {
+          console.error('Failed request for event data:', eventData);
+          throw new Error('Failed request for event data');
+        }
+  
+        const updatedEventData = updatedVolunteerData.map(request => {
+          const event = eventData.find(event => event.id === request.event_id);
+          return { ...request, event }; // Add event details to the request object
+        });
+  
+        setEvent(updatedEventData);
+        console.log(updatedEventData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
   
     fetchData();
-  }, []);
-
-  const handleViewDetails = (eventId) => {
-    // Find the data with the matching eventId
-    const selectedEventData = data.find(item => item.id === eventId);
-    setSelectedData(selectedEventData);
-    console.log(selectedData);
-  };
+  }, [data]); // Include data as a dependency if it's dynamic and might change
+  
 
   // const handleAccept = (eventId) => {
   //   setData(prevData => {
@@ -61,10 +132,10 @@ export default function AdminInvites() {
   return (
     <div className='App'>
       <Sidebar />
-      <Header profilepic={`/src/assets/${props.profilepic}`}/>
+      <Header />
       <div className='profile-content'>
         <AdminRequests
-          data={data}
+          alldata={event}
           onViewDetails={handleViewDetails}
           // onAccept={onAccept}
           // onReject={onReject}

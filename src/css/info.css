@@ -13,13 +13,12 @@
     margin: 10px 0;
     position: relative; /* Position relative for pseudo-element */
   }
-  
   .welcomeText p {
     flex: 1; /* Allow the paragraph to grow to fill the remaining space */
     text-align: left; /* Align text to the left */
     margin-left: 20px; /* Add margin for spacing */
     font-size: 35px;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--main);
   }
   
@@ -73,19 +72,19 @@
     line-height: 25px;
     padding: 5px 0;
     font-size: 25px;
-    font-weight: 600;
+    font-weight: 400;
 }
 .upcoming{
     color: var(--main);
     line-height: 20px;
     padding: 5px 0;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 300;
 }
 .eventDetail p{
     color: var(--main);
     font-size: 25px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
     padding-left: 10px;
     text-align: left;
@@ -99,7 +98,7 @@
 }
 .eventRoster p{
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 300;
     text-align: end;
 }
 .detailbtn{

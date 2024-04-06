@@ -7,42 +7,44 @@ import Pagination from '../components/Pagination';
 import ShowVolunteers from '../components/ShowVolunteers';
 
 export default function Accounts() {
-  const [profileData, setProfileData] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showList, setShowList] = useState(false);
   const [showVol, setShowVol] = useState(false);
 
+  const [adminId, setAdminId] = useState("");
+  const [password, setPassword] = useState("");
+  const [designation, setDesignation] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const itemsPerPage = 7;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/profile.json'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const Data = await response.json();
-        setProfileData(Data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
-    const response = await fetch('/admins.json');
-    const jsonData = await response.json();
-    setData(jsonData);
-    setTotalItems(jsonData.length); 
+    let url;
+    url = 'http://127.0.0.1:8000/api/admins';
+    try {
+      const response = await fetch(url, {
+           method: 'GET',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+       });
+          const responseBody = await response.json(); // Read response body
+          if (!response.ok) {
+              console.error('Failed request:', responseBody); // Log error and response body
+              throw new Error('Failed request');
+          }
+          console.log("succes");
+          setData(responseBody);
+          setTotalItems(responseBody.length); 
+      } catch (error) {
+          console.error('Error:', error);
+      }
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -52,6 +54,34 @@ export default function Accounts() {
       setCurrentPage(page);
   };
 
+  const createNewAdmin = async(e) =>{
+    let url;
+    url = 'http://127.0.0.1:8000/api/admin/register/'; // Log error if attempting to login with number
+       const requestBody = {
+           "id": adminId, // Assuming ID is numeric
+           "password": password,
+           "Designation": designation
+       };
+            
+        try {
+            const response = await fetch(url, {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                body: JSON.stringify(requestBody)
+             });
+        
+                const responseBody = await response.json(); // Read response body
+                if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+                console.log("succes");
+            } catch (error) {
+                console.error('Error:', error);
+            }
+  }
   const toggleFormVisibility = () => {
     setShowList(false);
     setShowVol(false);
@@ -71,7 +101,7 @@ export default function Accounts() {
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader profilepic={`/src/assets/${profileData.profileImage}`}/>
+      <AdminHeader/>
       <div className='Content'>
         <div>
           <h3 className={manage.headline}>Accounts</h3>
@@ -90,14 +120,19 @@ export default function Accounts() {
         {showForm && (
           <form className={manage.formCreate}>
             <div>
-              <label>Email:</label><br />
-              <input type="email" />
+              <label>ID:</label><br />
+              <input type="number" id="adminId" name="adminId" onChange={(e) => setAdminId(e.target.value)}/>
+            </div>
+            <div>
+              <label>Designation:</label><br />
+              <input type="text" id="designation" onChange={(e) => setDesignation(e.target.value)}name="Designation"/>
             </div>
             <div>
               <label>Password:</label><br />
-              <input type="password" />
+              <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
+              name="password"/>
             </div>
-            <button type="submit">Create Account</button>
+            <button onClick={createNewAdmin}>Create Account</button>
           </form>
         )}
         {showList && (
@@ -113,8 +148,8 @@ export default function Accounts() {
               {currentPageData.map((item) => (
                 <div key={item.applicationId} className={requests.row}>
                   <span className={requests.column}>{item.id}</span>
-                  <span className={requests.column}>{item.firstname} {item.lastname}</span>
-                  <span className={requests.column}>{item.designation}</span>
+                  <span className={requests.column}>{item.firstName} {item.lastName}</span>
+                  <span className={requests.column}>{item.Designation}</span>
                 </div>
               ))}
             </div>

@@ -12,44 +12,54 @@ export default function SendInvites() {
   const [profile, setProfile] = useState([]);
   const [showSelectedItems, setShowSelectedItems] = useState(false); 
   const [selectedItems, setSelectedItems] = useState([]);
-
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const admin_id = mydata.id;
+  const name = mydata.firstName;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 5;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/eventsCreated.json');
-        const jsonData = await response.json();
-        const filteredData = jsonData.filter(event => event.eventId == props.eventId);
-        setData(filteredData[0]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('/eventsCreated.json');
+  //       const jsonData = await response.json();
+  //       const filteredData = jsonData.filter(event => event.eventId == props.eventId);
+  //       setData(filteredData[0]);
 
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
   
-    fetchData();
-  }, [props.eventId]);
+  //   fetchData();
+  // }, [props.eventId]);
   
   useEffect(() => {
-    fetchProfiles();
+    fetchData();
   }, [currentPage]);
 
-  const fetchProfiles = async () => {
+  const fetchData = async () => {
+    let url;
+    url = 'http://127.0.0.1:8000/api/users';
     try {
-      const response = await fetch('/someProfiles.json');
-      const data = await response.json();
-      if (Array.isArray(data)) { // Check if data is an array
-        setProfile(data);
-        setTotalItems(data.length);
-      } else {
-        console.error('Data is not an array:', data);
+      const response = await fetch(url, {
+           method: 'GET',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+       });
+          const responseBody = await response.json(); // Read response body
+          if (!response.ok) {
+              console.error('Failed request:', responseBody); // Log error and response body
+              throw new Error('Failed request');
+          }
+          setProfile(responseBody);
+          setTotalItems(responseBody.length); 
+      } catch (error) {
+          console.error('Error:', error);
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
   };
 
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -67,19 +77,76 @@ export default function SendInvites() {
           prevSelectedItems.filter(selectedItem => selectedItem.id !== item.id)
         );
       }
+      console.log(selectedItems)
     };
   
     const handleAddButtonClick = () => {
       setShowSelectedItems(true);
     };
-      
+    const handleSubmit = async () => {
+      try {
+        for (const selectedItem of selectedItems) {
+          // Prepare the data to be sent in the request body
+          const requestData = {
+            "admin_id": admin_id,
+            "event_id": props.id,
+            "volunteer_id": selectedItem.id
+          };
+          
+          // Send a POST request to the API endpoint with the selected volunteer data
+          const response = await fetch('http://127.0.0.1:8000/api/invitations', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          });
+          
+          const responseBody = await response.json();
+          if (!response.ok) {
+            console.log(responseBody)
+            throw new Error('Failed to send invitation for volunteer:', selectedItem);
+          }
+          setSelectedItems([]);
+          setShowSelectedItems(false);
+          try{
+            const mes = `${name} has invited you to sign up.`
+            console.log(mes)
+            const requestData = {
+              "admin_id": admin_id,
+              "volunteer_id": selectedItem.id,
+              "Message": mes
+            };
+            const response = await fetch('http://127.0.0.1:8000/api/notifications', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(requestData),
+            });
+            
+            const responseBody = await response.json();
+            if (!response.ok) {
+              console.log(responseBody)
+              throw new Error('Failed to send invitation for volunteer:', selectedItem);
+            }
+          }catch (error) {
+            console.error('Error sending notifss:', error);   
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error sending invitations:', error);
+      }
+    };
+     
 
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
+      <AdminHeader />
       <div className='Content'>
-        <h3>Send Invitations For:&nbsp;&nbsp;{data.title}</h3>
+        <h3>Send Invitations For:&nbsp;&nbsp;{props.title}</h3>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
         <div className={requests.eventContainer}>
           <div className={requests.row}>
@@ -124,6 +191,7 @@ export default function SendInvites() {
                       </div>
                     ))}
                   </div>
+                  <button onClick={handleSubmit}>Send</button>
                 </>
             )}
         </div>

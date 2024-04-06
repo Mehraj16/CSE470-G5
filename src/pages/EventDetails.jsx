@@ -10,20 +10,33 @@ export default function EventDetails () {
 
   const [isClicked, setIsClicked] = useState(false);
   const [status, setStatus] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const location = useLocation();
-  const { id, title, image, date, time, profilepic } = location.state;
+  const props = location.state;
+  const jsonString = localStorage.getItem('profileData');
+  const mydata = JSON.parse(jsonString);
+  const myid = mydata.id;
+  const myemail = mydata.email;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/signedUp.json');
+        let url = 'http://127.0.0.1:8000/api/requests/';
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
         if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (data.some(item => item.id === id)) {
-
-          setStatus(true);
+                console.error('Failed request:', responseBody); // Log error and response body
+                throw new Error('Failed request');
+            }
+        console.log(responseBody)
+        if (responseBody.some(item => item.event_id === props.id)) {
+            console.log("found")
+            setStatus(true);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -32,17 +45,70 @@ export default function EventDetails () {
 
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchanotherData = async () => {
+      try {
+        let url = 'http://127.0.0.1:8000/api/events-signed-up/';
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
+        if (!response.ok) {
+                console.error('Failed request:', responseBody); // Log error and response body
+                throw new Error('Failed request');
+            }
+        console.log(responseBody)
+        if (responseBody.some(item => item.event_id === props.id)) {
+            console.log("found")
+            setStatus(true);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  const handleClick = async () => {
+    fetchanotherData();
+  }, []);
+
+  const handleClick = async (data) => {
+    console.log(data)
+    const requestBody = {
+        "admin_id": data.adminid,
+        "event_id": data.eventid,
+        "volunteer_id": myid,
+        "volunteer_email": myemail
+    }
+    console.log(requestBody)
+    let url = 'http://127.0.0.1:8000/api/requests/';
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              console.log("posted");
+            } catch (error) {
+                console.error('Error:', error);
+            }
     setIsClicked(true);
   };
   return (
     <div className='App'>
+      
       <Sidebar />
-      <Header profilepic={`/src/assets/${profilepic}`}/>
+      <Header />
       <div className='Content'>
-        {console.log(title)}
-        <Details title={title} date={date} time={time} image={`/src/assets/${image}`} isClicked={isClicked} handleClick={handleClick} status={status}/>
+        <Details title={props.title} date={props.date} time={props.time} location={props.location} description={props.description} image={props.banner_image} adminid={props.admin_id} eventid={props.id} isClicked={isClicked} handleClick={handleClick} status={status} isDisabled={isDisabled}/>
       </div>
     </div>
   )

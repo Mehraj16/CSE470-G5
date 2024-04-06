@@ -14,19 +14,19 @@
   
   .banner p {
     margin: 10px 0;
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
   }
   
   .banner p:nth-child(2) {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 400;
   }
   
   .banner p:nth-child(4),
   .banner p:nth-child(6),
   .banner p:nth-child(8) {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 400;
   }
   
   .banner p:nth-child(5),
@@ -34,7 +34,15 @@
   .banner p:nth-child(9) {
     font-size: 16px;
   }
-  .interestBtn:active, .interestBtn:focus {
-    background-color: #6d747b;
-  }
+  .interestBtn:active {
+    cursor: pointer;
+}
+
+.interestBtn[disabled] {
+    /* Styles for disabled state */
+    background-color: #ddd; /* Darker grey */
+    color: #aaa; /* Light grey */
+    cursor: not-allowed; /* Red circle cursor */
+}
+
   

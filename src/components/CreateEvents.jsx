@@ -8,21 +8,42 @@ import { MdOutlineFileUpload } from "react-icons/md";
 export default function CreateEvents() {
  const location = useLocation();
  const props = location.state;
-
+ const jsonString = localStorage.getItem('profileData');
+ const data = JSON.parse(jsonString);
+ const id = data.id;
  const [formData, setFormData] = useState({
         title: '',
         location: '',
         time: '',
         date: '',
         description: '',
-        rewardPoints: 0,
-        banner: null 
+        rewards: 0,
+        banner_image: null,
+        admin_id: id
     });
 
- const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData);
-    };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      console.log(formData);
+      let url = 'http://127.0.0.1:8000/api/events/';
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+      });
+      const responseBody = await response.json(); // Read response body
+          if (!response.ok) {
+                  console.error('Failed request:', responseBody); // Log error and response body
+                  throw new Error('Failed request');
+              }
+            console.log("posted");
+          } catch (error) {
+              console.error('Error:', error);
+          }
+  };
 
  const handleChange = (e) => {
         const { name, value } = e.target;
@@ -37,7 +58,7 @@ export default function CreateEvents() {
         <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
     <div className='Content'>
       <h3 className={manage.headline}>Create Your Event</h3>
-            <form onSubmit={handleSubmit} className={manage.eventForm}>
+            <form className={manage.eventForm}>
               <div className={manage.inputContainer}>
               <label htmlFor="title">Title:</label><br />
               <input
@@ -97,8 +118,8 @@ export default function CreateEvents() {
                       <input
                       type="number"
                       id="rewardPoints"
-                      name="rewardPoints"
-                      value={formData.rewardPoints}
+                      name="rewards"
+                      value={formData.rewards}
                       onChange={handleChange}
                       min="0"
                       />
@@ -109,13 +130,13 @@ export default function CreateEvents() {
                       <input
                       type="file"
                       id="banner"
-                      name="banner"
+                      name="banner_image"
                       onChange={handleChange}
                       className={manage.fileInput}
                       />
                   </div>
             </div>
-              <button type="submit">Create Event</button>
+              <button onClick={handleSubmit}>Create Event</button>
               <br />
               <br />
             </form>

@@ -3,18 +3,18 @@ import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
 import manage from "../css/manage.module.css";
 import { useLocation } from "react-router-dom";
-import { MdOutlineFileUpload } from "react-icons/md";
 
 export default function CreateJob() {
     const location = useLocation();
     const props = location.state;
-
+    const jsonString = localStorage.getItem('profileData');
+    const data = JSON.parse(jsonString);
+    const id = data.id;
     const [formData, setFormData] = useState({
         positionTitle: '',
-        deadlineDate: '',
-        jobDescription: '',
-        jobRequirements: '',
-        resume: null
+        deadline: '',
+        description: '',
+        admin_id: id
       });
     
       const handleChange = (e) => {
@@ -22,16 +22,27 @@ export default function CreateJob() {
         setFormData({ ...formData, [name]: value });
       };
     
-      const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFormData({ ...formData, resume: file });
-      };
-    
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit form data, formData will contain the entered data and selected file
-        console.log('Form submitted with data:', formData);
-        // You can perform further submission logic here
+        console.log(formData);
+        // let url = 'http://127.0.0.1:8000/api/jobs/';
+        // try {
+        //   const response = await fetch(url, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(formData)
+        // });
+        // const responseBody = await response.json(); // Read response body
+        //     if (!response.ok) {
+        //             console.error('Failed request:', responseBody); // Log error and response body
+        //             throw new Error('Failed request');
+        //         }
+        //       console.log("posted");
+        //     } catch (error) {
+        //         console.error('Error:', error);
+        //     }
       };
   return (
     <div className="App">
@@ -56,18 +67,8 @@ export default function CreateJob() {
         <label htmlFor="jobDescription">Job Description:</label><br />
         <textarea
           id="jobDescription"
-          name="jobDescription"
+          name="description"
           value={formData.jobDescription}
-          onChange={handleChange}
-          required
-        />
-        </div>
-        <div className={manage.inputContainer}>
-        <label htmlFor="jobRequirements">Job Requirements:</label><br />
-        <textarea
-          id="jobRequirements"
-          name="jobRequirements"
-          value={formData.jobRequirements}
           onChange={handleChange}
           required
         />
@@ -78,25 +79,12 @@ export default function CreateJob() {
                 <input
                 type="date"
                 id="deadlineDate"
-                name="deadlineDate"
+                name="deadline"
                 value={formData.deadlineDate}
                 onChange={handleChange}
                 required
                 className={manage.dateInput}
                 />
-            </div>
-            <div className={manage.filecontainer}>
-              <label>CV(*PDF only):</label><br />
-              <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
-              <input
-                type="file"
-                id="resume"
-                name="resume"
-                accept=".pdf"
-                onChange={handleFileChange}
-                required
-                className={manage.fileInput}
-              />
             </div>
         </div>
             <button type="submit">Create Posting</button>

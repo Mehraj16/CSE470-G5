@@ -1,49 +1,130 @@
-import React ,{ useState } from 'react';
-import login from './css/LoginSignup.module.css'
-// import user_icon from '../assets/person.png'
-// import email_icon from '../assets/email.png'
-// import password_icon from '../assets/password.png'
-import logo_icon from'./assets/logo.png'
+import React, { useState } from 'react';
+import login from './css/LoginSignup.module.css';
+import logo_icon from './assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 const LoginSignup = () => {
-    const [action,setAction]= useState("Login");
+
+        const navigation = useNavigate();
+        const [username, setUsername] = useState("");
+        const [password, setPassword] = useState("");
+        const [action, setAction] = useState("");
+    
+        const handleSubmit = async (event, click) => {
+            event.preventDefault(); // Prevent the default form submission behavior
+            setAction(click);
+            console.log(click)
+            if (isNaN(username)) { // Check if username is not a number (assuming ID is numeric)
+                goTouserfetch();
+            } else {
+                goToadminfetch();
+            }
+        };
+        
+        const goTouserfetch = async () => {
+            let url;
+        
+            if (action === 'login') {
+                url = 'http://127.0.0.1:8000/user_login/'; // Email login API
+            } else if (action === 'signup') {
+                url = 'http://127.0.0.1:8000/register/'; // Log error if attempting to sign up with email   
+            }
+
+            const requestBody = {
+                "email": username,
+                "password_hash": password
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+        
+                const responseBody = await response.json(); // Read response body
+        
+                if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+                localStorage.setItem('profileData', JSON.stringify(responseBody));
+                navigation("/home");
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        
+        const goToadminfetch = async () => {
+            let url;
+        
+            if (action === 'login') {
+                url = 'http://127.0.0.1:8000/api/admin/user_login/'; // Log error if attempting to login with number
+                   
+            } else if (action === 'signup') {
+                console.error('Cannot  with number'); 
+                return;
+            }
+            const requestBody = {
+                "id": parseInt(username), // Assuming ID is numeric
+                "password": password
+            };
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+        
+                const responseData = await response.json(); // Read response body
+        
+                if (!response.ok) {
+                    console.error('Failed request:', responseData); // Log error and response body
+                    throw new Error('Failed request');
+                }
+                console.log(responseData)
+                localStorage.setItem('profileData', JSON.stringify(responseData));
+                navigation("/admin");
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        
+
     return (
         <div className={login.container}>
-    <div className={login.header}>
-        <div className={login.logo}>
-            <img src={logo_icon} alt=""/>
+            <div className={login.header}>
+                <div className={login.logo}>
+                    <img src={logo_icon} alt=""/>
+                </div>
+                <div className={login.text}>
+                    Login
+                </div>
+                <div className={login.underline}></div>
+            </div>
+            <form>
+                <div className={login.inputs}>
+                    <div className={login.input}>
+                        <input type="text" id="username" name="username" placeholder='Username' onChange={(e) => setUsername(e.target.value)} />
+                    </div>
+                    <div className={login.input}>
+                        <input type="password" id="password" name="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                </div>
+                <div className={login['submit-container']}>
+                    <button type="submit" className={login.submit} onClick={(e) => handleSubmit(e, 'login')}>Login</button>
+                </div>
+                <div className={login['submit-container']}>
+                    <button type="submit" className={login.submit} onClick={(e) => handleSubmit(e, 'signup')}>Sign Up</button>
+                </div>
+            </form>
         </div>
-        <div className={login.text}>
-            {action}  
-        </div>
-        <div className={login.underline}></div>
-    </div>
-    <div className={login.inputs}>
-        {action==="Login" ? <div></div> : <div className={login.input}>
-            {/* <img src={user_icon} alt=""/> */}
-            <input type="text" placeholder='Username'/>
-        </div>}
-        <div className={login.input}>
-            {/* <img src={email_icon} alt=""/> */}
-            <input type="email" placeholder='Email'/>
-        </div>
-        <div className={login.input}>
-            {/* <img src={password_icon} alt=""/> */}
-            <input type="password" placeholder='Password'/>
-        </div> 
-    </div>
-    {action==="Sign Up" ? 
-        <div className={login['submit-acc-container']}>
-            <div className={login['submit-acc']}>Create Account</div>
-        </div> :
-        <div className={login.Account}>Don't Have Any Account?<span> <div onClick={()=>{setAction("Sign Up")}}>Sign Up Now! </div></span> </div>
-    }
-    <div className={login['submit-container']}>
-        <div className={action==="Login" ? `${login.submit} ${login.gray}` : login.submit} onClick={()=>{setAction("Sign Up")}}>Sign Up</div>
-        <div className={action==="Sign Up" ? `${login.submit} ${login.gray}` : login.submit} onClick={()=>{setAction("Login")}}>Login</div>
-    </div>
-</div>
+    );
+};
 
-    )
-}
-export default LoginSignup
+export default LoginSignup;

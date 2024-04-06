@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import { RxDashboard } from "react-icons/rx";
 import { BsCalendar3Event } from "react-icons/bs"
@@ -8,6 +9,11 @@ import logo from '../assets/logo.png'
 import '../css/sidebar.css';
 
 export default function AdminSidebar() {
+  const navigateTo = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    navigateTo('/')
+  };
   return (
     <div className="sidebar">
         <div className="logo">
@@ -18,7 +24,7 @@ export default function AdminSidebar() {
             <li className='list-item'><BsCalendar3Event className='icon'/><a href="/manage">Manage</a></li>
             <li className='list-item'><RxDashboard className='icon'/><a href="/accounts">Accounts</a></li>
             <li className='list-item'><VscSettings className='icon'/><a href="/adminsettings">Settings</a></li>
-            <li className='list-item'><IoLogOut className='icon'/><a href="/">Logout</a></li>
+            <li className='list-item'><IoLogOut className='icon'/><a onClick={handleLogout} href=''>Logout</a></li>
         </ul>
     </div>
   )

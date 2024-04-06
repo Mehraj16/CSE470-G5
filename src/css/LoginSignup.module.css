@@ -28,7 +28,7 @@
 .text{
     color: #3c009d;
     font-size: 48px;
-    font-weight: 700; 
+    font-weight: 500; 
 }
 .underline{
     width:61px;
@@ -78,7 +78,7 @@
     background: #4c00b4;
     border-radius:50px;
     font-size: 19px;
-    font-weight: 700;
+    font-weight: 500;
     cursor: pointer;
 }
 .gray{
@@ -110,6 +110,6 @@
     background:blueviolet;
     border-radius:50px;
     font-size: 19px;
-    font-weight: 700;
+    font-weight: 500;
     cursor: pointer;
 }

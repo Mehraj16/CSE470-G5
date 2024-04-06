@@ -22,8 +22,11 @@
     background-color: rgb(244 80 77 / 80%);
     color: var(--main);
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: 400;
     cursor: pointer;
+}
+.eventsCreate div p, .jobsCreate div p{
+  color: var(--main);
 }
 .eventsCreate div:hover{
     background-color: rgba(242, 65, 62, 0.9);
@@ -89,7 +92,7 @@
   width:100%;
 }
 .inputContainer textarea{
-    width: 703px; 
+    width: 637px; 
     height: 125px;
     border: none;
     outline: none;
@@ -98,7 +101,7 @@
     resize: none;
 }
 .inputContainer label{
-    font-weight: 600;
+    font-weight: 400;
     font-size: 18px;
     color: var(--acc);
 }
@@ -135,13 +138,19 @@
     position: relative;
     display: inline-block;
   }
-  
+.fileBox{
+  position: relative;
+}
+.fileBox input[type="file"]{
+  width: 155px;
+    height: 41px;
+    cursor: pointer;
+}
   .fileInput {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 24px;
+    left: 0px;
     opacity: 0;
-    cursor: pointer;
   }
   .icon{
     width: 25px;
@@ -170,7 +179,7 @@
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 65vw;
+  width: 70vw;
 }
 
 .applicationDetails h3 {
@@ -193,7 +202,7 @@
 }
 
 .applicationDetails strong {
-  font-weight: bold; /* Make text bold */
+  font-weight: 400; /* Make text bold */
 }
 
 .applicationDetails a {

@@ -14,7 +14,7 @@
     margin-right: 50px;
     width: 150px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
 }
 .profilePic {

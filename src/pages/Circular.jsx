@@ -13,7 +13,7 @@ export default function Circular() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/jobs.json'); 
+        const response = await fetch('http://127.0.0.1:8000/api/jobs/'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -70,6 +70,7 @@ export default function Circular() {
 
   return (
     <div className='App'>
+      
       <Sidebar />
       <Header profilepic={`/src/assets/${props}`}/>
       <div className='Content' style={{
@@ -84,7 +85,7 @@ export default function Circular() {
                 height: 'auto',
             }}/>
             <p>Position Title</p>
-            <p>{data.title}</p>
+            <p>{data.positionTitle}</p>
             <p>Application deadline</p>
             <p>{formatDate(data.date)}</p>
             <p>Job Details</p>

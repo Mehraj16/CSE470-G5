@@ -59,6 +59,7 @@ export default function Invites() {
 
   return (
     <div className='App'>
+      
       <Sidebar />
       <Header profilepic={`/src/assets/${props.profilepic}`}/>
       <div className='profile-content'>

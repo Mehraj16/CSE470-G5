@@ -1,11 +1,11 @@
 import React from 'react'
-import '../css/header.css';
+import header from '../css/header.module.css';
 
 export default function AdminHeader(props) {
   return (
-    <div className="navbar">
-        <div className="profile-admin">
-            <img src={props.profilepic} alt="Profile Picture" className="profile-pic" />
+    <div className={header.navbar}>
+        <div className={header.profile}>
+            <img src={props.profilepic} alt="Profile Picture" className={header.profilePic} />
         </div>
       </div>
   )

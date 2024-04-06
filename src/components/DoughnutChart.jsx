@@ -3,7 +3,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import chartcss from '../css/chart.module.css'
 
-const DoughnutChart = () => {
+const DoughnutChart = ({ userdata, admindata }) => {
   const chartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
 
@@ -11,7 +11,7 @@ const DoughnutChart = () => {
   const data = {
     labels: ['Volunteers', 'Admins'],
     datasets: [{
-      data: [70, 30], // Sample data percentages
+      data: [userdata.length, admindata.length], // Sample data percentages
       backgroundColor: [
         "rgb(60, 72, 107, 0.8)",
         "rgb(244, 80, 80, 0.8)"

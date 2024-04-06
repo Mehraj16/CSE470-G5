@@ -10,7 +10,9 @@ import requests from'../css/requests.module.css';
 export default function AdminJobs() {
     const location = useLocation();
     const props = location.state;
-  
+    const jsonString = localStorage.getItem('profileData');
+    const mydata = JSON.parse(jsonString);
+    const admin_id = mydata.id;
     const [currentPage, setCurrentPage] = useState(1);
     const [data, setData] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
@@ -25,12 +27,26 @@ export default function AdminJobs() {
     // Function to fetch data for the current page
     const fetchData = async () => {
       // For the sake of this example, fetching mock JSON data
-      const response = await fetch('/jobApply.json');
-      const jsonData = await response.json();
-      const filteredData = jsonData.filter(event => event.authorId === 5);
-    
-      setData(filteredData);
-      setTotalItems(filteredData.length); 
+      let url = 'http://127.0.0.1:8000/api/jobs/';
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              const filteredData = responseBody.filter(event => event.admin_id === admin_id);
+              setData(filteredData);
+              setTotalItems(filteredData.length);
+
+            } catch (error) {
+                console.error('Error:', error);
+            }  
     };
     
     const startIndex = (currentPage - 1) * itemsPerPage;

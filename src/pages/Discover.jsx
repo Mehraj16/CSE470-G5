@@ -5,34 +5,16 @@ import Jobs from '../components/Jobs'
 import { IoArrowForwardCircle } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import Leaderboard from '../components/Leaderboard';
+import MvvMode from '../components/MvvMode';
 
 export default function Discover() {
-
-  const [profileData, setProfileData] = useState([]);
   const [suggestedData, setSuggestedData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/profile.json'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const Data = await response.json();
-        setProfileData(Data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, []);
 
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/jobs.json'); 
+        const response = await fetch('http://127.0.0.1:8000/api/jobs/'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -51,7 +33,7 @@ export default function Discover() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('/article.json'); 
+        const response = await fetch('http://127.0.0.1:8000/api/posts/'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -85,7 +67,7 @@ export default function Discover() {
   const showResources = () => {
     navigation('../viewall', {
       state: {
-        props: profileData.profileImage,
+        type:'articles',
       }
     });
   };
@@ -93,8 +75,7 @@ export default function Discover() {
   const showJobs = () => {
     navigation('../viewall', {
       state: {
-        props: profileData.profileImage,
-        someProp: 'jobs',
+        type: 'jobs',
       }
     });
   };
@@ -103,8 +84,9 @@ export default function Discover() {
   }
   return (
     <div className='App'>
+      <MvvMode />
       <Sidebar />
-      <Header profilepic={`/src/assets/${profileData.profileImage}`}/>
+      <Header />
       <div className='Content' style={{
         marginRight: '25px',
       }}>
@@ -116,7 +98,7 @@ export default function Discover() {
         <div className='scroll-container'>
             <div className='job-cards'>
                 {suggestedData.map(item => (
-                        <Jobs key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} type={'Date'} profilepic={`/src/assets/${profileData.profileImage}`} code={0}/>
+                        <Jobs key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} type={'Date'}code={0}/>
                 ))}
             </div>
         </div>
@@ -127,7 +109,7 @@ export default function Discover() {
         <div className='scroll-container'>
             <div className='job-cards'>
                 {resource.map(item => (
-                        <Jobs key={item.id} id={item.id} title={item.title} image={item.image} date={item.date} type={'Published'} profilepic={`/src/assets/${profileData.profileImage}`} content={item.content} code={1}/>
+                        <Jobs key={item.id} id={item.id} title={item.title} image={item.banner_image} date={item.date} type={'Published'} article={item.article} code={1}/>
                 ))}
             </div>
         </div>
@@ -138,7 +120,7 @@ export default function Discover() {
         <div className='scroll-container'>
             <div className='job-cards'>
                 {data.map(item => (
-                        <Jobs key={item.id} id={item.id} title={item.title} image={`/src/assets/${item.image}`} date={item.date} type={'Deadline'} profilepic={`/src/assets/${profileData.profileImage}`} code={2}/>
+                        <Jobs key={item.id} id={item.id} title={item.positionTitle} image={item.banner_image} date={item.deadline} type={'Deadline'} code={2}/>
                 ))}
             </div>
         </div>

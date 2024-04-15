@@ -10,6 +10,11 @@
     z-index: 2;
     margin-bottom: 20px;
 }
+.alertdiv{
+  width: 62vw;
+  display: flex;
+  justify-content: center;
+}
 .profile {
     margin-right: 50px;
     width: 150px;
@@ -73,3 +78,10 @@
   .h2{
     border-bottom: 1px solid;
   }
+  .notificationSpan {
+    display: block;
+    border-bottom: 1px solid #ccc; /* Soft bottom border */
+    padding-bottom: 10px; /* Add some padding for spacing */
+    margin-bottom: 10px; /* Add margin to separate each notification */
+  }
+  

@@ -23,7 +23,7 @@ class VolunteerProfile(Base):
     eventCount = Column(Integer, default=0, nullable=True)
     interests = Column(String(200), nullable=True)
     skills = Column(String(200), nullable=True)
-    profileImage = Column(LargeBinary, nullable=True)
+    profileImage = Column(String(50), nullable=True)
     AccountCreationDate = Column(Date, nullable=False)
 
     # Define relationships
@@ -33,7 +33,6 @@ class VolunteerProfile(Base):
     invitations = relationship("Invitation", back_populates="volunteer")
     mvv = relationship("MVV", back_populates="volunteer_profile")
     leaderboard = relationship("Leaderboard", back_populates="volunteer_profile")
-    suggested = relationship("Suggested", back_populates="volunteer_profile")
     applications = relationship("Applications", back_populates="volunteer_profile")
     notifications = relationship("Notifications", back_populates="volunteer_profile")
 
@@ -50,7 +49,7 @@ class AdminProfile(Base):
     blood = Column(String(5), nullable=True)
     gender = Column(String(10), nullable=True)
     biography = Column(String(500), nullable=True)
-    profileImage = Column(LargeBinary, nullable=True)
+    profileImage = Column(String(50), nullable=True)
     AccountCreationDate = Column(Date, nullable=False)
     Designation = Column(String(100), nullable=False)
 
@@ -71,7 +70,7 @@ class Jobs(Base):
     positionTitle = Column(String(100))
     description = Column(String(500))
     deadline = Column(Date)
-    banner_image = Column(LargeBinary)
+    banner_image = Column(String(50), nullable=True)
     admin_id = Column(Integer, ForeignKey('admin_profiles.id'))
 
     # Define relationship with AdminProfile
@@ -86,8 +85,8 @@ class Article(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     date = Column(Date)
     title = Column(String(100))
-    article = Column(LargeBinary)
-    banner_image = Column(LargeBinary)
+    article = Column(String(50), nullable=True)
+    banner_image = Column(String(50), nullable=True)
     admin_id = Column(Integer, ForeignKey('admin_profiles.id'))
 
     # Define relationship with AdminProfile
@@ -101,7 +100,7 @@ class Applications(Base):
     volunteer_id = Column(Integer, ForeignKey('volunteer_profiles.id'))
     admin_id = Column(Integer, ForeignKey('admin_profiles.id'))
     job_id = Column(Integer, ForeignKey('jobs.id'))
-    resume = Column(LargeBinary)
+    resume_path = Column(String(100), nullable=True)
     date = Column(Date)
 
     # Define relationship with Jobs
@@ -142,16 +141,6 @@ class Leaderboard(Base):
 
     volunteer_profile = relationship("VolunteerProfile", back_populates="leaderboard")
 
-class Suggested(Base):
-    __tablename__ = 'suggested'
-
-    id = Column(Integer, primary_key=True)
-    volunteer_id = Column(Integer, ForeignKey('volunteer_profiles.id'))
-    event_id = Column(Integer, ForeignKey('events.id'))
-
-    # Define relationship with Event
-    event = relationship("Event", back_populates="suggestions")
-    volunteer_profile = relationship("VolunteerProfile", back_populates="suggested")
 
 class Event(Base):
     __tablename__ = "events"
@@ -160,7 +149,7 @@ class Event(Base):
     admin_id = Column(Integer, ForeignKey('admin_profiles.id'))
     title = Column(String(100), nullable=False)
     description = Column(String(500))
-    banner_image = Column(LargeBinary)
+    banner_image = Column(String(50), nullable=True)
     rewards = Column(Integer, default=0, nullable=True)
     time = Column(String(10)) 
     date = Column(Date)
@@ -172,7 +161,6 @@ class Event(Base):
     signups = relationship("EventsSignedUp", back_populates="event")
     volunteers = relationship("EventsVolunteered", back_populates="event")
     admin = relationship("AdminProfile", back_populates="events")
-    suggestions = relationship("Suggested", back_populates="event")
 
 class Requests(Base):
     __tablename__ = "requests"

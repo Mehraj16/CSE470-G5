@@ -1,21 +1,30 @@
+.main{
+    width: 100vw;
+    height: 100vh;
+}
+.inputform{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
 .container{
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: auto;
     background: rgba(255, 255, 255, 0.7); 
-    padding-bottom: 30px;
-    width: 600px;
-    height: 710px;
     backdrop-filter: blur(5px); 
+    width: 30%;
     border-radius: 20px; 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); 
 }
 .logo{
-        display: flex;
-        justify-content: center; 
-        align-items: center;  
-        width: auto;
+    width: 25%;
+    }
+.logo img{
+    width: 100%;
+    height: auto;
     }
 .header{
     display: flex;
@@ -27,7 +36,7 @@
 }
 .text{
     color: #3c009d;
-    font-size: 48px;
+    font-size: 35px;
     font-weight: 500; 
 }
 .underline{
@@ -37,17 +46,18 @@
     border-radius: 9px;
 }
 .inputs{
-    margin-top: 55px;
+    margin-top: 25px;
     display: flex;
     flex-direction: column;
     gap: 25px;
+    width: 80%;
 }
 .input{
     display: flex;
     align-items: center;
     margin: auto;
-    width: 480px;
-    height: 80px;
+    width: 100%;
+    height: 50px;
     background: #eaeaea;
     border-radius: 6px;
 }
@@ -55,8 +65,8 @@
     margin: 0px 30px;
 }
 .input input{
-    height: 50px;
-    width: 400px;
+    width: 80%;
+    height: 80%;
     background: transparent;
     border: none;
     outline: none;
@@ -66,7 +76,8 @@
 .submit-container{
     display: flex;
     gap: 30px;
-    margin: 60px auto;
+    margin: 30px auto;
+    width: 80%;
 }
 .submit{
     display: flex;

@@ -10,6 +10,7 @@
   position: relative;
   cursor: pointer;
   background-size: cover;
+  background-position: center;
 }
 
 .card:hover {
@@ -20,7 +21,7 @@
   bottom:0;
   left: 0;
   margin-left: 10px;
-  color: black;
+  color: white;
 }
 .title {
   margin: 0;
@@ -34,7 +35,7 @@
   -webkit-box-orient: vertical;
 }
 p{
-  color: black;
+  color: white;
   line-height: 25px;
   padding: 5px 0;
 }

@@ -43,9 +43,11 @@ const DoughnutChart = ({ userdata, admindata }) => {
   }, [chartInstance]);
 
   return (
-    <div className={chartcss.container3}>
-      <h3>Number of Volunteers vs. Admins</h3>
+    <div className={chartcss.container4}>
+      <h3 className={chartcss.head}>Number of Volunteers vs. Admins</h3>
+      <div className={chartcss.container3}>
       <Doughnut ref={chartRef} data={data} options={options} />
+    </div>
     </div>
   );
 };

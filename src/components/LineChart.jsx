@@ -116,8 +116,9 @@ export default function LineChart({ selectedOption='lastYear', myevents, alleven
   // };
 
   return (
-    <div className={chartcss.container2}>
-      <h3>Your Organised Events</h3>
+    <div className={chartcss.container5}>
+       <h3 >Your Organised Events</h3>
+      <div className={chartcss.container2}>
       <Line
         data={{
           labels: chartData.labels,
@@ -154,6 +155,7 @@ export default function LineChart({ selectedOption='lastYear', myevents, alleven
           }
         }}
       />
+    </div>
     </div>
   );
 }

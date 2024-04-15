@@ -1,13 +1,13 @@
 .banner {
     margin: 50px 0px 20px 20px;
-    width: 100%;
+    width: 90%;
     text-align: start;
   }
   
   .banner img {
     margin-bottom: 20px;
-    width: 90%;
-    height: 55vh;
+    width: 100%;
+    height: auto;
     display: block;
     border-radius: 35px;
   }
@@ -15,18 +15,19 @@
   .banner p {
     margin: 10px 0;
     font-family: "Poppins", sans-serif;
+    color: black;
   }
   
   .banner p:nth-child(2) {
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 500;
   }
   
   .banner p:nth-child(4),
   .banner p:nth-child(6),
   .banner p:nth-child(8) {
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 20px;
+    font-weight: 500;
   }
   
   .banner p:nth-child(5),
@@ -34,11 +35,11 @@
   .banner p:nth-child(9) {
     font-size: 16px;
   }
-  .interestBtn:active {
+  .interestBtn:active, .applyBtn:active {
     cursor: pointer;
 }
 
-.interestBtn[disabled] {
+.interestBtn[disabled], .applyBtn[disabled] {
     /* Styles for disabled state */
     background-color: #ddd; /* Darker grey */
     color: #aaa; /* Light grey */

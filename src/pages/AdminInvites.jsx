@@ -9,7 +9,7 @@ export default function AdminInvites() {
   const [data, setData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
 
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const myid = mydata.id;
   
@@ -31,7 +31,7 @@ export default function AdminInvites() {
         console.log(responseBody)
         if (responseBody.some(item => item.admin_id === myid)) {
           const filteredData = responseBody.filter(item => item.admin_id === myid);
-          setData(filteredData); // Set matchingData state with filtered data
+          setData(filteredData);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -43,7 +43,6 @@ export default function AdminInvites() {
   const [allVolunteer, setAllVolunteer] = useState([]);
 
   const handleViewDetails = (eventId) => {
-
     const selectedEventData = allVolunteer.find(item => item.id === eventId);
     setSelectedData(selectedEventData);
     console.log(selectedData);
@@ -74,8 +73,7 @@ export default function AdminInvites() {
         });
   
         setVolunteer(updatedVolunteerData);
-        console.log(updatedVolunteerData);
-  
+
         url = 'http://127.0.0.1:8000/api/events/';
         const eventResponse = await fetch(url, {
           method: 'GET',
@@ -96,7 +94,6 @@ export default function AdminInvites() {
         });
   
         setEvent(updatedEventData);
-        console.log(updatedEventData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -104,30 +101,7 @@ export default function AdminInvites() {
   
     fetchData();
   }, [data]); // Include data as a dependency if it's dynamic and might change
-  
 
-  // const handleAccept = (eventId) => {
-  //   setData(prevData => {
-  //       return prevData.map(event => {
-  //           if (event.id === eventId) {
-  //               event.accepted = true;
-  //           }
-  //           return event;
-  //       });
-  //   });
-  //   console.log(data);
-  // };
-
-  // const handleReject = (eventId) => {
-  //   setData(prevData => {
-  //       return prevData.map(event => {
-  //           if (event.id === eventId) {
-  //               event.accepted = false;
-  //           }
-  //           return event;
-  //       });
-  //   });
-  // };
 
   return (
     <div className='App'>
@@ -137,15 +111,12 @@ export default function AdminInvites() {
         <AdminRequests
           alldata={event}
           onViewDetails={handleViewDetails}
-          // onAccept={onAccept}
-          // onReject={onReject}
         />
         <AdminDetailedView
           firstName={selectedData?.firstName}
           lastName={selectedData?.lastName}
-          image={selectedData?.profileImage}
           total={selectedData?.eventCount}
-          score={selectedData?.score}
+          score={selectedData?.lifetimeScore}
           medals={selectedData?.totalMedals}
           skills={selectedData?.skills}
           interests={selectedData?.interests}

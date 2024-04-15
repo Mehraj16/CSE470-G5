@@ -13,19 +13,27 @@ export default function Invites() {
   const props = location.state;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/invites.json'); 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+      const fetchData = async () => {
+        let url = `http://127.0.0.1:8000/api/events-signed-with-id/${props.id}`;
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const responseBody = await response.json(); // Read response body
+
+            if (!response.ok) {
+                console.error('Failed request:', responseBody); // Log error and response body
+                throw new Error('Failed request');
+            }
+            setData(responseBody)
+        } catch (error) {
+            console.error('Error:', error);
         }
-        const data = await response.json();
-        setData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
     };
-  
+
     fetchData();
   }, []);
 

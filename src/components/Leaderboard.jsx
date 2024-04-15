@@ -1,23 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import leaderboard from '../css/leaderboard.module.css'
-
+import Confetti from 'react-confetti';
 export default function Leaderboard() {
     const [leaderboardData, setLeaderboardData] = useState([]);
+    const [isCelebrating, setIsCelebrating] = useState(false);
+    const [nowMVV, setnowMVV] = useState([]);
+    const [img, setImg] = useState();
+    useEffect(() => {
+      let hasSeenConfetti = false; 
+      if (!hasSeenConfetti) {
+        setIsCelebrating(true);
+        hasSeenConfetti = true;
+        setTimeout(() => {
+          setIsCelebrating(false);
+        }, 3000); 
+      }
+    }, []);
+    useEffect(() => {
+
+      const fetchnowMVVData = async () => {
+        let url = `http://127.0.0.1:8000/api/mvv/`;
+          try {
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          const responseBody = await response.json();
+              if (!response.ok) {
+                      throw new Error('Failed request');
+                  }
+                console.log(responseBody[0]);
+                setnowMVV(responseBody);
+          } catch (error) {
+                  console.error('Error:', error);
+          }  
+      };
+  
+      fetchnowMVVData();
+    }, []);
 
     useEffect(() => {
-      // Simulated leaderboard data, replace this with actual data fetching logic
+
       const fetchData = async () => {
-        // Fetch leaderboard data from an API or some data source
-        const response = await fetch('/public/lead.json');
-        const data = await response.json();
-        // Assuming data is an array of objects with 'name' and 'score' properties
-        setLeaderboardData(data);
+        let url = `http://127.0.0.1:8000/api/leaderboard/`;
+          try {
+            const response = await fetch(url, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          const responseBody = await response.json();
+              if (!response.ok) {
+                      console.error('Failed request:', responseBody); 
+                      throw new Error('Failed request');
+                  }
+                setLeaderboardData(responseBody);
+          } catch (error) {
+                  console.error('Error:', error);
+          }  
       };
   
       fetchData();
     }, []);
-    const currentDate = new Date();
-  // Get the month of the current date
+
+    useEffect(() => {
+      if (nowMVV && nowMVV.length === 1) {
+        fetchImageData();
+      }
+    }, [nowMVV]);
+    const fetchImageData = async () => {
+      let url = `http://127.0.0.1:8000/api/images/${nowMVV[0].id}`;
+        try {
+          const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+            const imageBlob = await res.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            setImg(imageObjectURL);
+            } catch (error) {
+                console.error('Error:', error);
+            }  
+    };
+  
+  const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const lastMonth = new Date(currentDate.getFullYear(), currentMonth - 1).toLocaleDateString('default', { month: 'long' });
     return (
@@ -25,17 +96,27 @@ export default function Leaderboard() {
         <h2>Top 10 Leaderboard</h2>
         <div className={leaderboard.leadBox}>
             <div className={leaderboard.Win}>
+            {isCelebrating && <Confetti
+                className="confetti"
+                width={500}
+                numberOfPieces={150}
+                gravity={0.5}
+            />}
                 <div><p>Winners of {lastMonth}</p></div>
                 <div className={leaderboard.pastWin}>
-                    <div><img src="src/assets/logo.png" alt="" />
-                    <div className={leaderboard.numberStylized}><span><img src="src/assets/8.png" alt="2nd" /></span></div>
-                    </div>
-                    <div><img src="src/assets/logo.png" alt="" />
-                    <div className={leaderboard.numberStylized}><span><img src="src/assets/7.png" alt="1st" /></span></div>
-                    </div>
-                    <div className={leaderboard.image3}><img src="src/assets/logo.png" alt="" />
-                    <div className={leaderboard.numberStylized}><span><img src="src/assets/9.png" alt="3rd" /></span></div>
-                    </div>
+                    {nowMVV && nowMVV.length < 2 ? (
+                        <div>
+                             <p style={{fontWeight: 300, fontSize:'22px'}}> {nowMVV && nowMVV.length === 1 && `${nowMVV[0].firstName} ${nowMVV[0].lastName}`}</p>
+                            <img src={img} alt="" />
+                            <div className={leaderboard.numberStylized}>
+                                <span><img src="src/assets/7.png" alt="1st" /></span>
+                            </div>
+                        </div>
+                    ) : (
+                        nowMVV.map((item, index) => (
+                            <span key={index}>{item.name}</span>
+                        ))
+                    )}
                 </div>
             </div>
             <div className={leaderboard.topTen}>
@@ -45,11 +126,8 @@ export default function Leaderboard() {
                     <span className={leaderboard.playerScore}>Score</span>
                 </li>{leaderboardData.slice(0, 10).map((player, index) => (
                 <li key={index}>
-                <div className={leaderboard.nameImg}>
-                    <img src="../assets/logo.png" alt="" />
-                    <span className={leaderboard.playerName}>{player.name}</span>
-                </div>
-                <span className={leaderboard.playerScore}>{player.score}</span>
+                  <span className={leaderboard.playerName}>{player.volunteerfirstName}</span>
+                  <span className={leaderboard.playerScore}>{player.monthly_score}</span>
                 </li>
             ))}
             </ol>

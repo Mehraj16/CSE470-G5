@@ -17,7 +17,7 @@ export default function Info(props) {
         navigation('../invites', { state: props });
     };
     const showMyEvents = () => {
-        navigation('../myevents', { state: props });
+        navigation('../myevents', { state: props.data });
     };
     useEffect(() => {
         const fetchpartData = async () => {
@@ -36,7 +36,7 @@ export default function Info(props) {
                     throw new Error('Failed request');
                 }
                 if (responseBody && responseBody.length > 0) {
-                    const filteredEvents = responseBody.filter(event => event.id === props.data.id);
+                    const filteredEvents = responseBody.filter(event => event.volunteer_id === props.data.id);
                     setInvitations(filteredEvents.length)
                 }
             } catch (error) {
@@ -45,10 +45,42 @@ export default function Info(props) {
         };
             fetchpartData();
     }, []);
+
+    function formatDate(dateStr) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateStr);
+        if(dateStr !== undefined && dateStr !== null)
+            return date.toLocaleDateString('en-US', options);
+      }
+      function convertToAMPM(timeString) {
+        
+        if(timeString !== undefined && timeString !== null){
+          const [hours, minutes] = timeString.split(':');
+          const date = new Date();
+          date.setHours(hours);
+          date.setMinutes(minutes);
+          const ampmTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+          return ampmTime;
+        }
+    }
+
+    useEffect(() => {
+        const my_mvv = localStorage.getItem('mvv');
+        if(my_mvv === 'true'){
+            console.log(my_mvv)
+            const mvvTextElement = document.getElementById("mvv-text");
+            if (mvvTextElement) {
+                mvvTextElement.textContent = "Hey there, MVV of the month, " + props.data.firstName;
+            } else {
+                console.error("Element with ID 'mvv-text' not found.");
+            }
+        }
+    }, []);
+    
     return (
         <div className="dashboard">
             <div className="welcomeText">
-                <p>Welcome, {props.data.firstName}</p>
+                <p id="mvv-text">Welcome, {props.data.firstName}</p>
             </div>
             <div className="dashEvent">
                 <div className="totalEvents">
@@ -66,7 +98,7 @@ export default function Info(props) {
                         <p>Event Roster</p>
                         <button className='detailbtn' onClick={showMyEvents}>Details</button>
                     </div>
-                    <p>{props.nearestEvent.event_date} {props.info.time}</p>
+                    <p>{formatDate(props.info.date)} | {convertToAMPM(props.info.time)}</p>
                     <p>{props.info.location}</p>
                 </div>
             </div>
@@ -79,7 +111,7 @@ export default function Info(props) {
                         <option value="allTime">All Time</option>
                     </select>
                 </div>
-                <BarChart selectedOption={selectedOption} />
+                <BarChart selectedOption={selectedOption} id={props.data.id}/>
             </div>
         </div>
     );

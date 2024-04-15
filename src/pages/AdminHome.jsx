@@ -15,7 +15,7 @@ function AdminHome() {
   const [myevents, setmyevents] = useState([]);
   const [allevents, setallevents] = useState([]);
 
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const myid = mydata.id;
 
@@ -54,7 +54,8 @@ useEffect(() => {
             nearestDateDiff = dateDiff;
           }
         }
-      setNearestEvent(nearestEvent)
+      setNearestEvent(nearestEvent);
+      console.log(nearestEvent)
       }
       setNumEventsSignedUp(count)
     } catch (error) {
@@ -66,10 +67,10 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  fetchData();
+  fetchadminData();
 }, []);
 
-const fetchData = async () => {
+const fetchadminData = async () => {
   let url;
   url = 'http://127.0.0.1:8000/api/admins';
   try {
@@ -125,9 +126,11 @@ const fetchuserData = async () => {
             nearestEvent={nearestEvent}
             profilepic={mydata.profileImage}
           />
+          <div>
           <div className='first-layer'>
             <DoughnutChart userdata={userdata} admindata={admindata}/>
             <DoubleBarChart userdata={userdata} admindata={admindata}/>
+          </div>
           </div>
           <br />
           <br />

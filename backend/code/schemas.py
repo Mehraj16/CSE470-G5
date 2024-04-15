@@ -2,7 +2,6 @@ from typing import List, Optional
 from datetime import date
 from pydantic import BaseModel
 
-
 class VolunteerProfileBase(BaseModel):
     email: str
     password_hash: str
@@ -22,7 +21,6 @@ class VolunteerProfile(VolunteerProfileBase):
     eventCount: Optional[int] = 0
     interests: Optional[str] = None
     skills: Optional[str] = None
-    profileImage: Optional[bytes] = None
     AccountCreationDate: date
     
     class Config:
@@ -41,7 +39,6 @@ class VolunteerProfileUpdate(VolunteerProfileBase):
     eventCount: Optional[int] = 0
     interests: Optional[str] = None
     skills: Optional[str] = None
-    profileImage: Optional[bytes] = None
 
 class AdminProfileBase(BaseModel):
     id: int
@@ -113,9 +110,24 @@ class Job(JobBase):
     class Config:
         from_attributes = True
 
+class ApplicationBase(BaseModel):
+    name: str
+    date: date
+    admin_id: int
+    volunteer_id: int
+    job_id: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
+class Application(ApplicationBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
 class ArticleBase(BaseModel):
     title: str
-    article: bytes
     date: date
     admin_id: int
 
@@ -124,6 +136,7 @@ class ArticleBase(BaseModel):
 
 class ArticleBaseUpdate(ArticleBase):
     banner_image: Optional[bytes] = None
+    article: Optional[bytes] = None
 
 class Article(ArticleBase):
     id: int
@@ -169,6 +182,13 @@ class EventsSignedUp(EventsSignedUpBase):
     class Config:
         from_attributes = True
 
+class EventsSignReqNotif(BaseModel):
+    volunteer_id: int
+    event_id: int
+    event_date: date
+    admin_id: int
+    Message: str
+    req_id: int
 
 class EventsVolunteeredBase(BaseModel):
     volunteer_id: int
@@ -194,11 +214,23 @@ class Notification(BaseModel):
     admin_id: int
     volunteer_id: int
     Message: str
+
 class NotificationBase(Notification):
     id: int
 
     class Config:
         from_attributes = True
+
+class NotificationMultiple(BaseModel):
+    id: int
+    admin_id: int
+    Message: str
+
+class InviteAndNotify(BaseModel):
+    admin_id: int
+    event_id: int
+    volunteer_ids: List[int]
+    Message: str
 
 class ChangePass(BaseModel):
     userid: int

@@ -7,10 +7,12 @@ import { VscSettings } from "react-icons/vsc";
 import { IoLogOut } from "react-icons/io5";
 import logo from '../assets/logo.png'
 import '../css/sidebar.css';
+import { Link } from 'react-router-dom';
 
 export default function AdminSidebar() {
   const navigateTo = useNavigate();
   const handleLogout = () => {
+    sessionStorage.clear();
     localStorage.clear();
     navigateTo('/')
   };
@@ -20,12 +22,12 @@ export default function AdminSidebar() {
             <img src={logo} alt="Logo" width="70" />
         </div>
         <ul className="list">
-            <li className='list-item'><FaHome className='icon'/><a href="/admin">Home</a></li>
-            <li className='list-item'><BsCalendar3Event className='icon'/><a href="/manage">Manage</a></li>
-            <li className='list-item'><RxDashboard className='icon'/><a href="/accounts">Accounts</a></li>
-            <li className='list-item'><VscSettings className='icon'/><a href="/adminsettings">Settings</a></li>
-            <li className='list-item'><IoLogOut className='icon'/><a onClick={handleLogout} href=''>Logout</a></li>
-        </ul>
+          <li className='list-item'><Link to="/admin"><FaHome className='icon'/> <span>Home</span></Link></li>
+          <li className='list-item'><Link to="/manage"><BsCalendar3Event className='icon'/> <span>Manage</span></Link></li>
+          <li className='list-item'><Link to="/accounts"><RxDashboard className='icon'/> <span>Accounts</span></Link></li>
+          <li className='list-item'><Link to="/adminsettings"><VscSettings className='icon'/> <span>Settings</span></Link></li>
+          <li className='list-item'><a onClick={handleLogout} href=''><IoLogOut className='icon'/> <span>Logout</span></a></li>
+      </ul>
     </div>
   )
 }

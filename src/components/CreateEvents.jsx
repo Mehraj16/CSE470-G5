@@ -8,9 +8,49 @@ import { MdOutlineFileUpload } from "react-icons/md";
 export default function CreateEvents() {
  const location = useLocation();
  const props = location.state;
- const jsonString = localStorage.getItem('profileData');
+ const jsonString = sessionStorage.getItem('profileData');
  const data = JSON.parse(jsonString);
  const id = data.id;
+ const [alert, setAlert] = useState("");
+ const [alertColor, setAlertColor] = useState("");
+ const [isVisible, setIsVisible] = useState(false);
+ 
+ const [selectedFile, setSelectedFile] = useState(null);
+
+ const handleFileInputChange = (file) => {
+   setSelectedFile(file);
+   console.log("set");
+ };
+
+ const getFileExtension = (filename) => {
+   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2); // Extract file extension
+ };
+
+ const handleUpload = async (eventid) => {
+   if (!selectedFile) {
+     console.error('No file selected');
+     return;
+   }
+
+   const formData = new FormData();
+   const extension = getFileExtension(selectedFile.name); // Get file extension
+   const filename = `event${eventid}.${extension}`; // Dynamically set filename with the ID and original extension
+   formData.append('file', selectedFile, filename);
+
+   try {
+     const response = await fetch(`http://127.0.0.1:8000/api/upload-event-banners/${eventid}`, {
+       method: 'POST',
+       body: formData,
+     });
+
+     if (!response.ok) {
+       throw new Error('Failed to upload file');
+     }
+     console.log('File uploaded successfully');
+   } catch (error) {
+     console.error('Error uploading file: ', error);
+   }
+ };
  const [formData, setFormData] = useState({
         title: '',
         location: '',
@@ -21,7 +61,6 @@ export default function CreateEvents() {
         banner_image: null,
         admin_id: id
     });
-
     const handleSubmit = async (e) => {
       e.preventDefault();
       console.log(formData);
@@ -36,11 +75,16 @@ export default function CreateEvents() {
       });
       const responseBody = await response.json(); // Read response body
           if (!response.ok) {
+                  setAlert("Oops! Something went wrong!");
+                  setAlertColor('#f45050');
                   console.error('Failed request:', responseBody); // Log error and response body
                   throw new Error('Failed request');
               }
-            console.log("posted");
+              handleUpload(responseBody.id);
+              setAlert("Event Created Succesfully!");
           } catch (error) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
               console.error('Error:', error);
           }
   };
@@ -52,10 +96,19 @@ export default function CreateEvents() {
           [name]: value
         });
   };
+  useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+        setAlert("");
+        setAlertColor("");
+    }, 2000);
+    return () => clearTimeout(timer);
+}, [alert]);
   return (
     <div className='App'>
         <AdminSidebar />
-        <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
+        <AdminHeader alert={alert} isVisible={isVisible} alertColor={alertColor}/>
     <div className='Content'>
       <h3 className={manage.headline}>Create Your Event</h3>
             <form className={manage.eventForm}>
@@ -126,12 +179,12 @@ export default function CreateEvents() {
                   </div>
                   <div className={manage.filecontainer}>
                   <label htmlFor="banner">Event Banner:</label><br />
-                  <label htmlFor="resume" class={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
+                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
                       <input
                       type="file"
                       id="banner"
                       name="banner_image"
-                      onChange={handleChange}
+                      onChange={(event) => handleFileInputChange(event.target.files[0])}
                       className={manage.fileInput}
                       />
                   </div>

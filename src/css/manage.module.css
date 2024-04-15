@@ -10,8 +10,8 @@
 }
 .opps div{
     display: inline-flex;
-    justify-content: flex-start;
-    width: 50%;
+    justify-content: space-evenly;
+    width: 100%;
 }
 .eventsCreate div, .jobsCreate div{
     height: 4em;
@@ -44,7 +44,7 @@
     border-bottom: 1px solid;
     margin: 1em;
     font-size: 28px;
-    width: 94%;
+    width: 95%;
 }
 .eventForm{
     display: flex;
@@ -60,12 +60,13 @@
     display: flex;
     justify-content: space-between;
 }
-.inputContainer input[type="text"], .inputContainer input[type="number"]{
+.inputContainer input[type="text"], .inputContainer input[type="number"], .inputContainer input[type="password"] {
     width: 90%;
     height: 25px;
     border: none;
     border-radius: 5px;
     background-color: #e3e1e1;
+    margin-bottom: 15px;
 } 
 .inputContainer input[type="number"]{
   height: 45px;
@@ -105,9 +106,18 @@
     font-size: 18px;
     color: var(--acc);
 }
-.inputContainer input[type="text"]:focus, textarea:focus{
+.inputContainer input[type="text"]:focus, textarea:focus, .inputContainer input[type="number"]:focus, .inputContainer input[type="password"]:focus{
     outline: none;
-    border-bottom: 1px solid var(--text);
+    border-bottom: 1px solid var(--acc);
+}
+.inputContainer .number{
+  width: 90%;
+  height: 25px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 /* Styling for the date input field */
 .inputContainer .dateInput {
@@ -142,8 +152,8 @@
   position: relative;
 }
 .fileBox input[type="file"]{
-  width: 155px;
-    height: 41px;
+    width: 141px;
+    height: 45px;
     cursor: pointer;
 }
   .fileInput {
@@ -151,6 +161,15 @@
     top: 24px;
     left: 0px;
     opacity: 0;
+    width: 67%;
+    height: 46%;
+    cursor: pointer;
+  }
+  .fileInputProf{
+    position: absolute;
+    left: 62px;
+    opacity: 0;
+    cursor: pointer;
   }
   .icon{
     width: 25px;
@@ -232,5 +251,18 @@
   background-color: #0056b3;
 }
 
-  
+@media screen and (max-width: 1130px) {
+  .eventsCreate, .jobsCreate{
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .eventsCreate div, .jobsCreate div{
+    margin-bottom: 25px;
+  }
+  .opps{
+    flex-direction: column;
+    align-items: center;
+  }
+}
   

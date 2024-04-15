@@ -12,8 +12,43 @@ const ViewAll = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
+  const [bannerImages, setBannerImages] = useState({});
+  const [jobbannerImages, setjobBannerImages] = useState({});
 
+  const fetchJobImageData = async (itemId) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/job-banner/${itemId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const imageBlob = await res.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      return imageObjectURL;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  };
+
+  const fetchImageData = async (itemId) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/article-banner/${itemId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const imageBlob = await res.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      return imageObjectURL;
+    } catch (error) {
+      console.error('Error:', error);
+      return null; // Return null on error
+    }
+  };
   useEffect(() => {
     fetchData();
   }, [currentPage, props]);
@@ -35,9 +70,34 @@ const ViewAll = () => {
             console.error('Failed request:', responseBody);
             throw new Error('Failed request');
           }
-            setData(responseBody);
-            console.log(data)
-            setTotalItems(responseBody.length); 
+          setData(responseBody);
+          setTotalItems(responseBody.length); 
+          if(props.type === 'jobs'){
+            const filteredData = responseBody.filter(job => new Date(job.deadline) >= new Date());
+            setData(filteredData);
+              const imageDataPromises = filteredData.map(async (event) => {
+                const imageUrl = await fetchJobImageData(event.id);
+                return { eventId: event.id, imageUrl };
+              });
+              const images = await Promise.all(imageDataPromises);
+              const imageMap = {};
+              images.forEach((image) => {
+                imageMap[image.eventId] = image.imageUrl;
+              });
+              setjobBannerImages(imageMap)
+          }
+          else{
+            const imageDataPromises = responseBody.map(async (event) => {
+              const imageUrl = await fetchImageData(event.id);
+              return { eventId: event.id, imageUrl };
+            });
+            const images = await Promise.all(imageDataPromises);
+            const imageMap = {};
+            images.forEach((image) => {
+              imageMap[image.eventId] = image.imageUrl;
+            });
+            setBannerImages(imageMap);
+          }
         }catch (error) {
                 console.error('Error:', error);
             }
@@ -55,17 +115,27 @@ const ViewAll = () => {
   let handleClick;
   const navigate = useNavigate();
   if (props.type === 'jobs') {
-    handleClick = (item) => {
+    handleClick = (item, image) => {
       navigate('../circular', {
         state: {
           id: item,
+          image: image
         }
       });
     };
   } else {
-    handleClick = (item) => {
-      console.log(item)
-      window.open(item.article, '_blank');
+    handleClick = async (item) => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/article-pdf/${item.id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch PDF');
+        }
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch (error) {
+        console.error('Error fetching PDF:', error);
+      }
     };
   }
   
@@ -83,14 +153,14 @@ const ViewAll = () => {
         {props.type === 'jobs' ?
           <div className='card-container'>
             {currentPageData.map((item) => (
-                <Cards key={item.id} id={item.id} title={item.positionTitle} image={item.banner_image} date={item.deadline} 
-                click={() => handleClick(item)} />
+                <Cards key={item.id} id={item.id} title={item.positionTitle} banner_image={jobbannerImages[item.id]} date={item.deadline} 
+                click={() => handleClick(item, jobbannerImages[item.id])} />
               ))}
           </div>
           :
           <div className='card-container'>
             {currentPageData.map((item) => (
-                <Cards key={item.id} id={item.id} title={item.title} image={item.banner_image} date={item.date} 
+                <Cards key={item.id} id={item.id} title={item.title} banner_image={bannerImages[item.id]} date={item.date} 
                 click={() => handleClick(item)} />
               ))}
           </div>}

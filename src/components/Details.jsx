@@ -25,7 +25,6 @@ export default function Details({ isClicked, handleClick, status, isDisabled, ..
           disabled={isDisabled || status}>
           {status ? 'Interest Sent' : (isClicked ? 'Interest Sent' : 'Interested')}
         </button>
-
       </div>
 
     </div>

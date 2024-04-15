@@ -5,6 +5,7 @@ import manage from "../css/manage.module.css";
 import requests from'../css/requests.module.css';
 import Pagination from '../components/Pagination';
 import ShowVolunteers from '../components/ShowVolunteers';
+import Leaderboard from '../components/Leaderboard';
 
 export default function Accounts() {
   const [showForm, setShowForm] = useState(false);
@@ -19,6 +20,10 @@ export default function Accounts() {
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 5;
+
+  const [alert, setAlert] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [isVisible, setIsVisible] = useState(false);  
 
   useEffect(() => {
     fetchData();
@@ -74,10 +79,11 @@ export default function Accounts() {
         
                 const responseBody = await response.json(); // Read response body
                 if (!response.ok) {
-                    console.error('Failed request:', responseBody); // Log error and response body
+                    setAlertColor('#f45050');
+                    setAlert(responseBody.detail);
                     throw new Error('Failed request');
                 }
-                console.log("succes");
+                setAlert("Account Created Successfully")
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -98,11 +104,22 @@ export default function Accounts() {
     setShowVol(!showVol);
   };
 
+  useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+        setAlert("");
+        setAlertColor("");
+    }, 2000);
+    return () => clearTimeout(timer);
+}, [alert]);
+
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader/>
+      <AdminHeader alert={alert} isVisible={isVisible} alertColor={alertColor}/>
       <div className='Content'>
+        <Leaderboard />
         <div>
           <h3 className={manage.headline}>Accounts</h3>
         </div>
@@ -118,21 +135,32 @@ export default function Accounts() {
           </div>
         </div>
         {showForm && (
-          <form className={manage.formCreate}>
-            <div>
+          <form className={manage.formCreate} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems:'center'
+          }}>
+            <h3 className={manage.headline}>Create New Admin</h3>
+           <div style={{width:'30vw',
+              marginBottom:'2em'}}>
+           <div className={manage.inputContainer}>
               <label>ID:</label><br />
-              <input type="number" id="adminId" name="adminId" onChange={(e) => setAdminId(e.target.value)}/>
+              <input style={{
+                width: '91%',
+                height: '40px'
+              }} type="number" id="adminId" name="adminId" onChange={(e) => setAdminId(e.target.value)}/>
             </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label>Designation:</label><br />
               <input type="text" id="designation" onChange={(e) => setDesignation(e.target.value)}name="Designation"/>
             </div>
-            <div>
+            <div className={manage.inputContainer}>
               <label>Password:</label><br />
               <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
               name="password"/>
             </div>
-            <button onClick={createNewAdmin}>Create Account</button>
+            <button onClick={createNewAdmin} style={{marginTop:'20px'}}>Create Account</button>
+           </div>
           </form>
         )}
         {showList && (

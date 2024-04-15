@@ -12,7 +12,7 @@ export default function SendInvites() {
   const [profile, setProfile] = useState([]);
   const [showSelectedItems, setShowSelectedItems] = useState(false); 
   const [selectedItems, setSelectedItems] = useState([]);
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const admin_id = mydata.id;
   const name = mydata.firstName;
@@ -20,29 +20,12 @@ export default function SendInvites() {
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 5;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch('/eventsCreated.json');
-  //       const jsonData = await response.json();
-  //       const filteredData = jsonData.filter(event => event.eventId == props.eventId);
-  //       setData(filteredData[0]);
-
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-  
-  //   fetchData();
-  // }, [props.eventId]);
-  
   useEffect(() => {
     fetchData();
   }, [currentPage]);
-
   const fetchData = async () => {
     let url;
-    url = 'http://127.0.0.1:8000/api/users';
+    url = `http://127.0.0.1:8000/api/users_without_invites/${props.id}`;
     try {
       const response = await fetch(url, {
            method: 'GET',
@@ -77,24 +60,24 @@ export default function SendInvites() {
           prevSelectedItems.filter(selectedItem => selectedItem.id !== item.id)
         );
       }
-      console.log(selectedItems)
     };
   
     const handleAddButtonClick = () => {
       setShowSelectedItems(true);
     };
+
+
     const handleSubmit = async () => {
       try {
-        for (const selectedItem of selectedItems) {
-          // Prepare the data to be sent in the request body
+          const volunteerIds = selectedItems.map(item => item.id);
+          const  mes = `You have been invited to ${props.title}.`
           const requestData = {
             "admin_id": admin_id,
             "event_id": props.id,
-            "volunteer_id": selectedItem.id
+            "volunteer_ids": volunteerIds,
+            "Message": mes
           };
-          
-          // Send a POST request to the API endpoint with the selected volunteer data
-          const response = await fetch('http://127.0.0.1:8000/api/invitations', {
+                    const response = await fetch('http://127.0.0.1:8000/api/invite-and-notify/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -105,42 +88,16 @@ export default function SendInvites() {
           const responseBody = await response.json();
           if (!response.ok) {
             console.log(responseBody)
-            throw new Error('Failed to send invitation for volunteer:', selectedItem);
+            throw new Error('Failed to send invitation for volunteer');
           }
           setSelectedItems([]);
           setShowSelectedItems(false);
-          try{
-            const mes = `${name} has invited you to sign up.`
-            console.log(mes)
-            const requestData = {
-              "admin_id": admin_id,
-              "volunteer_id": selectedItem.id,
-              "Message": mes
-            };
-            const response = await fetch('http://127.0.0.1:8000/api/notifications', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(requestData),
-            });
-            
-            const responseBody = await response.json();
-            if (!response.ok) {
-              console.log(responseBody)
-              throw new Error('Failed to send invitation for volunteer:', selectedItem);
-            }
-          }catch (error) {
-            console.error('Error sending notifss:', error);   
-          }
         }
-        
-      } catch (error) {
+        catch (error) {
         console.error('Error sending invitations:', error);
       }
     };
      
-
   return (
     <div className='App'>
       <AdminSidebar />

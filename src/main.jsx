@@ -29,6 +29,8 @@ import {
 } from "react-router-dom";
 import SendInvites from './components/SendInvites.jsx'
 import LoginSignup from './LoginSignup.jsx'
+import SignUps from './components/SignUps.jsx'
+import AdminRatings from './components/AdminRating.jsx'
 
 
 const router = createBrowserRouter([
@@ -123,6 +125,14 @@ const router = createBrowserRouter([
   {
     path: "notifications",
     element: <Notifications/>,
+  },
+  {
+    path: "signups",
+    element: <SignUps />,
+  },
+  {
+    path: "adminratings",
+    element: <AdminRatings />,
   },
 ]);
 

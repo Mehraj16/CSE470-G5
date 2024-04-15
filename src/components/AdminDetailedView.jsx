@@ -5,7 +5,6 @@ export default function AdminDetailedView(props) {
   return (
       <div className={profile.prof}>
       <div className={profile.profileDisplay}>
-        <img src={`/src/assets/${props.image}`} alt="Profile Picture" className={profile.bannerPic} />
         <h3 className={profile.profileName}>{props.firstName + ' ' + props.lastName}</h3>
         <div className={profile.analytics}>
             <div className={profile.a1}>
@@ -31,6 +30,6 @@ export default function AdminDetailedView(props) {
 }
 
 AdminDetailedView.defaultProps = {
- "firstName": "Volunteer", "lastName": "Name", "image": "mascot.png", "total": 10, "score": 430, "medals": 1,
+ "firstName": "Volunteer", "lastName": "Name", "total": "Event Count", "score": "Score", "medals": "Medal",
  "skills":"Things I am good at...", "interests":"Things I like doing..."
 }

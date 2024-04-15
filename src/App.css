@@ -56,7 +56,8 @@ h4{
 .job-cards, .card-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 95%;
 }
 .opp-wrapper {
   display: inline-flex;
@@ -130,4 +131,13 @@ h4{
 }
 .first-layer{
   display: flex;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 95%;
+}
+@media screen and (max-width: 950px){
+  .first-layer{
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 }

@@ -11,6 +11,7 @@
     font-weight: 200;
     margin-bottom: 0;
     padding-bottom: 0;
+    color: black;
 }
 .filter-details{
     display: flex;

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar } from 'react-chartjs-2';
 
-export default function BarChart({ selectedOption }) {
+export default function BarChart({ selectedOption, id }) {
   const mvv = localStorage.getItem('mvv');
   let bar1 = '#3C486B';
   let bar2 = '#F45050';
   if(mvv){
      bar1 = '#74c091';
+     bar2 = '#74c091'
   }
   const [chartData, setChartData] = useState({
     labels: [],
@@ -26,7 +27,7 @@ export default function BarChart({ selectedOption }) {
 
   useEffect(() => {
     const fetchpartData = async () => {
-    let url = 'http://127.0.0.1:8000/api/events-volunteered/';
+    let url = `http://127.0.0.1:8000/api/events-volunteered/${id}`;
     try {
       const response = await fetch(url, {
           method: 'GET',
@@ -42,7 +43,6 @@ export default function BarChart({ selectedOption }) {
       }
         const events = responseBody;
         let filteredEvents;
-        console.log(events);
         switch (selectedOption) {
           case 'lastYear':
             filteredEvents = events.filter(event => {

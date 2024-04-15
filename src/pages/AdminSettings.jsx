@@ -7,51 +7,39 @@ import AdminEditForm from '../components/AdminEditForm';
 
 export default function AdminSettings() {
     const [formData, setFormData] = useState({});
-    const [backenddata, setBackenddata] = useState([]);
-    const [profileImage, setProfileImage] = useState(null);
+    const [alert, setAlert] = useState("");
+    const [alertColor, setAlertColor] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
+
     useEffect(() => {
-      const fetchDataFromLocalStorage = () => {
+      const fetchDataFromsSessionStorage = () => {
           try {
               // Retrieve data from local storage
-              const data = localStorage.getItem('profileData');
+              const data = sessionStorage.getItem('profileData');
               if (!data) {
+                  setAlert("Could not fetch data of this profile!");
+                  setAlertColor('#f45050');
                   throw new Error('No data found in local storage');
               }
   
               // Parse the data as JSON
               const parsedData = JSON.parse(data);
               setFormData(parsedData);
-
           } catch (error) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
               console.error('Error fetching data from local storage:', error);
           }
       };
   
-      fetchDataFromLocalStorage();
+      fetchDataFromsSessionStorage();
   }, []);
     
   const handleInputChange = (field, value) => {
-    if (field === 'profileImage') {
-      console.log('File input changed:', value.target.files[0]);
-      const file = value.target.files[0]; // Get the first file selected by the user
-      const reader = new FileReader();
-  
-      reader.onload = () => {
-        const binaryData = reader.result; // This will be the binary data of the file
-        setProfileImage(binaryData); // Store the binary data in state
-        setFormData(prevData => ({
-          ...prevData,
-          [field]: binaryData // Set profileImage to binaryData
-        }));
-      };
-  
-      reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
-    } else {
       setFormData(prevData => ({
         ...prevData,
         [field]: value
       }));
-    }
   };
   
   const [inputsEnabled, setInputsEnabled] = useState(false);
@@ -81,54 +69,45 @@ export default function AdminSettings() {
         });
 
         if (!response.ok) {
+            setAlert("Oops! Something went wrong!");
+            setAlertColor('#f45050');
             throw new Error('Failed to update data');
         }
-
-        // Update profileData in localStorage with the updated data
-        localStorage.setItem('profileData', JSON.stringify(updatedData));
-        
-        setInputsEnabled(false); // Disable form inputs after successful update
+        sessionStorage.setItem('profileData', JSON.stringify(updatedData));
+        setAlert("Changes Saved Successfully");
+        setInputsEnabled(false);
     } catch (error) {
+        setAlert("Oops! Something went wrong!");
+        setAlertColor('#f45050');
         console.error('Error:', error);
-    }
-    try {
-      const imageId = formData.id;   
-      const url = `http://127.0.0.1:8000/images/${imageId}`;
-
-      // Fetch image data from the backend
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        console.error('Error:', response.status);
-        throw new Error('Failed to fetch image data');
-      }
-      const responseBody = await response.json();
-      const base64String = btoa(
-        String.fromCharCode(...new Uint8Array(responseBody.profileImage))
-      );
-      console.log(responseBody)
-      setBackenddata(base64String);
-      console.log(backenddata);
-      localStorage.setItem('profileImage', base64String);
-
-    } catch (error) {
-      console.error('Error:', error);
     }
     setInputsEnabled(false);
   }
-
+    const giveAlert = (type) =>{
+    if(type){
+      setAlert("Password changed successfully."); 
+    }else{
+      setAlertColor('#f45050');
+      console.log(alertColor);
+      setAlert("Something went wrong.");
+    } 
+  }
+  useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+        setAlert("");
+        setAlertColor("");
+    }, 2000);
+    return () => clearTimeout(timer);
+}, [alert]);
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader profilepic={`/src/assets/${formData.profileImage}`}/>
+      <AdminHeader alert={alert} isVisible={isVisible} alertColor={alertColor}/>
       <div className='profile-content'>
-        <AdminEditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} saveInputs={saveInputs}/>
-        <AdminProfile formData={formData} image={backenddata}/>
+        <AdminEditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} saveInputs={saveInputs} giveAlert={giveAlert}/>
+        <AdminProfile formData={formData}/>
       </div>
     </div>
   )

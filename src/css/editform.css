@@ -60,6 +60,7 @@ textarea{
 .btn2{
     display: flex;
     justify-content: flex-end;
+    margin-top: 20px;
 }
 .btn2 button{
     margin: 0 5px;
@@ -68,12 +69,31 @@ textarea{
     .prof{
         justify-content: center;
         margin-bottom: 30px;
+        width: 100%;
+        margin: auto;
     }
     .profile-details{
-        width: 85vw;
+        width: 100%;
     }
     .btn{
-        margin-bottom: 20px;
+        width: 97%;
+        margin-bottom: 10px;
+    }
+    .all-details{
+        width: 100%;
+    }
+    .profile-display{
+        width: 60vw;
+    }
+}
+@media screen and (max-width: 500px) {
+    .inputs{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    textarea{
+        width: 200px;
     }
 }
 .settings-headers{

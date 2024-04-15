@@ -8,7 +8,33 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import requests from'../css/requests.module.css';
 import { MdOutlineFileUpload } from "react-icons/md";
 
-function DeleteEventPopup({ onCancel, onConfirm }) {
+function DeleteEventPopup({ onCancel, onConfirm, fetchDataAndPostData, event }) {
+  const deleteEvent = async(event) =>{
+    let event_id = event.id;
+    try{
+      const deleteResponse = await fetch(`http://127.0.0.1:8000/api/events/${event_id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        const deleteResponseBody = await deleteResponse.json();
+        if (!deleteResponse.ok) {
+          console.log(deleteResponseBody);
+          throw new Error('Failed to remove request:');
+        }
+        window.location.reload();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  }
+  const handleDelete = async() =>{
+    let mes = `${event.title} has been cancelled.`
+    fetchDataAndPostData(event, mes);
+    deleteEvent(event);
+    onConfirm();
+  }
   return (
     <div className="popup">
       <div className="popup-inner">
@@ -16,25 +42,26 @@ function DeleteEventPopup({ onCancel, onConfirm }) {
         <p>Deleting the event will send a notification to all the volunteers who signed up.</p>
         <div className="btn-group">
           <button onClick={onCancel}>Cancel</button>
-          <button onClick={onConfirm}>Confirm</button>
+          <button onClick={handleDelete}>Confirm</button>
         </div>
       </div>
     </div>
   );
 }
-function SaveChangesPopup({ onClose, event, submitForm }) {
+function SaveChangesPopup({ onClose, event, submitForm, fetchDataAndPostData }) {
   const [sendNotif, setSendNotif] = useState(false);
 
   const handleCheckboxChange = (event) => {
     setSendNotif(event.target.checked);
   };
-
+  
   const handleSend = async () => {
     onClose();
     if (sendNotif) {
-      // Set state to true and display a message
-      console.log(`Has edited ${event.title}`);
-      postNotification();
+      let mes =`${event.title} has been edited. Request again if you are still interested.`;
+      submitForm(event);
+      fetchDataAndPostData(event, mes);
+    }else{
       submitForm(event);
     }
   };
@@ -63,43 +90,70 @@ function SaveChangesPopup({ onClose, event, submitForm }) {
 export default function AdminEvents() {
   const location = useLocation();
   const props = location.state;
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const admin_id = mydata.id;
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  const itemsPerPage = 7; // Change this according to your requirements
-  const [eventClicked, setEventClicked] = useState(false); // State to track if event link is clicked
+  const itemsPerPage = 3;
+  const [eventClicked, setEventClicked] = useState(false);
+  const [alert, setAlert] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
-  const pushNotification = async() =>{
-      let url = 'http://127.0.0.1:8000/api/events/';
-          try {
-            const response = await fetch(url, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
+    async function fetchDataAndPostData(event, mes) {
+      try {
+        // Fetch data from events-signed-up API
+        let url = 'http://127.0.0.1:8000/api/events-signed-up/';
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch events data');
+        }
+        const eventsResponse = await response.json();
+        console.log("about to post")
+        postDataForVolunteer(event.id, mes);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+    async function postDataForVolunteer(eventId, mes) {
+      try {
+          const postData = {
+            admin_id: admin_id,
+            id: eventId,
+            Message: mes,
+          };
+    
+          // Make a POST request to the other API for each volunteerId
+          const response = await fetch('http://127.0.0.1:8000/api/notifications-for-all/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
           });
-          const responseBody = await response.json(); // Read response body
-              if (!response.ok) {
-                      console.error('Failed request:', responseBody); // Log error and response body
-                      throw new Error('Failed request');
-                  }
-                const filteredData = responseBody.filter(event => event.admin_id === admin_id);
-                setData(filteredData);
-                setTotalItems(filteredData.length);
-  
-              } catch (error) {
-                  console.error('Error:', error);    
-          }  
-  }
+    
+          if (!response.ok) {
+            throw new Error(`Failed to post data for volunteer ${volunteerId}`);
+          }
+          console.log("Posted note")
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+      
   useEffect(() => {
     fetchData();
   }, [currentPage]);
 
   const fetchData = async () => {
-    let url = 'http://127.0.0.1:8000/api/events/';
+    let url = 'http://127.0.0.1:8000/api/events-with-dates/';
         try {
           const response = await fetch(url, {
             method: 'GET',
@@ -115,6 +169,7 @@ export default function AdminEvents() {
               const filteredData = responseBody.filter(event => event.admin_id === admin_id);
               setData(filteredData);
               setTotalItems(filteredData.length);
+              console.log(filteredData)
 
             } catch (error) {
                 console.error('Error:', error);
@@ -146,12 +201,18 @@ export default function AdminEvents() {
         });
         const responseBody = await response.json(); // Read response body
             if (!response.ok) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
                     console.error('Failed request:', responseBody); // Log error and response body
                     throw new Error('Failed request');
                 }
               console.log("posted");
+              setAlert("Changes Saved Successfully");
+
             } catch (error) {
-                console.error('Error:', error);
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
+              console.error('Error:', error);
             }
   };
   
@@ -200,8 +261,9 @@ export default function AdminEvents() {
         setEvent(event);
     };
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const handleDeleteEvent = () =>{
+  const handleDeleteEvent = (event) =>{
     setShowDeletePopup(true);
+    setEvent(event);
   }
   const handleCancelDelete = () => {
     setShowDeletePopup(false);
@@ -210,10 +272,25 @@ export default function AdminEvents() {
 const handleConfirmDelete = () => {
     setShowDeletePopup(false);
 };
+useEffect(() => {
+  setIsVisible(true);
+  const timer = setTimeout(() => {
+      setIsVisible(false);
+      setAlert("");
+      setAlertColor("");
+  }, 2000);
+  return () => clearTimeout(timer);
+}, [alert]);
+
+const goToSignUps = (formdata) => {
+  console.log(formdata)
+  navigation('../signups', { state: formdata });
+}
+
   return (
     <div className='App'>
       <AdminSidebar />
-      <AdminHeader  />
+      <AdminHeader alert={alert} isVisible={isVisible} alertColor={alertColor}/>
       <div className='Content'>
         <h2>Your Active Events</h2>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
@@ -239,6 +316,7 @@ const handleConfirmDelete = () => {
         />
         {eventClicked && ( // Render form only if event link is clicked
           <React.Fragment>
+            <div style={{margin:'2em'}}><button onClick={() => goToSignUps(formData)}>See Sign Ups</button></div>
             <h3 className={manage.headline}>Edit Event</h3>
             <div className={manage.eventForm}>
               <div className={manage.inputContainer}>
@@ -295,7 +373,7 @@ const handleConfirmDelete = () => {
               />
             </div>
               <div className={manage.formDiv}>
-                  <div className={manage.inputContainer}>
+                  <div className={manage.inputContainer} style={{width: '50%'}}>
                       <label htmlFor="rewardPoints">Reward Points:</label><br />
                       <input
                       type="number"
@@ -306,32 +384,24 @@ const handleConfirmDelete = () => {
                       min="0"
                       />
                   </div>
-                  <div className={manage.filecontainer}>
-                  <label htmlFor="banner">Event Banner:</label><br />
-                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
-                      <input
-                      type="file"
-                      id="banner"
-                      name="banner_image"
-                      onChange={handleChange}
-                      className={manage.fileInput}
-                      />
-                  </div>
             </div>
               <div className={manage.formDiv} style={{justifyContent: 'space-evenly'}}>
                 <button onClick={() => handlePopupToggle(formData)}>Save Changes</button>
-                <button className='del-btn' onClick={handleDeleteEvent}>Delete Event</button>
+                <button className='del-btn' onClick={() => handleDeleteEvent(formData)}>Delete Event</button>
               </div>
               <br />
               <br />
             </div>
-            {showPopup && <SaveChangesPopup onClose={handlePopupToggle} event={event} submitForm={handleSubmit}/>}
+            {showPopup && <SaveChangesPopup onClose={handlePopupToggle} event={event} submitForm={handleSubmit} fetchDataAndPostData={fetchDataAndPostData}/>}
 
             {showDeletePopup && (
                     <DeleteEventPopup
                     onCancel={handleCancelDelete}
                     onConfirm={handleConfirmDelete}
+                    fetchDataAndPostData={fetchDataAndPostData}
+                    event={event}
                     />
+                    
               )}
           </React.Fragment>
         )}

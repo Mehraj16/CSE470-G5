@@ -11,10 +11,9 @@ export default function DetailedView(props) {
         return date.toLocaleDateString('en-US', options);
       }
   return (
-      <div className='prof'>
+      <div className='prof' style={{width: '60vw'}}>
       <div className="profile-display">
-        <img src={`/src/assets/${props.image}`} alt="Profile Picture" className="banner-pic" />
-        <h3 className='profile-name'>{props.author}</h3>
+        <h3 className='profile-name'>{props.title}</h3>
         <div className='analytics'>
             <div className='a1'>
                 <p>Date</p>
@@ -32,7 +31,7 @@ export default function DetailedView(props) {
         <p>Location</p>
         <p className='propcontent'>{props.location}</p>  
         <p className='profile-bio'>Event Details</p>
-        <p className='bio'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, ex asperiores recusandae totam quisquam voluptate!</p>
+        <p className='bio'>{props.description}</p>
       </div>
     </div>
   )

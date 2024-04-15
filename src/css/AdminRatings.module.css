@@ -1,0 +1,66 @@
+
+  .hourDiv{
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid;
+    margin-bottom: 2em;
+    width: 70vw;
+  }
+  .hourDiv p{
+    line-height: 1.5;
+  }
+  .hoursInput {
+    display: block;
+    width: 8%;
+    padding: 5px;
+    margin-bottom: 1em;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    text-align: center;
+  }
+/* ------------------------------------------------------  */
+/* styles.module.css */
+
+.volunteersContainer {
+  display: flex;
+  flex-direction: column;
+  width: 70vw;
+  margin-bottom: 2em;
+}
+
+.header {
+  display: flex;
+  background-color: var(--acc);
+  color: white;
+  padding: 5px;
+}
+
+.header span {
+  flex: 1;
+  text-align: center;
+}
+
+.volunteerItem {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.volunteerItem span {
+  flex: 1;
+  text-align: center;
+}
+.starLabel{
+  margin-right: 2em;
+}
+.starDiv{
+  display: flex;
+  justify-content: center;
+  width:36%;
+}
+  

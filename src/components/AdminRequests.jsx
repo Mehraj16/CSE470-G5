@@ -9,53 +9,56 @@ export default function AdminRequests({ onViewDetails, alldata}) {
         console.log(data);
     }, [data]);
 
-   const removeRequest = async(reqid, vol_id, admin_id, name) =>{
-    try{
-        const mes = `Ypur request for ${name} has been approved`
-        console.log(mes)
-        const requestData = {
-          "admin_id": admin_id,
-          "volunteer_id": vol_id,
-          "Message": mes
-        };
-        const response = await fetch('http://127.0.0.1:8000/api/notifications', {
-          method: 'POST',
+    const removeRequest = async (reqid, vol_id, admin_id, name, val) => {
+      try {
+        const mes = `Your request for ${name} has been approved`;
+        console.log(mes);
+    
+        if (val === 1) {
+          // Send push notification only if val is 1
+          const requestData = {
+            admin_id: admin_id,
+            volunteer_id: vol_id,
+            Message: mes,
+          };
+          const response = await fetch('http://127.0.0.1:8000/api/notifications', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          });
+    
+          const responseBody = await response.json();
+          if (!response.ok) {
+            console.log(responseBody);
+            throw new Error('Failed to send push notification:');
+          }
+        }
+    
+        // Always delete the request
+        const deleteResponse = await fetch(`http://127.0.0.1:8000/api/remove-requests/${reqid}`, {
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(requestData),
         });
-        
-        const responseBody = await response.json();
-        if (!response.ok) {
-          console.log(responseBody)
-          throw new Error('Failed to send invitation for volunteer:');
+    
+        const deleteResponseBody = await deleteResponse.json();
+        if (!deleteResponse.ok) {
+          console.log(deleteResponseBody);
+          throw new Error('Failed to remove request:');
         }
-        try{
-            const response = await fetch(`http://127.0.0.1:8000/api/remove-requests/${reqid}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            });
-        
-        const responseBody = await response.json();
-        if (!response.ok) {
-          console.log(responseBody);
-          throw new Error('Failed to remove:');
-        }
-        }catch (error) {
-        console.error('Error removing:', error);   
-        }
-      }catch (error) {
-        console.error('Error sending notifs:', error);   
+      } catch (error) {
+        console.error('Error:', error);
       }
-   }
+    };
+    
     useEffect(() => {
         setData(alldata);
     }, [alldata]);
+    
     const handleAccept = async (reqid, id, vol_id, date, admin_id, name) => {
-        console.log('Accept clicked for ID:', id);
         setData(prevData => prevData.map(item => {
             if (item.event.id === id) {
                 return { ...item, status: 'accepted' };
@@ -63,14 +66,15 @@ export default function AdminRequests({ onViewDetails, alldata}) {
             return item;
         }));
         try{
-
             const requestData = {  
               "volunteer_id": vol_id,
               "event_id": id,
               "event_date": date,
-              "admin_id": admin_id
+              "admin_id": admin_id,
+              "req_id": reqid,
+              "Message": `Your request for ${name} has been approved`
             };
-            const response = await fetch('http://127.0.0.1:8000/api/events-signed-up/', {
+            const response = await fetch('http://127.0.0.1:8000/api/events-signed-req-notif/', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -81,9 +85,9 @@ export default function AdminRequests({ onViewDetails, alldata}) {
             const responseBody = await response.json();
             if (!response.ok) {
               console.log(responseBody)
-              throw new Error('Failed to send invitation for volunteer:', selectedItem);
+              throw new Error('Failed to send');
             }
-            removeRequest(reqid, vol_id, admin_id, name);
+            console.log("worked")
           }catch (error) {
             console.error('Error sending notifss:', error);   
           }
@@ -97,12 +101,12 @@ export default function AdminRequests({ onViewDetails, alldata}) {
             }
             return item;
         }));
-        removeRequest(reqid, vol_id, admin_id, name);
+        removeRequest(reqid, vol_id, admin_id, name, 0);
     };
 
     return (
         <div className={requests.container}>
-            <h3 className={requests.h3}>Pending Invitations:</h3>
+            <h3 className={requests.h3}>Pending Approvals:</h3>
             <div className={requests.row}>
                 <span className={requests.column} id={requests.head}>Volunteer Name</span>
                 <span className={requests.column} id={requests.head}>Title</span>

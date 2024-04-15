@@ -29,14 +29,11 @@ export default function Filter({ onOptionSelect, option }) {
     case 'all':
       textToShow = 'All';
       break;
-    case 'suggested':
-      textToShow = 'Suggested';
-      break;
     default:
       textToShow = 'All';
       break;
   }
-  console.log(textToShow)
+
   return (
     <div>
       <div className='filter-container'>
@@ -53,7 +50,6 @@ export default function Filter({ onOptionSelect, option }) {
             <div onClick={() => handleOptionClick('signedUpEvents')}>Signed Up Events</div>
             <div onClick={() => handleOptionClick('eventsNotSignedUp')}>Events Not Signed Up</div>
             <div onClick={() => handleOptionClick('all')}>All</div>
-            <div onClick={() => handleOptionClick('suggested')}>Suggested for You</div>
           </div>
         )}
       </div>

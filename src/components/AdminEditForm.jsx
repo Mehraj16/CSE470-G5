@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { MdOutlineFileUpload } from "react-icons/md";
-import manage from '../css/manage.module.css';
 import {useNavigate} from 'react-router-dom';
+import AdminProfileImage from './AdminProfileImage';
 
 function DeleteAccountPopup({ onCancel, onConfirm }) {
     return (
@@ -18,7 +17,7 @@ function DeleteAccountPopup({ onCancel, onConfirm }) {
     );
   }
 
-  function ChangePasswordPopup({ onClose, formData }) {
+  function ChangePasswordPopup({ onClose, formData, handleAlert }) {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const id = formData.id
@@ -41,10 +40,13 @@ function DeleteAccountPopup({ onCancel, onConfirm }) {
             });
             const responseBody = await response.json();
             if (!response.ok) {
+                handleAlert(e, 0);
                 console.error('Failed request:', responseBody);
                 throw new Error('Failed to update data');
             }
+            handleAlert(e,1);
         } catch (error) {
+            handleAlert(e,0);
             console.error('Error:', error);
         }
         onClose();
@@ -73,13 +75,20 @@ function DeleteAccountPopup({ onCancel, onConfirm }) {
     );
 }
 
-export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs, saveInputs}) {
-    
+export default function EditForm({ enableInputs, inputsEnabled, formData, handleInputChange, cancelInputs, saveInputs, giveAlert}) {
+    const handleAlert =  (e, val) => {
+        e.preventDefault();
+        if(val){
+            giveAlert(true);
+        } else {
+            giveAlert(false);
+        }
+    };
     const navigation = useNavigate();
 
     const handleChange = (field, e) => {
         handleInputChange(field, e.target.value);
-      };
+    };
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -154,25 +163,6 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                     <label htmlFor="email">Email:</label><br />
                     <input type="email" id="email" name="email" value={formData.email} onChange={(e) => handleChange('city', e)} disabled={!inputsEnabled} /><br /><br />
                 </div>
-                <div className={manage.fileBox} style={{
-                        paddingRight:'45px'
-                    }}>
-                        <label htmlFor="profile-pic-update">Profile Picture:</label><br />
-                        <label htmlFor="pro-pic" className={manage.filelabel} style={{
-                            padding:'5px 8px',
-                            paddingLeft: '4px'
-                        }}><MdOutlineFileUpload className={manage.icon} style={{
-                            width: '18x',
-                            height: '18px'
-                        }}/>&nbsp;| Choose File</label><br />
-                        <input
-                        type="file"
-                        id="png"
-                        name="png"
-                        onChange={(e) => handleChange('profileImage', e)}
-                        className={manage.fileInput}
-                        /><br /><br />
-                    </div>
             </div>
             <label htmlFor="biography">Biography:</label><br />
             <textarea id="biography" name="biography" rows="5" cols="52" value={formData.biography} onChange={(e) => handleChange('biography', e)} disabled={!inputsEnabled}></textarea><br /><br />
@@ -185,13 +175,13 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                     width: '35%',
                     lineHeight: '30px'
                 }}>
-                    <label >Gender:</label><br />
+                    <label>Gender:</label><br />
                     <label>
                     <input
                         type="radio"
                         name="gender"
                         value="male"
-                        checked={formData.gender === 'Male'}
+                        checked={formData.gender === 'male'}
                                     onChange={(e) => handleChange('gender', e)}
                                     disabled={!inputsEnabled}
                     />
@@ -203,7 +193,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                         type="radio"
                         name="gender"
                         value="female"
-                        checked={formData.gender === 'Female'}
+                        checked={formData.gender === 'female'}
                                     onChange={(e) => handleChange('gender', e)}
                                     disabled={!inputsEnabled}
                     />
@@ -215,7 +205,7 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
                         type="radio"
                         name="gender"
                         value="other"
-                        checked={formData.gender === 'Other'}
+                        checked={formData.gender === 'other'}
                                     onChange={(e) => handleChange('gender', e)}
                                     disabled={!inputsEnabled}
                     />
@@ -230,17 +220,18 @@ export default function EditForm({ enableInputs, inputsEnabled, formData, handle
             </div>
         </form>
       </div>
+      <AdminProfileImage />
       <div>
-                <h3 className='settings-headers'>Manage Password</h3>
-                <p className='settings-headers' style={{border: 'None'}}>Upon changing your password, you will be logged out and need to log in again.</p>
-                <div style={{
-                    width: '95%',
-                    display: 'inline-flex',
-                    justifyContent: 'flex-end'
-                }}>
+            <h3 className='settings-headers'>Manage Password</h3>
+            <p className='settings-headers' style={{border: 'None'}}>Upon changing your password, you will belogged out and need to log in again.</p>
+            <div style={{
+                width: '95%',
+                display: 'inline-flex',
+                justifyContent: 'flex-end'
+            }}>
                     <button className='del-btn' onClick={handlePopupToggle}>Change Password</button>
                 </div>
-                {showPopup && <ChangePasswordPopup onClose={handlePopupToggle} formData={formData} />}
+                {showPopup && <ChangePasswordPopup onClose={handlePopupToggle} formData={formData} handleAlert={handleAlert}/>}
             </div>
             <br />
             <div>

@@ -11,7 +11,7 @@ import { MdOutlineFileUpload } from "react-icons/md";
 export default function AdminPosts() {
   const location = useLocation();
   const props = location.state;
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const admin_id = mydata.id;
 
@@ -20,6 +20,9 @@ export default function AdminPosts() {
   const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 3; // Change this according to your requirements
   const [eventClicked, setEventClicked] = useState(false);
+  const [alert, setAlert] = useState("");
+    const [alertColor, setAlertColor] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -107,30 +110,71 @@ export default function AdminPosts() {
           console.log(formData);
           const responseBody = await response.json(); // Read response body
             if (!response.ok) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
                     console.error('Failed request:', responseBody); // Log error and response body
                     throw new Error('Failed request');
                 }
               console.log("posted");
+              setAlert("Changes Saved Successfully");
             } catch (error) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
                 console.error('Error:', error);
             }
   };
+  
+  const handleDelete = async (event) =>{
+    const postId = event.id;
+    let url = `http://127.0.0.1:8000/api/delete-article/${postId}`;
+        try {
+          const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+          const responseBody = await response.json(); // Read response body
+            if (!response.ok) {
+                    setAlert("Oops! Something went wrong!");
+                    setAlertColor('#f45050');
+                    console.error('Failed request:', responseBody); // Log error and response body
+                    throw new Error('Failed request');
+                }
+              setAlert("Article Deleted Successfully");
+            } catch (error) {
+              setAlert("Oops! Something went wrong!");
+              setAlertColor('#f45050');
+                console.error('Error:', error);
+            }
+  }
+
+  useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+        setAlert("");
+        setAlertColor("");
+    }, 2000);
+    return () => clearTimeout(timer);
+}, [alert]);
 
   return (
     <div className="App">
       <AdminSidebar />
-      <AdminHeader profilepic={`/src/assets/${props.profileImage}`} />
+      <AdminHeader alert={alert} isVisible={isVisible} alertColor={alertColor}/>
       <div className="Content">
         <h2>All Your Articles</h2>
         <h3>Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}</h3>
         <div className={requests.eventContainer}>
-          <div className={requests.row}>
-            <span className={requests.column} id={requests.head}>Post ID</span>
-            <span className={requests.column} id={requests.head}>Article Title</span>
-            <span className={requests.column} id={requests.head}>Date</span>
-          </div>
-          {currentPageData.map((item) => (
-            <div key={item.postId} className={requests.row}>
+        <div className={requests.row}>
+          <span className={requests.column} id={requests.head}>Post ID</span>
+          <span className={requests.column} id={requests.head}>Article Title</span>
+          <span className={requests.column} id={requests.head}>Date</span>
+        </div>
+        {currentPageData.map((item) => (
+          <div key={item.postId}>
+            <div className={requests.row}>
               <span className={requests.column}>{item.id}</span>
               <span className={requests.column}>
                 <a
@@ -143,8 +187,10 @@ export default function AdminPosts() {
               </span>
               <span className={requests.column}>{item.date}</span>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
+
         <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(totalItems / itemsPerPage)}
@@ -176,33 +222,18 @@ export default function AdminPosts() {
                     className={manage.dateInput}
                     />
                 </div>
-                  <div className={manage.fileBox}>
-                  <label htmlFor="banner">Article (*PDF only):</label><br />
-                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
-                      <input
-                      type="file"
-                      id="pdf"
-                      name="pdf"
-                      onChange={handleChange}
-                      className={manage.fileInput}
-                      />
-                  </div>
             </div>
-            <div className={manage.fileBox}>
-                  <label htmlFor="banner">Banner:</label><br />
-                  <label htmlFor="resume" className={manage.filelabel}><MdOutlineFileUpload className={manage.icon}/>&nbsp;| Choose File</label><br />
-                      <input
-                      type="file"
-                      id="image"
-                      name="banner_image"
-                      onChange={handleChange}
-                      className={manage.fileInput}
-                      />
-                  </div>
-              <button onClick={() => handleSubmit(formData)}>Submit</button>
+              <div style={{
+                width: '40%',
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}>
+                <button onClick={() => handleSubmit(formData)}>Submit</button>
+                <button className='del-btn' onClick={() => handleDelete(formData)}>Delete</button>
+              </div>
+            </div>
               <br />
               <br />
-            </div>
           </React.Fragment>
         )}
       </div>

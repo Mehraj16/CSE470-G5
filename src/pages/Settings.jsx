@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Profile from '../components/Profile';
@@ -8,17 +8,20 @@ import EditForm from '../components/EditForm';
 import MvvMode from '../components/MvvMode';
 
 export default function Settings() {
+
     const [formData, setFormData] = useState({});
+    const [alert, setAlert] = useState("");
+    const [alertColor, setAlertColor] = useState("");
+    const [isVisible, setIsVisible] = useState(false);    
+
     useEffect(() => {
-      const fetchDataFromLocalStorage = () => {
+      const fetchDataFromSessionStorage = () => {
           try {
               // Retrieve data from local storage
-              const data = localStorage.getItem('profileData');
+              const data = sessionStorage.getItem('profileData');
               if (!data) {
                   throw new Error('No data found in local storage');
               }
-  
-              // Parse the data as JSON
               const parsedData = JSON.parse(data);
               setFormData(parsedData);
 
@@ -27,10 +30,10 @@ export default function Settings() {
           }
       };
   
-      fetchDataFromLocalStorage();
+      fetchDataFromSessionStorage();
   }, []);
-    
-      const handleInputChange = (field, value) => {
+  
+  const handleInputChange = (field, value) => {
         setFormData(prevData => ({
           ...prevData,
           [field]: value
@@ -63,53 +66,47 @@ export default function Settings() {
         });
 
         if (!response.ok) {
+            setAlert("Oops! Something went wrong!");
+            setAlertColor('#f45050');
             throw new Error('Failed to update data');
         }
-
-        // Update profileData in localStorage with the updated data
-        localStorage.setItem('profileData', JSON.stringify(updatedData));
-        
-        setInputsEnabled(false); // Disable form inputs after successful update
+        sessionStorage.setItem('profileData', JSON.stringify(updatedData));
+        setAlert("Changes Saved Successfully");
+        setInputsEnabled(false); 
     } catch (error) {
+        setAlert("Oops! Something went wrong!");
+        setAlertColor('#f45050');
         console.error('Error:', error);
-    }
-    try {
-      const imageId = formData.id;   
-      const url = `http://127.0.0.1:8000/images/${imageId}`;
-
-      // Fetch image data from the backend
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        console.error('Error:', response.status);
-        throw new Error('Failed to fetch image data');
-      }
-      const responseBody = await response.json();
-      const base64String = btoa(
-        String.fromCharCode(...new Uint8Array(responseBody.profileImage))
-      );
-      setBackenddata(base64String);
-      console.log(backenddata);
-      localStorage.setItem('profileImage', base64String);
-
-    } catch (error) {
-      console.error('Error:', error);
     }
     setInputsEnabled(false);
   }
+  const giveAlert = (type) =>{
+    if(type){
+      setAlert("Password changed successfully.")
+    }else{
+      setAlertColor('#f45050');
+      setAlert("Something went wrong.");
+    } 
+  }
+  useEffect(() => {
+    setIsVisible(true);
+    const timer = setTimeout(() => {
+        setIsVisible(false);
+        setAlert("");
+        setAlertColor("");
+    }, 2000);
+    return () => clearTimeout(timer);
+}, [alert]);
+
+
   return (
     <div className='App'>
       <MvvMode />
       <Sidebar />
-      <Header profilepic={`/src/assets/${formData.profileImage}`}/>
+      <Header alert={alert} isVisible={isVisible} alertColor={alertColor}/>
       <div className='profile-content'>
-        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} saveInputs={saveInputs}/>
-        <Profile formData={formData}/>
+        <EditForm inputsEnabled={inputsEnabled} enableInputs={enableInputs} formData={formData} handleInputChange={handleInputChange} cancelInputs={cancelInputs} saveInputs={saveInputs} giveAlert={giveAlert}/>
+        <Profile formData={formData} />
       </div>
     </div>
   )

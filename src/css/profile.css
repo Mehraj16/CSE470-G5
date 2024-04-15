@@ -1,9 +1,11 @@
 p{
     margin: 3px;
+    color: black;
 }
 .prof{
     display: flex;
     padding-top: 50px;
+    width: 25vw;
 }
 .profile-display{
     background-color: var(--main);
@@ -16,6 +18,7 @@ p{
     padding-top: 33px;
     font-size: 18px;
     height: fit-content;
+    width: 100%;
 }
 .analytics{
     width: 100%;
@@ -50,4 +53,18 @@ p{
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+}
+@media screen and (max-width: 800px) {
+    .prof{
+        justify-content: center;
+        margin-bottom: 30px;
+        width: 100%;
+        margin: auto;
+    }
+    .profile-details{
+        width: 100%;
+    }
+    .profile-display{
+        width: 60vw;
+    }
 }

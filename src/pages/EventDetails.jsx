@@ -2,7 +2,6 @@ import React , { useState, useEffect }from 'react';
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 import '../css/details.css';
-import Details from '../components/Details';
 import { useLocation } from 'react-router-dom'
 
 
@@ -13,7 +12,7 @@ export default function EventDetails () {
   const [isDisabled, setIsDisabled] = useState(false);
   const location = useLocation();
   const props = location.state;
-  const jsonString = localStorage.getItem('profileData');
+  const jsonString = sessionStorage.getItem('profileData');
   const mydata = JSON.parse(jsonString);
   const myid = mydata.id;
   const myemail = mydata.email;
@@ -33,11 +32,12 @@ export default function EventDetails () {
                 console.error('Failed request:', responseBody); // Log error and response body
                 throw new Error('Failed request');
             }
-        console.log(responseBody)
-        if (responseBody.some(item => item.event_id === props.id)) {
-            console.log("found")
+
+        if (responseBody.some(item => item.event_id === props.id && item.volunteer_id === myid)) {
+            console.log("found here", props.id);
             setStatus(true);
         }
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -45,6 +45,7 @@ export default function EventDetails () {
 
     fetchData();
   }, []);
+
   useEffect(() => {
     const fetchanotherData = async () => {
       try {
@@ -60,11 +61,11 @@ export default function EventDetails () {
                 console.error('Failed request:', responseBody); // Log error and response body
                 throw new Error('Failed request');
             }
-        console.log(responseBody)
-        if (responseBody.some(item => item.event_id === props.id)) {
-            console.log("found")
+        if (responseBody.some(item => item.event_id === props.id && item.volunteer_id === myid)) {
+            console.log("found", props.id, item.event_id);
             setStatus(true);
         }
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -76,8 +77,8 @@ export default function EventDetails () {
   const handleClick = async (data) => {
     console.log(data)
     const requestBody = {
-        "admin_id": data.adminid,
-        "event_id": data.eventid,
+        "admin_id": data.admin_id,
+        "event_id": data.id,
         "volunteer_id": myid,
         "volunteer_email": myemail
     }
@@ -96,19 +97,40 @@ export default function EventDetails () {
                     console.error('Failed request:', responseBody); // Log error and response body
                     throw new Error('Failed request');
                 }
-              console.log("posted");
+              setIsClicked(true);
+              setStatus(true);
             } catch (error) {
                 console.error('Error:', error);
             }
-    setIsClicked(true);
+
   };
+  function formatDate(dateStr) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', options);
+  }
   return (
-    <div className='App'>
-      
+    <div className='App'> 
       <Sidebar />
       <Header />
       <div className='Content'>
-        <Details title={props.title} date={props.date} time={props.time} location={props.location} description={props.description} image={props.banner_image} adminid={props.admin_id} eventid={props.id} isClicked={isClicked} handleClick={handleClick} status={status} isDisabled={isDisabled}/>
+        <div className='banner'>
+        <img src={props.banner_image} alt="eventBanner" />
+        <p>Event Title</p>
+        <p>{props.title}</p>
+        <p>Event Time</p>
+        <p>{formatDate(props.date)} {props.time}</p>
+        <p>Event Location</p>
+        <p>{props.location}</p>
+        <p>Event Details</p>
+        <p>{props.description}</p>
+        <button
+          className={`interestBtn ${isClicked ? 'active' : ''}`}
+          onClick={(e) => handleClick(props)}
+          disabled={isDisabled || status}>
+          {status ? 'Interest Sent' : (isClicked ? 'Interest Sent' : 'Interested')}
+        </button>
+      </div>
       </div>
     </div>
   )

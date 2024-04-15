@@ -7,25 +7,15 @@ import MvvMode from './components/MvvMode';
 import './App.css'
 
 function App() {
-  const [profileData, setProfileData] = useState({});
   const [numEventsSignedUp, setNumEventsSignedUp] = useState(0);
   const [nearestEvent, setNearestEvent] = useState({});
   const [myevents, setmyevents] = useState([]);
   const [info, setInfo] = useState([]);
   const [chart, setChart] = useState([]);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [MVV, setMVV] = useState(false);
 
-  useEffect(() => {
-    const hasSeenConfetti = localStorage.getItem('hasSeenConfetti'); 
-    if (!hasSeenConfetti) {
-      setIsCelebrating(true);
-      localStorage.setItem('hasSeenConfetti', 'true');
-      setTimeout(() => {
-        setIsCelebrating(false);
-      }, 3000); // Stop celebrating after 3 seconds
-    }
-  }, []);
-  const data = localStorage.getItem('profileData');
+  const data = sessionStorage.getItem('profileData');
   const parsedData = JSON.parse(data);
   const mydata = parsedData
 
@@ -104,25 +94,39 @@ function App() {
     }
 }, [nearestEvent]); // Adding nearestEvent to the dependency array
 
+const is_mvv = localStorage.getItem('mvv');
+
+useEffect(() => {
+  if (is_mvv === 'true') {
+    setMVV(true);
+    const hasSeenMVVConfetti = localStorage.getItem('hasSeenMVVConfetti');
+    if (hasSeenMVVConfetti === 'false' || hasSeenMVVConfetti === null) {
+      setIsCelebrating(true);
+      localStorage.setItem('hasSeenMVVConfetti', 'true');
+      setTimeout(() => {
+        setIsCelebrating(false);
+      }, 4000);
+    }
+  }
+}, [is_mvv]);
 
   return (
     <>
       <div className='App'>
-      {isCelebrating && <Confetti
-        width={1200}
-        height={600}
+      {MVV && isCelebrating && <Confetti
+        style={{ width: "100vw",
+        height: "100vh" }}
         numberOfPieces={200}
         gravity={0.5}
       />}
         <MvvMode />
         <Sidebar />
-        <Header profilepic={`/src/assets/${profileData.profileImage}`} /> {/* Sends the profile image from fetched data */}
+        <Header /> {/* Sends the profile image from fetched data */}
         <div className='Content'>
           <Info 
             data={mydata}
             totalEvents={numEventsSignedUp}
             nearestEvent={nearestEvent}
-            profilepic={mydata.profileImage}
             info={info}
             chart={chart}
           />

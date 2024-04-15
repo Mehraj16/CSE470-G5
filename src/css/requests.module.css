@@ -1,6 +1,6 @@
 .container {
     margin-right: 15px;
-    width: 90vw;
+    width: 50vw;
     height: 70vh;
 }
 .eventContainer{
@@ -18,11 +18,14 @@
 }
 .row span{
     text-align: center;
+    flex: 1;
 }
 .column {
-    flex: 1;
-    padding: 10px;
-    white-space: nowrap;
+  flex: 1;
+  padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #head, #head3{
     font-size: 16px;

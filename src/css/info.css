@@ -1,6 +1,5 @@
 .dashboard{
     min-width: calc(95vw - 280px);
-    min-height: calc(90vh - 60px);
 }
 .welcomeText {
     display: flex; /* Use flexbox for layout */
@@ -14,14 +13,14 @@
     position: relative; /* Position relative for pseudo-element */
   }
   .welcomeText p {
-    flex: 1; /* Allow the paragraph to grow to fill the remaining space */
+    width: 10em;
     text-align: left; /* Align text to the left */
     margin-left: 20px; /* Add margin for spacing */
     font-size: 35px;
     font-weight: 400;
     color: var(--main);
+    line-height: 41px;
   }
-  
   .welcomeText::before {
     content: "";
     position: absolute; 
@@ -139,5 +138,23 @@
     }
     .eventDetail{
         width: 100%;
+    }
+}
+@media screen and (max-width: 950px) {
+    .dashEvent{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        grid-gap: 10px;
+    }
+    .dashEvent div{
+        width: 86%;
+    }
+    .dashEvent .eventDetail{
+        grid-column: 1 / span 2;
+        width: 97%;
+    }
+    .invitation div{
+        width: 100%;
+        justify-content: space-between;
     }
 }

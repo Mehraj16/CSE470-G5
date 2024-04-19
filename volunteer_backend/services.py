@@ -15,7 +15,7 @@ from fastapi import Depends, HTTPException, status
 
 SECRET_KEY = "fyuufyaufiyaiyufoioyufdaaaaaa"  
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Adjust token expiration as needed
+ACCESS_TOKEN_EXPIRE_MINUTES = 300  # Adjust token expiration as needed
 
 
 # Function to create access token
@@ -99,7 +99,8 @@ def get_user_events_by_email(db: Session, email: str):
 
 
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGFoZWRhbWluIiwiZXhwIjoxNzEzNTM3ODkxfQ.I2PgNT8njztCYCeD5t1yG1yp_pNSsBksZqrfiGlYUYA
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGFoZWRhbWluIiwiZXhwIjoxNzEzNTU2MzY3fQ.GanFMK6gKpD4jf21BHMXNg_XHQVJxgKWJQsaVdRit68
+
 
 
 

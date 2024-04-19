@@ -102,8 +102,25 @@ def get_event_by_id(db: Session, event_id: int):
 
 
 
+# Function to accept a event by the user 
+def accept_event(db: Session, event_id, email):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if user:
+        user_event = db.query(models.UserEventModel).filter(models.UserEventModel.event_id == event_id).first()
+        if not user_event:
+            raise HTTPException(status_code=404, detail="Event not found for the user")  
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM1NTk3NjN9.fZT8WaSlvZwc5XqCJ-FlElMh1ahOyFIM4eTfVydj_BE
+        # Update event_status to 'accepted'        
+        else:
+            user_event.event_status = "accepted"
+            db.commit()
+            return user_event
+    else:
+        return None
+
+
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM1NzU0Mzl9.SmN7w60Cz-2tx1qxZiUIcZAcdbW1R5j87xU1-_XKVuU
 
 
 
@@ -190,20 +207,7 @@ def get_event_by_id(db: Session, event_id: int):
 
 
 
-# # Function to accept an event
-# def accept_event(db: Session, user_id: int, event_id: int):
-#     user_event = db.query(models.UserEventModel).filter(
-#         models.UserEventModel.user_id == user_id,
-#         models.UserEventModel.event_id == event_id
-#     ).first()
 
-#     if not user_event:
-#         raise HTTPException(status_code=404, detail="Event not found for the user")
-
-#     # Update event_status to 'accepted'
-#     user_event.event_status = "accepted"
-#     db.commit()
-#     return user_event
 
 # # Function to reject an event
 # def reject_event(db: Session, user_id: int, event_id: int):

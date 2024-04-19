@@ -10,11 +10,7 @@ from sqlalchemy.orm import Session
 from typing import List 
 from database import get_db
 
-app = FastAPI()
-
-# Add middleware to the app
-# app.add_middleware(JWTMiddleware)
-
+app = FastAPI()  
 
 
 # This will be use for user registration
@@ -71,10 +67,13 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
     return event
 
 
-
-
-
-
+# API endpoint to accept a event by the user 
+@app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
+def accept_event_api(event_id: int, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    event = services.accept_event(db, event_id, email)
+    if event is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return event
 
 
 
@@ -177,10 +176,7 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
 
 
 
-# # # API endpoint to accept an event
-# # @app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
-# # def accept_event_api(event_id: int, current_user: models.UserModel = Depends(middleware.get_current_user), db: Session = Depends(get_db)):
-# #     return services.accept_event(db, current_user.id, event_id)
+
 
 # # # API endpoint to reject an event
 # # @app.post("/events/{event_id}/reject")

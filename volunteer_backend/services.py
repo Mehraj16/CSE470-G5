@@ -88,11 +88,18 @@ def get_user_info(db: Session, payload: str):
     return None
 
 
+# Function to fetch user's pending and Upcoming events details by email
+def get_user_events_by_email(db: Session, email: str):
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if user:
+        return user.user_events if user.user_events else []
+    else:
+        return None
 
 
 
 
-
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGFoZWRhbWluIiwiZXhwIjoxNzEzNTM3ODkxfQ.I2PgNT8njztCYCeD5t1yG1yp_pNSsBksZqrfiGlYUYA
 
 
 
@@ -174,19 +181,7 @@ def get_user_info(db: Session, payload: str):
 
 
 
-# # Function to fetch user's events by token
-# def get_user_events_by_token(db: Session, token: str):
-#     try:
-#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-#         email: str = payload.get("sub")
-#         if email is None:
-#             return None
-#         user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
-#         if not user:
-#             return None
-#         return user.user_events if user.user_events else []
-#     except JWTError:
-#         return None
+
 
 # # fetch event details by event id 
 # def get_event_by_id(db: Session, event_id: int):

@@ -49,7 +49,17 @@ def get_user_info_endpoint(db: Session = Depends(get_db), user: str = Depends(au
     
     return {"user_name": user_info}
 
+    # will also return the image
 
+
+
+# API endpoint to fetch user's pending and Upcoming events details by email
+@app.get("/user_events/")
+def get_user_events(db: Session = Depends(get_db), email: str = Depends(auth.get_current_user)):
+    user_events = services.get_user_events_by_email(db, email)
+    if user_events is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"user_events": user_events}
 
 
 
@@ -157,13 +167,7 @@ def get_user_info_endpoint(db: Session = Depends(get_db), user: str = Depends(au
 
 
 
-# # API endpoint to fetch user's pending and accepted events by email
-# @app.get("/user_events/", response_model=schemas.UserEventList)
-# def get_user_events(email: str, db: Session = Depends(get_db)):
-#     user_events = services.get_user_events_by_email(db, email)
-#     if user_events is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return schemas.UserEventList(user_events=user_events)
+
 
 # # API endpoint to fetch event details by event id 
 # @app.get("/events/{event_id}", response_model=schemas.EventSchema)

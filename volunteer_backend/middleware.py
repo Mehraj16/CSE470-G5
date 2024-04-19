@@ -14,7 +14,7 @@ SECRET_KEY = "fyuufyaufiyaiyufoioyufdaaaaaa"  # Please change this to your own s
 ALGORITHM = "HS256"  # This will be the algorithm used to sign & verify the JWT payload
 
 
-
+# JWT middleware for authenticate user
 class JWTMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
         authorization: str = request.headers.get("Authorization")
@@ -33,11 +33,15 @@ class JWTMiddleware(BaseHTTPMiddleware):
         token = authorization.split(" ")[1]
         
         try:
-            jwt.decode(
+            payload = jwt.decode(
                 token, 
                 SECRET_KEY, 
                 algorithms=[ALGORITHM]
-            )
+            ) 
+
+            # Add this payload to request state
+            request.state.payload = payload
+            
         except JWTError as e:
             raise HTTPException(
                 status_code=HTTP_401_UNAUTHORIZED,

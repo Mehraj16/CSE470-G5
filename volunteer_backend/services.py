@@ -96,10 +96,14 @@ def get_user_events_by_email(db: Session, email: str):
     else:
         return None
 
+# fetch event details by event id 
+def get_event_by_id(db: Session, event_id: int):
+    return db.query(models.EventPublishModel).filter(models.EventPublishModel.id == event_id).first()
 
 
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGFoZWRhbWluIiwiZXhwIjoxNzEzNTU2MzY3fQ.GanFMK6gKpD4jf21BHMXNg_XHQVJxgKWJQsaVdRit68
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM1NTk3NjN9.fZT8WaSlvZwc5XqCJ-FlElMh1ahOyFIM4eTfVydj_BE
 
 
 
@@ -184,9 +188,7 @@ def get_user_events_by_email(db: Session, email: str):
 
 
 
-# # fetch event details by event id 
-# def get_event_by_id(db: Session, event_id: int):
-#     return db.query(models.EventPublishModel).filter(models.EventPublishModel.id == event_id).first()
+
 
 # # Function to accept an event
 # def accept_event(db: Session, user_id: int, event_id: int):

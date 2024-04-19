@@ -62,7 +62,13 @@ def get_user_events(db: Session = Depends(get_db), email: str = Depends(auth.get
     return {"user_events": user_events}
 
 
-
+# API endpoint to fetch event details by event id 
+@app.get("/events/{event_id}", response_model=schemas.EventSchema)
+def read_event(event_id: int, db: Session = Depends(get_db)):
+    event =services.get_event_by_id(db, event_id)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return event
 
 
 
@@ -169,13 +175,7 @@ def get_user_events(db: Session = Depends(get_db), email: str = Depends(auth.get
 
 
 
-# # API endpoint to fetch event details by event id 
-# @app.get("/events/{event_id}", response_model=schemas.EventSchema)
-# def read_event(event_id: int, db: Session = Depends(get_db)):
-#     event =services.get_event_by_id(db, event_id)
-#     if event is None:
-#         raise HTTPException(status_code=404, detail="Event not found")
-#     return event
+
 
 # # # API endpoint to accept an event
 # # @app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)

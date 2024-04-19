@@ -67,7 +67,7 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
     return event
 
 
-# API endpoint to accept a event by the user 
+# API endpoint to accept an event by the user 
 @app.post("/events/{event_id}/accept", response_model=schemas.UserEvent)
 def accept_event_api(event_id: int, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
     event = services.accept_event(db, event_id, email)
@@ -78,6 +78,11 @@ def accept_event_api(event_id: int, email: str = Depends(auth.get_current_user),
 
 
 
+# API endpoint to reject an event by the user 
+@app.post("/events/{event_id}/reject")
+def reject_event_api(event_id: int, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    event = services.reject_event(db, event_id, email) 
+    return {"message": "Event rejected successfully"}
 
 
 
@@ -178,10 +183,5 @@ def accept_event_api(event_id: int, email: str = Depends(auth.get_current_user),
 
 
 
-# # # API endpoint to reject an event
-# # @app.post("/events/{event_id}/reject")
-# # def reject_event_api(event_id: int, current_user: models.UserModel = Depends(middleware.get_current_user), db: Session = Depends(get_db)):
-# #     services.reject_event(db, current_user.id, event_id)
-# #     return {"message": "Event rejected successfully"}
 
 # #-------------------------------------------------------------------------------------------------------------------------------------

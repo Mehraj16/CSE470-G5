@@ -87,7 +87,16 @@ def reject_event_api(event_id: int, email: str = Depends(auth.get_current_user),
 
 
 
+# API endpoint to fetch author's name 
+@app.get("/author/name/{author_id}")
+def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
+    author_info = services.get_author_info(db, author_id)
+    if author_info is None:
+        raise HTTPException(status_code=404, detail="Author not found")
+    
+    return {"Author_name": author_info}
 
+    # will also return the image
 
 
 

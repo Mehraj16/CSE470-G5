@@ -133,11 +133,16 @@ def reject_event(db: Session, event_id, email):
             db.commit()
 
 
+#  Function to fetch author's name 
+def get_author_info(db: Session,author_id):
+    return db.query(models.UserModel).filter(models.UserModel.id == author_id).first()
+
+
     
 
 
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM1NzU0Mzl9.SmN7w60Cz-2tx1qxZiUIcZAcdbW1R5j87xU1-_XKVuU
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2MDQ0NjV9.Xc5xLILKlGka3BtvJsejH8ZVya11_6nBtSdKHqwGALQ
 
 
 

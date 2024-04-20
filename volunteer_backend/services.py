@@ -181,7 +181,42 @@ def register_event(db: Session, event_id: int, email: str):
 
 
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2NDQxNjZ9.SvH66NYAZclEK5C8en30wRJDr2c9fhXIkRIK0yePNW0
+# create event
+def create_event(db: Session, event: schemas.EventSchema, email: str):
+    # Fetch user
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not Found")
+
+    # Check if user has administrative privileges
+    if user.priority_level != 'admin':
+        raise HTTPException(status_code=403, detail="Access Denied: User does not have administrative privileges")
+
+    # Create Event
+    new_event = models.EventPublishModel(
+        title=event.title,
+        description=event.description,
+        author_id=user.id,
+        location = event.location,
+        date=event.date,
+        time = event.time,
+        organizer_company = event.organizer_company
+    )
+    try:
+        db.add(new_event)
+        db.commit()
+        db.refresh(new_event)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+    return new_event
+
+
+
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2NTc2NjF9.kKT48JMBX38YfogLA5B698JbwOsuJCfGB8YdcgF0ZLM
 
 
 

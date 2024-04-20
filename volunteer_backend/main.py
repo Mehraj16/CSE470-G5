@@ -128,6 +128,15 @@ def register_event_api(event_id: int, email: str = Depends(auth.get_current_user
         raise HTTPException(status_code=404, detail="Event not Found")
     return event_registration
 
+# create event
+@app.post("/events/create", response_model=schemas.EventSchema)
+def create_event_api(event: schemas.EventSchema, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    created_event = services.create_event(db, event, email)
+    if created_event is None:
+        raise HTTPException(status_code=400, detail="Unable to Create Event")
+    return created_event
+
+
 
 # Include the router in the main application
 app.include_router(router, prefix="/api")
@@ -135,7 +144,14 @@ app.include_router(router, prefix="/api")
 
 
 
+# need to write algorithm for score
+# need to create endpoint for leader board
 
+# need to write algo for event suggestion
+
+# fetch the user based on their role
+
+# give user madel and fetch the user with madel 
 
 
 

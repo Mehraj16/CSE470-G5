@@ -215,7 +215,7 @@ def create_event(db: Session, event: schemas.EventSchema, email: str):
 
 
 
-
+#test commit 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2NTc2NjF9.kKT48JMBX38YfogLA5B698JbwOsuJCfGB8YdcgF0ZLM
 
 

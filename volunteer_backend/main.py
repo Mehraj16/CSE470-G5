@@ -98,10 +98,22 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
     # will also return the image
 
+
 #################################################################################
 
 
 
+# Define an APIRouter instance
+router = APIRouter() 
+
+# Get all published event details  
+@router.get("/events/")
+def get_all_events(db: Session = Depends(get_db)):
+    return db.query(models.EventPublishModel).all()
+
+
+# Include the router in the main application
+app.include_router(router, prefix="/api")
 
 
 
@@ -174,17 +186,6 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
 
 
-# # Define an APIRouter instance
-# router = APIRouter() 
-
-# # Get all published event details  
-# @router.get("/events/")
-# def get_all_events(db: Session = Depends(get_db)):
-#     return db.query(models.EventPublishModel).all()
-
-
-# # Include the router in the main application
-# app.include_router(router, prefix="/api")
 
 
 

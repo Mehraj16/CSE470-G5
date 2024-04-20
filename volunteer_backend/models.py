@@ -50,7 +50,7 @@ class EventPublishModel(Base):
     # later there will be added image field 
 
 
+
 Base.metadata.create_all(bind=engine)
 
-    
-#-------------------------------------------------------------------------------------------------------------------------------------
+

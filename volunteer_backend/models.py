@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey,Date, Time
 from sqlalchemy.orm import  relationship
 from database import Base,engine
 
@@ -36,14 +36,14 @@ class UserEventModel(Base):
     user = relationship("UserModel", back_populates="user_events")
 
 class EventPublishModel(Base):
-    __tablename__ = 'events published'
+    __tablename__ = 'events_published'
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(50), index=True)
     description = Column(String(500))
     author_id = Column(Integer, ForeignKey('users.id'))
     location = Column(String(30))
-    date = Column(DateTime) # It will be only date later
-    time = Column(DateTime)  # It will be only time later
+    date = Column(Date)
+    time = Column(Time) 
     organizer_company = Column(String(50))
 
     author = relationship("UserModel", back_populates="events_published")

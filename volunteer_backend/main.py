@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, date
 from fastapi import FastAPI, HTTPException,  Depends,status,APIRouter,Request
 
 import schemas, models, services,auth
@@ -98,10 +98,60 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
     # will also return the image
 
+
 #################################################################################
 
 
 
+# Define an APIRouter instance
+router = APIRouter() 
+
+# Get all published event details  
+@router.get("/events/")
+def get_all_events(db: Session = Depends(get_db)):
+    return db.query(models.EventPublishModel).all()
+
+
+
+# Get all event details of a specific date 
+# format 2024-04-20 
+@router.get("/events/date/", response_model=List[schemas.EventSchema])
+def get_events_by_date_endpoint(date: date, db: Session = Depends(get_db)):
+    return services.get_events_by_date(db, date)
+
+
+# event interested by a user 
+@app.post("/events/{event_id}/register", response_model=schemas.UserEvent)
+def register_event_api(event_id: int, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    event_registration = services.register_event(db, event_id, email)
+    if event_registration is None:
+        raise HTTPException(status_code=404, detail="Event not Found")
+    return event_registration
+
+# create event
+@app.post("/events/create", response_model=schemas.EventSchema)
+def create_event_api(event: schemas.EventSchema, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    created_event = services.create_event(db, event, email)
+    if created_event is None:
+        raise HTTPException(status_code=400, detail="Unable to Create Event")
+    return created_event
+
+
+
+# Include the router in the main application
+app.include_router(router, prefix="/api")
+
+
+
+
+# need to write algorithm for score
+# need to create endpoint for leader board
+
+# need to write algo for event suggestion
+
+# fetch the user based on their role
+
+# give user madel and fetch the user with madel 
 
 
 
@@ -140,11 +190,6 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
 
 
-# # Get all event details of a specific date 
-# # Need to modify it for only date input
-# @router.get("/events/date/", response_model=List[schemas.EventSchema])
-# def get_events_by_date_endpoint(date: datetime, db: Session = Depends(get_db)):
-#     return services.get_events_by_date(db, date)
 
 # # Get all event details of a specific location
 # @router.get("/events/location/", response_model=List[schemas.EventSchema])
@@ -174,17 +219,6 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
 
 
-# # Define an APIRouter instance
-# router = APIRouter() 
-
-# # Get all published event details  
-# @router.get("/events/")
-# def get_all_events(db: Session = Depends(get_db)):
-#     return db.query(models.EventPublishModel).all()
-
-
-# # Include the router in the main application
-# app.include_router(router, prefix="/api")
 
 
 

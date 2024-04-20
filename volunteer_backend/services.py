@@ -6,7 +6,7 @@ import schemas, models
 from database import get_db
 from passlib.hash import bcrypt
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 from fastapi import Depends, HTTPException, status
 
 
@@ -141,8 +141,82 @@ def get_author_info(db: Session,author_id):
     
 
 
+# Define a service function to handle filtering events by date
+def get_events_by_date(db: Session, date: datetime) -> List[models.EventPublishModel]:
+    events = db.query(models.EventPublishModel).filter(models.EventPublishModel.date == date).all()
+    if not events:
+        raise HTTPException(status_code=404, detail="No events found for the specified date.")
+    return events
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2MDQ0NjV9.Xc5xLILKlGka3BtvJsejH8ZVya11_6nBtSdKHqwGALQ
+
+# event interested by a user 
+def register_event(db: Session, event_id: int, email: str):
+    # Fetch user
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not Found")
+
+    # Fetch Event
+    event = db.query(models.EventPublishModel).filter(models.EventPublishModel.id == event_id).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not Found")
+    
+    # In case event already exists in user_events for current user
+    existing_event = db.query(models.UserEventModel).filter(models.UserEventModel.event_id == event_id, models.UserEventModel.user_id == user.id).first()
+    if existing_event:
+        raise HTTPException(status_code=400, detail="User already registered to this event")
+
+    # Register Event
+    new_event_registration = models.UserEventModel(
+        event_id=event_id,
+        user_id=user.id,
+        event_name=event.title,
+        event_status='accepted'
+    )
+    
+    db.add(new_event_registration)
+    db.commit()
+    db.refresh(new_event_registration)
+    return new_event_registration
+
+
+
+# create event
+def create_event(db: Session, event: schemas.EventSchema, email: str):
+    # Fetch user
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not Found")
+
+    # Check if user has administrative privileges
+    if user.priority_level != 'admin':
+        raise HTTPException(status_code=403, detail="Access Denied: User does not have administrative privileges")
+
+    # Create Event
+    new_event = models.EventPublishModel(
+        title=event.title,
+        description=event.description,
+        author_id=user.id,
+        location = event.location,
+        date=event.date,
+        time = event.time,
+        organizer_company = event.organizer_company
+    )
+    try:
+        db.add(new_event)
+        db.commit()
+        db.refresh(new_event)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+    return new_event
+
+
+
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2NTc2NjF9.kKT48JMBX38YfogLA5B698JbwOsuJCfGB8YdcgF0ZLM
 
 
 
@@ -191,13 +265,6 @@ def get_author_info(db: Session,author_id):
 #     db.refresh(db_event)
 #     return db_event
 
-# # Define a service function to handle filtering events by date
-# # Need to modify it for only date input
-# def get_events_by_date(db: Session, date: datetime) -> List[models.EventPublishModel]:
-#     events = db.query(models.EventPublishModel).filter(models.EventPublishModel.date == date).all()
-#     if not events:
-#         raise HTTPException(status_code=404, detail="No events found for the specified date.")
-#     return events
 
 # # Get all event details of a specific location
 # def get_events_by_location(db: Session, location: str) -> List[models.EventPublishModel]:

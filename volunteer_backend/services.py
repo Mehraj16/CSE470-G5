@@ -137,7 +137,7 @@ def reject_event(db: Session, event_id, email):
 def get_author_info(db: Session,author_id):
     return db.query(models.UserModel).filter(models.UserModel.id == author_id).first()
 
-
+#################################################################################
     
 
 

@@ -98,11 +98,7 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 
     # will also return the image
 
-
-
-
-
-
+#################################################################################
 
 
 
@@ -135,18 +131,14 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 #             detail="Failed to delete account. Check email and password.",
 #         )
 
-# # Define an APIRouter instance
-# router = APIRouter()   
+  
 
 # # Create an event 
 # @router.post("/events/", response_model=schemas.EventSchema)
 # def create_event(event: schemas.EventSchema, db: Session = Depends(get_db)):
 #     return services.launch_event(db, event)
 
-# # Get all event details  
-# @router.get("/events/")
-# def get_all_events(db: Session = Depends(get_db)):
-#     return db.query(models.EventPublishModel).all()
+
 
 # # Get all event details of a specific date 
 # # Need to modify it for only date input
@@ -179,11 +171,20 @@ def get_author_info_endpoint( author_id : int, db: Session = Depends(get_db)):
 #     return {"message": "Event deleted successfully"}
 
 
+
+
+
+# # Define an APIRouter instance
+# router = APIRouter() 
+
+# # Get all published event details  
+# @router.get("/events/")
+# def get_all_events(db: Session = Depends(get_db)):
+#     return db.query(models.EventPublishModel).all()
+
+
 # # Include the router in the main application
 # app.include_router(router, prefix="/api")
-
-
-
 
 
 

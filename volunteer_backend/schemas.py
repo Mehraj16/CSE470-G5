@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date,time
 from pydantic import BaseModel
 from typing import List
 
@@ -18,14 +18,14 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: str
-    access_token: str  # Include access token here
+    access_token: str 
 
 class EventSchema(BaseModel):
     title: str
     description: str
     location: str
-    date: datetime  # It will be only date later
-    time: datetime  # It will be only time later
+    date: date 
+    time: time  
     organizer_company: str
 
 class UserEventBase(BaseModel):

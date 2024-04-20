@@ -6,7 +6,7 @@ import schemas, models
 from database import get_db
 from passlib.hash import bcrypt
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 from fastapi import Depends, HTTPException, status
 
 
@@ -141,6 +141,14 @@ def get_author_info(db: Session,author_id):
     
 
 
+# Define a service function to handle filtering events by date
+def get_events_by_date(db: Session, date: datetime) -> List[models.EventPublishModel]:
+    events = db.query(models.EventPublishModel).filter(models.EventPublishModel.date == date).all()
+    if not events:
+        raise HTTPException(status_code=404, detail="No events found for the specified date.")
+    return events
+
+
 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2MDQ0NjV9.Xc5xLILKlGka3BtvJsejH8ZVya11_6nBtSdKHqwGALQ
 
@@ -191,13 +199,6 @@ def get_author_info(db: Session,author_id):
 #     db.refresh(db_event)
 #     return db_event
 
-# # Define a service function to handle filtering events by date
-# # Need to modify it for only date input
-# def get_events_by_date(db: Session, date: datetime) -> List[models.EventPublishModel]:
-#     events = db.query(models.EventPublishModel).filter(models.EventPublishModel.date == date).all()
-#     if not events:
-#         raise HTTPException(status_code=404, detail="No events found for the specified date.")
-#     return events
 
 # # Get all event details of a specific location
 # def get_events_by_location(db: Session, location: str) -> List[models.EventPublishModel]:

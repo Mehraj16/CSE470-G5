@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, date
 from fastapi import FastAPI, HTTPException,  Depends,status,APIRouter,Request
 
 import schemas, models, services,auth
@@ -112,8 +112,21 @@ def get_all_events(db: Session = Depends(get_db)):
     return db.query(models.EventPublishModel).all()
 
 
+
+# Get all event details of a specific date 
+# format 2024-04-20 
+@router.get("/events/date/", response_model=List[schemas.EventSchema])
+def get_events_by_date_endpoint(date: date, db: Session = Depends(get_db)):
+    return services.get_events_by_date(db, date)
+
+
 # Include the router in the main application
 app.include_router(router, prefix="/api")
+
+
+
+
+
 
 
 
@@ -152,11 +165,6 @@ app.include_router(router, prefix="/api")
 
 
 
-# # Get all event details of a specific date 
-# # Need to modify it for only date input
-# @router.get("/events/date/", response_model=List[schemas.EventSchema])
-# def get_events_by_date_endpoint(date: datetime, db: Session = Depends(get_db)):
-#     return services.get_events_by_date(db, date)
 
 # # Get all event details of a specific location
 # @router.get("/events/location/", response_model=List[schemas.EventSchema])

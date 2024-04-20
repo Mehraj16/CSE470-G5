@@ -149,8 +149,39 @@ def get_events_by_date(db: Session, date: datetime) -> List[models.EventPublishM
     return events
 
 
+# event interested by a user 
+def register_event(db: Session, event_id: int, email: str):
+    # Fetch user
+    user = db.query(models.UserModel).filter(models.UserModel.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not Found")
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2MDQ0NjV9.Xc5xLILKlGka3BtvJsejH8ZVya11_6nBtSdKHqwGALQ
+    # Fetch Event
+    event = db.query(models.EventPublishModel).filter(models.EventPublishModel.id == event_id).first()
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not Found")
+    
+    # In case event already exists in user_events for current user
+    existing_event = db.query(models.UserEventModel).filter(models.UserEventModel.event_id == event_id, models.UserEventModel.user_id == user.id).first()
+    if existing_event:
+        raise HTTPException(status_code=400, detail="User already registered to this event")
+
+    # Register Event
+    new_event_registration = models.UserEventModel(
+        event_id=event_id,
+        user_id=user.id,
+        event_name=event.title,
+        event_status='accepted'
+    )
+    
+    db.add(new_event_registration)
+    db.commit()
+    db.refresh(new_event_registration)
+    return new_event_registration
+
+
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZXciLCJleHAiOjE3MTM2NDQxNjZ9.SvH66NYAZclEK5C8en30wRJDr2c9fhXIkRIK0yePNW0
 
 
 

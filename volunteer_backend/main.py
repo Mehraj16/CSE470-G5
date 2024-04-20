@@ -120,6 +120,15 @@ def get_events_by_date_endpoint(date: date, db: Session = Depends(get_db)):
     return services.get_events_by_date(db, date)
 
 
+# event interested by a user 
+@app.post("/events/{event_id}/register", response_model=schemas.UserEvent)
+def register_event_api(event_id: int, email: str = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    event_registration = services.register_event(db, event_id, email)
+    if event_registration is None:
+        raise HTTPException(status_code=404, detail="Event not Found")
+    return event_registration
+
+
 # Include the router in the main application
 app.include_router(router, prefix="/api")
 

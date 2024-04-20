@@ -22,8 +22,7 @@ class UserModel(Base):
 
     user_events = relationship("UserEventModel", back_populates="user")
     events_published = relationship("EventPublishModel", back_populates="author")
-    
-#-------------------------------------------------------------------------------------------------------------------------------------
+
 class UserEventModel(Base):
     __tablename__ = "user_events"
 
@@ -53,4 +52,5 @@ class EventPublishModel(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
 

@@ -15,3 +15,10 @@ Base = declarative_base()
 if not database_exists(engine.url):
     create_database(engine.url)
 
+# Dependency to get a database session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

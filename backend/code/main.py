@@ -892,8 +892,9 @@ app.include_router(router, prefix="/api")
 
 ####################Code to select MVV at the end of the month and increase medal count of winner###################
 def is_last_day_of_month():
-    target_date = datetime(2024, 4, 15).date()  # April 15, 2024, 1:10 AM
-    current_date = datetime.now().date()
+    current_date = datetime.datetime.now().date()
+    last_day_of_month = calendar.monthrange(current_date.year, current_date.month)[1]
+    target_date = datetime.date(current_date.year, current_date.month, last_day_of_month)
     print("Running...")
     print(target_date)
     return current_date == target_date
